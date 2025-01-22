@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "dfcc160d-db70-4fc2-a063-1e8b12a2f840"
+      }
+    },
+    "owner": "beyondwebsolutions"
   }
 }
