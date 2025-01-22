@@ -1,0 +1,5 @@
+{
+  "invalid-email": "Het emailadres is ongeldig.",
+  "password-too-short": "Het wachtwoord moet minimaal 8 tekens lang zijn.",
+  "passwords-dont-match": "De wachtwoorden komen niet overeen."
+}
