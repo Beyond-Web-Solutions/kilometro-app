@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import "../lib/i18n";
+import { AuthErrorToast } from "@/components/auth/error-toast";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -47,6 +48,7 @@ export default function RootLayout() {
       <PaperProvider theme={theme}>
         <StatusBar style="auto" />
         <Slot />
+        <AuthErrorToast />
       </PaperProvider>
     </QueryClientProvider>
   );

@@ -10,9 +10,11 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useState } from "react";
 import { Button, TextInput } from "react-native-paper";
 import { supabase } from "@/lib/supabase";
+import { useAuthErrorStore } from "@/store/auth-error";
 
 export function SignInForm() {
   const { t } = useTranslation("auth", { keyPrefix: "sign-in.form" });
+  const { setError } = useAuthErrorStore();
 
   const {
     control,
@@ -39,7 +41,11 @@ export function SignInForm() {
       password: values.password,
     });
 
-    console.log(data, error);
+    if (error) {
+      setError(error.code ?? "unknown");
+
+      return;
+    }
   }, []);
 
   return (

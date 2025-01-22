@@ -8,17 +8,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextFormField } from "@/components/_common/form/text-input";
 import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useState } from "react";
-import { Button, TextInput } from "react-native-paper";
+import { Button, Portal, Snackbar, TextInput } from "react-native-paper";
 import {
   SignUpFormData,
   signUpSchema,
 } from "@/constants/definitions/auth/sign-up";
 import { supabase } from "@/lib/supabase";
+import { useAuthErrorStore } from "@/store/auth-error";
 
 export function SignUpForm() {
   const { t } = useTranslation("auth", { keyPrefix: "sign-up.form" });
+  const { setError } = useAuthErrorStore();
 
-  const { control, setFocus, handleSubmit } = useForm<SignUpFormData>({
+  const {
+    control,
+    setFocus,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
@@ -40,10 +47,16 @@ export function SignUpForm() {
   }, []);
 
   const onSubmit = useCallback(async (values: SignUpFormData) => {
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
     });
+
+    if (error) {
+      setError(error.code ?? "unknown");
+
+      return;
+    }
   }, []);
 
   return (
@@ -104,6 +117,8 @@ export function SignUpForm() {
       <Button
         style={styles.button}
         mode="contained"
+        loading={isSubmitting}
+        disabled={isSubmitting}
         onPress={handleSubmit(onSubmit)}
       >
         {t("submit")}
