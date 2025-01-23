@@ -1,14 +1,10 @@
 import { StyleSheet, View } from "react-native";
 import { useForm } from "react-hook-form";
-import {
-  SignInFactorOneFormData,
-  signInFactorOneSchema,
-} from "@/constants/definitions/auth/sign-in/factor-one";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextFormField } from "@/components/_common/form/text-input";
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useState } from "react";
-import { Button, Portal, Snackbar, TextInput } from "react-native-paper";
+import { useCallback, useState } from "react";
+import { Button, TextInput } from "react-native-paper";
 import {
   SignUpFormData,
   signUpSchema,
@@ -57,7 +53,7 @@ export function SignUpForm() {
       return setError(error.code ?? "unknown");
     }
 
-    return router.navigate("/(auth)/otp");
+    return router.push(`/(auth)/confirm-email?email=${values.email}`);
   }, []);
 
   return (

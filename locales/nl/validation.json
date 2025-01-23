@@ -1,5 +1,7 @@
 {
   "invalid-email": "Het emailadres is ongeldig.",
   "password-too-short": "Het wachtwoord moet minimaal 8 tekens lang zijn.",
-  "passwords-dont-match": "De wachtwoorden komen niet overeen."
+  "passwords-dont-match": "De wachtwoorden komen niet overeen.",
+  "otp-must-be-6-digits": "De code moet 6 cijfers lang zijn.",
+  "invalid-email-otp-type": "Ongeldig OTP-type"
 }
