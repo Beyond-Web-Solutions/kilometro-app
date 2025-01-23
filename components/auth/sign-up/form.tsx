@@ -15,6 +15,7 @@ import {
 } from "@/constants/definitions/auth/sign-up";
 import { supabase } from "@/lib/supabase";
 import { useAuthErrorStore } from "@/store/auth-error";
+import { router } from "expo-router";
 
 export function SignUpForm() {
   const { t } = useTranslation("auth", { keyPrefix: "sign-up.form" });
@@ -53,10 +54,10 @@ export function SignUpForm() {
     });
 
     if (error) {
-      setError(error.code ?? "unknown");
-
-      return;
+      return setError(error.code ?? "unknown");
     }
+
+    return router.navigate("/(auth)/otp");
   }, []);
 
   return (

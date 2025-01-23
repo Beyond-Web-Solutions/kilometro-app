@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import { useTheme, Text, Button, Divider } from "react-native-paper";
+import { Button, Divider, Text, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { SignInForm } from "@/components/auth/sign-in/form";
 import { Link } from "expo-router";

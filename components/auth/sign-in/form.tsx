@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button, TextInput } from "react-native-paper";
 import { supabase } from "@/lib/supabase";
 import { useAuthErrorStore } from "@/store/auth-error";
+import { router } from "expo-router";
 
 export function SignInForm() {
   const { t } = useTranslation("auth", { keyPrefix: "sign-in.form" });
@@ -36,16 +37,16 @@ export function SignInForm() {
   }, []);
 
   const onSubmit = useCallback(async (values: SignInFactorOneFormData) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,
     });
 
     if (error) {
-      setError(error.code ?? "unknown");
-
-      return;
+      return setError(error.code ?? "unknown");
     }
+
+    return router.replace("/(tabs)");
   }, []);
 
   return (

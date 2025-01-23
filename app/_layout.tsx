@@ -3,12 +3,13 @@ import { StatusBar } from "expo-status-bar";
 import { AppState, useColorScheme } from "react-native";
 import { supabase } from "@/lib/supabase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { PaperProvider, MD3DarkTheme, MD3LightTheme } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 import { useEffect, useState } from "react";
+import { AuthErrorToast } from "@/components/auth/error-toast";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import "../lib/i18n";
-import { AuthErrorToast } from "@/components/auth/error-toast";
+import { darkTheme, lightTheme } from "@/constants/ui/themes";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,7 +29,7 @@ AppState.addEventListener("change", (state) => {
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const [theme, setTheme] = useState(MD3LightTheme);
+  const [theme, setTheme] = useState(lightTheme);
   const colorScheme = useColorScheme();
 
   useEffect(() => {
@@ -37,9 +38,9 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (colorScheme === "dark") {
-      setTheme(MD3DarkTheme);
+      setTheme(darkTheme);
     } else {
-      setTheme(MD3LightTheme);
+      setTheme(lightTheme);
     }
   }, [colorScheme]);
 
