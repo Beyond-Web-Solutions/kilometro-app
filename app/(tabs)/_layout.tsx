@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { router, Tabs } from "expo-router";
-import { BottomNavigation, Icon } from "react-native-paper";
-import { CommonActions } from "@react-navigation/native";
+import { Icon } from "react-native-paper";
+import { TabBar } from "@/components/nav/tabs";
 
 export default function TabsLayout() {
   useEffect(() => {
@@ -11,7 +11,6 @@ export default function TabsLayout() {
         router.replace("/(auth)/sign-in");
       }
     });
-
     return () => {
       data.subscription.unsubscribe();
     };
@@ -20,41 +19,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{ headerShown: false }}
-      tabBar={({ navigation, state, insets, descriptors }) => (
-        <BottomNavigation.Bar
-          navigationState={state}
-          safeAreaInsets={insets}
-          onTabPress={({ route, preventDefault }) => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (event.defaultPrevented) {
-              preventDefault();
-            } else {
-              navigation.dispatch({
-                ...CommonActions.navigate(route.name, route.params),
-                target: state.key,
-              });
-            }
-          }}
-          renderIcon={({ route, focused, color }) => {
-            const { options } = descriptors[route.key];
-            if (options.tabBarIcon) {
-              return options.tabBarIcon({ focused, color, size: 24 });
-            }
-
-            return null;
-          }}
-          getLabelText={({ route }) => {
-            const { options } = descriptors[route.key];
-
-            return options.title;
-          }}
-        />
-      )}
+      tabBar={(props) => <TabBar {...props} />}
     >
       <Tabs.Screen
         key="index"

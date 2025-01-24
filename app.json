@@ -9,13 +9,18 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyARdLvOzumvwXJqfQXS6rHJNKPM3-23ERU"
+      },
+      "bundleIdentifier": "com.beyondwebsolutions.kilometro"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.beyondwebsolutions.kilometro"
     },
     "web": {
       "bundler": "metro",

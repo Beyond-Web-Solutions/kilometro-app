@@ -1,0 +1,24 @@
+{
+  "create-or-join": {
+    "title": "Welkom!",
+    "description": "Uw account is aangemaakt. Maak een team aan of voeg je bij een bestaand team.",
+    "links": {
+      "create": "Maak een team aan",
+      "join": "Voeg je bij een team"
+    }
+  },
+  "join": {
+    "header-title": ""
+  },
+  "create": {
+    "header-title": "",
+
+    "title": "Maak een organisatie aan",
+    "description": "Maak een organisatie aan om je team te beheren en te organiseren.",
+
+    "form": {},
+    "links": {
+      "back": "Terug"
+    }
+  }
+}

@@ -7,9 +7,9 @@ import { PaperProvider } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { AuthErrorToast } from "@/components/auth/error-toast";
 import * as SplashScreen from "expo-splash-screen";
+import { darkTheme, lightTheme } from "@/constants/ui/themes";
 import "react-native-reanimated";
 import "../lib/i18n";
-import { darkTheme, lightTheme } from "@/constants/ui/themes";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
