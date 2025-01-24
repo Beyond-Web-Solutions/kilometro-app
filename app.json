@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyARdLvOzumvwXJqfQXS6rHJNKPM3-23ERU"
+        "googleMapsApiKey": ""
       },
       "bundleIdentifier": "com.beyondwebsolutions.kilometro"
     },

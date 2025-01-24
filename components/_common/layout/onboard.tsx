@@ -1,8 +1,34 @@
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import { Button, Divider, Text, useTheme } from "react-native-paper";
-import { CreatOrganizationForm } from "@/components/onboard/create-org/form";
+import {
+  Button,
+  Divider,
+  Text,
+  useTheme,
+  ButtonProps,
+} from "react-native-paper";
+import { ReactNode } from "react";
 
-export function EntryLayout() {
+interface Link extends Omit<ButtonProps, "children"> {
+  label: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+
+  children?: ReactNode;
+  showDivider?: boolean;
+
+  links?: Link[];
+}
+
+export function OnboardAndAuthLayout({
+  title,
+  description,
+  children,
+  showDivider = true,
+  links,
+}: Props) {
   const { colors } = useTheme();
 
   return (
@@ -10,21 +36,26 @@ export function EntryLayout() {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.header_text} variant="headlineLarge">
-            {t("title")}
+            {title}
           </Text>
-          <Text style={styles.header_text}>{t("description")}</Text>
+          <Text style={styles.header_text}>{description}</Text>
         </View>
-        <View style={styles.form_container}>
-          <CreatOrganizationForm />
-        </View>
-        <Divider />
-        <View style={[styles.form_container, styles.link_container]}>
-          <Button onPress={handleGoBack}>{t("links.back")}</Button>
-        </View>
+        <View style={styles.form_container}>{children}</View>
+        {links && (
+          <>
+            {showDivider && <Divider />}
+            <View style={[styles.form_container, styles.link_container]}>
+              {links.map(({ label, ...props }) => (
+                <Button {...props}>{label}</Button>
+              ))}
+            </View>
+          </>
+        )}
       </View>
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 64,
@@ -33,8 +64,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   link_container: {
-    gap: 4,
-    paddingVertical: 4,
+    gap: 8,
+    paddingVertical: 8,
   },
   header: {
     alignItems: "center",

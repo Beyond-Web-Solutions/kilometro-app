@@ -9,14 +9,22 @@ export default function CreateOrJoinOrganizationScreen() {
     <OnboardAndAuthLayout
       title={t("title")}
       description={t("description")}
+      showDivider={false}
       links={[
         {
           label: t("links.join"),
           onPress: () => router.navigate("/onboard/join-org"),
+          mode: "contained",
+          icon: "arrow-right",
+          contentStyle: { flexDirection: "row-reverse" },
+          style: { marginTop: 8 },
         },
         {
           label: t("links.create"),
           onPress: () => router.navigate("/onboard/create-org"),
+          mode: "contained",
+          icon: "plus-circle-outline",
+          contentStyle: { flexDirection: "row-reverse" },
         },
       ]}
     />
