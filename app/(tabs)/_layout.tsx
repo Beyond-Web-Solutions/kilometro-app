@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import { TabBar } from "@/components/nav/tabs";
 import { useAuthState } from "@/hooks/use-auth-state";
@@ -15,13 +15,13 @@ export default function TabsLayout() {
   const { isFetched: isOrganizationsFetched, data: organizations } =
     useOrganizations();
 
+  // ensure a user has an organization before they can use the app
   useEffect(() => {
     if (isDefaultOrganizationFetched && isOrganizationsFetched) {
-      console.log(organizations[1]);
+      if (!defaultOrganization && organizations?.length === 0) {
+        return router.replace("/onboard");
+      }
     }
-    /*if (isDefaultOrganizationFetched && !defaultOrganization) {
-        if (organizations)
-    }*/
   }, [
     isDefaultOrganizationFetched,
     defaultOrganization,

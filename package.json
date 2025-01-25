@@ -10,7 +10,6 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-
     "gen:types": "npx supabase gen types typescript --local > types/supabase.ts"
   },
   "jest": {
@@ -52,7 +51,8 @@
     "react-native-webview": "13.12.5",
     "stripe": "^17.5.0",
     "zod": "^3.24.1",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "expo-location": "~18.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
