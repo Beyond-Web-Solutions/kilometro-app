@@ -1,5 +1,5 @@
-import { Text, View, StyleSheet } from "react-native";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import { StyleSheet, View } from "react-native";
+import MapView from "react-native-maps";
 
 export default function MapPage() {
   return (

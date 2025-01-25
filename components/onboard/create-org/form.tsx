@@ -10,8 +10,11 @@ import { TextFormField } from "@/components/_common/form/text-input";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-native-paper";
 import { supabase } from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 
 export function CreatOrganizationForm() {
+  const queryClient = useQueryClient();
   const { t } = useTranslation("onboard", { keyPrefix: "create.form" });
 
   const {
@@ -36,7 +39,12 @@ export function CreatOrganizationForm() {
       return console.error(error);
     }
 
-    console.log(data);
+    if (data.ok) {
+      await queryClient.invalidateQueries({
+        queryKey: ["orgs-for-user"],
+      });
+      return router.push("/(tabs)");
+    }
   }, []);
 
   return (

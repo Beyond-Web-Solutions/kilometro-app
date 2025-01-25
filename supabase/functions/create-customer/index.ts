@@ -6,7 +6,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { generateOrganizationCode } from "./utils/gen-org-code.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { Database } from "../lib/supabase.ts";
 import Stripe from "npm:stripe@17.5.0";
 
 console.log("Hello from Functions!");
@@ -16,7 +15,7 @@ Deno.serve(async (req: Request) => {
 
   const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "");
 
-  const supabase = createClient<Database>(
+  const supabase = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? "",
     {
@@ -34,7 +33,10 @@ Deno.serve(async (req: Request) => {
   } = await supabase.auth.getUser(token);
 
   if (!user) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response(
+      JSON.stringify({ ok: false, message: "Unauthorized" }),
+      { status: 401 },
+    );
   }
 
   // Create a new customer
@@ -55,7 +57,7 @@ Deno.serve(async (req: Request) => {
     .single();
 
   if (error) {
-    return new Response(JSON.stringify({ error }), {
+    return new Response(JSON.stringify({ ok: false, message: error.message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
