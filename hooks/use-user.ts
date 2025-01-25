@@ -1,17 +1,15 @@
-import { useEffect, useState } from "react";
-import { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { useQuery } from "@tanstack/react-query";
 
 export function useUser() {
-  const [isPending, setIsPending] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: getUser,
+  });
+}
 
-  useEffect(() => {
-    supabase.auth
-      .getUser()
-      .then(({ data }) => setUser(data.user))
-      .finally(() => setIsPending(false));
-  }, []);
+async function getUser() {
+  const { data } = await supabase.auth.getUser();
 
-  return { isPending, user };
+  return data;
 }

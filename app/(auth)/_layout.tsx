@@ -1,19 +1,8 @@
-import { useEffect } from "react";
-import { supabase } from "@/lib/supabase";
-import { router, Stack } from "expo-router";
+import { Stack } from "expo-router";
+import { useAuthState } from "@/hooks/use-auth-state";
 
 export default function AuthLayout() {
-  useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        router.replace("/(tabs)");
-      }
-    });
-
-    return () => {
-      data.subscription.unsubscribe();
-    };
-  }, []);
+  useAuthState();
 
   return <Stack screenOptions={{ headerShown: false, animation: "none" }} />;
 }

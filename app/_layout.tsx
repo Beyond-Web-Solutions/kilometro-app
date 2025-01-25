@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { AuthErrorToast } from "@/components/auth/error-toast";
 import * as SplashScreen from "expo-splash-screen";
 import { darkTheme, lightTheme } from "@/constants/ui/themes";
+import { SplashScreenProvider } from "@/components/splash-screen-provider";
 import "react-native-reanimated";
 import "../lib/i18n";
 
@@ -30,11 +31,8 @@ const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const [theme, setTheme] = useState(lightTheme);
-  const colorScheme = useColorScheme();
 
-  useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
     if (colorScheme === "dark") {
@@ -47,9 +45,11 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider theme={theme}>
-        <StatusBar style="auto" />
-        <Slot />
-        <AuthErrorToast />
+        <SplashScreenProvider>
+          <StatusBar style="auto" />
+          <Slot />
+          <AuthErrorToast />
+        </SplashScreenProvider>
       </PaperProvider>
     </QueryClientProvider>
   );

@@ -1,0 +1,109 @@
+CREATE EXTENSION IF NOT EXISTS "postgis"
+WITH
+  SCHEMA "extensions";
+
+CREATE TABLE IF NOT EXISTS "public"."organizations" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
+    "name" "text" NOT NULL,
+    "code" "text" NOT NULL UNIQUE,
+    "email" "text" NOT NULL,
+    "stripe_customer_id" "text" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now" () NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS "public"."organization_members" (
+    "id" "uuid" DEFAULT "gen_random_uuid" () NOT NULL PRIMARY KEY,
+    "user_id" "uuid",
+    "organization_id" "uuid",
+    "is_default" boolean NOT NULL DEFAULT false,
+    "created_at" timestamp with time zone DEFAULT "now" () NOT NULL,
+    CONSTRAINT "organization_members_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE CASCADE,
+    CONSTRAINT "organization_members_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations" ("id") ON DELETE CASCADE
+    );
+
+CREATE TABLE IF NOT EXISTS "public"."vehicles" (
+    "id" "uuid" DEFAULT "gen_random_uuid" () NOT NULL PRIMARY KEY,
+    "organization_id" "uuid",
+    "name" "text" NOT NULL,
+    "licence_plate" "text" NOT NULL,
+    "odometer" integer DEFAULT 0 NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now" () NOT NULL,
+    CONSTRAINT "vehicles_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations" ("id") ON DELETE CASCADE
+    );
+
+CREATE TABLE IF NOT EXISTS "public"."trips" (
+    "id" "uuid" DEFAULT "gen_random_uuid" () NOT NULL PRIMARY KEY,
+    "vehicle_id" "uuid",
+    "user_id" "uuid",
+    "codec" "text",
+    "avg_speed" integer,
+    "max_speed" integer,
+    "distance" integer,
+    "start_odometer" integer NOT NULL,
+    "end_odometer" integer,
+    "start_place_id" "text",
+    "end_place_id" "text",
+    "is_private" boolean DEFAULT false,
+    "started_at" timestamp with time zone DEFAULT "now" (),
+    "ended_at" timestamp with time zone DEFAULT "now" (),
+    "start_point" "extensions"."geography" (Point, 4326) NOT NULL,
+    "end_point" "extensions"."geography" (Point, 4326),
+    CONSTRAINT "trips_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE SET NULL,
+    CONSTRAINT "trips_vehicle_id_fkey" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles" ("id") ON DELETE CASCADE
+    );
+
+-- functions
+create
+or replace function get_org_ids_for_user () returns setof uuid as $$
+SELECT org.id
+FROM organizations org
+         INNER JOIN organization_members member ON org.id = member.organization_id
+WHERE member.user_id = auth.uid();
+$$ stable language sql security definer;
+
+create
+or replace function get_orgs_for_user () returns setof record as $$
+SELECT org
+FROM organizations org
+         INNER JOIN organization_members member ON org.id = member.organization_id
+WHERE member.user_id = auth.uid();
+$$ stable language sql security definer;
+
+create
+or replace function get_default_org () returns record as $$
+SELECT org
+FROM organizations org
+         INNER JOIN organization_members member ON org.id = member.organization_id
+WHERE member.user_id = auth.uid() AND member.is_default = true LIMIT 1;
+$$ stable language sql security definer;
+
+
+--    RLS
+ALTER TABLE "public"."organization_members" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."organizations" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."trips" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."vehicles" ENABLE ROW LEVEL SECURITY;
+
+create
+policy "Enable insert for authenticated users only"
+on "public"."organizations"
+to authenticated
+with check (
+  true
+);
+
+create
+policy "Enable read access for authenticated users only"
+on "public"."organizations"
+to authenticated
+using (
+  true
+);
+
+create
+policy "Enable insert for authenticated users only"
+on "public"."organization_members"
+to authenticated
+with check (
+  true
+);

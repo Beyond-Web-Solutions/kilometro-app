@@ -46,7 +46,9 @@ export function OnboardAndAuthLayout({
             {showDivider && <Divider />}
             <View style={[styles.form_container, styles.link_container]}>
               {links.map(({ label, ...props }) => (
-                <Button {...props}>{label}</Button>
+                <Button key={label} {...props}>
+                  {label}
+                </Button>
               ))}
             </View>
           </>
