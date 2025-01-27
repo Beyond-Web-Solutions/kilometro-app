@@ -10,8 +10,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { useVehicles } from "@/hooks/use-vehicles";
-import { useCurrentTripStore } from "@/store/current-trip";
 import * as Location from "expo-location";
+import { LocationAccuracy, LocationActivityType } from "expo-location";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -23,6 +23,8 @@ import { RadioGroupField } from "@/components/_common/form/radio-group";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCurrentTrip } from "@/hooks/use-current-trip";
+import { LOCATION_TASK_NAME } from "@/constants/strings";
+import { useCurrentTripStore } from "@/store/current-trip";
 
 export function StartTripDialog() {
   const queryClient = useQueryClient();
@@ -34,6 +36,8 @@ export function StartTripDialog() {
   }, []);
 
   const { t } = useTranslation("map", { keyPrefix: "start-trip" });
+  const { setIsTracking } = useCurrentTripStore();
+
   const { data: currentTrip } = useCurrentTrip();
   const { data: vehicles, isSuccess: areVehiclesLoadedSuccessfully } =
     useVehicles();
@@ -72,9 +76,16 @@ export function StartTripDialog() {
     }
 
     setIsVisible(false);
+    setIsTracking(true);
 
-    return queryClient.invalidateQueries({
+    await queryClient.invalidateQueries({
       queryKey: ["current-trip"],
+    });
+
+    return Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+      accuracy: LocationAccuracy.BestForNavigation,
+      activityType: LocationActivityType.AutomotiveNavigation,
+      showsBackgroundLocationIndicator: true,
     });
   }, []);
 

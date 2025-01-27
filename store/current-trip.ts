@@ -1,46 +1,37 @@
 import { create } from "zustand";
 import { LatLng } from "react-native-maps";
+import { persist, createJSONStorage } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Store = {
-  tripId: string | null;
   isTracking: boolean;
+
   route: LatLng[];
   speed: number[];
-  startedAt: number | null;
-  vehicle: string | null;
 
-  setTripId: (tripId: string | null) => void;
-
+  setIsTracking: (isTracking: boolean) => void;
   addRoutePoint: (point: LatLng) => void;
   addSpeed: (speed: number) => void;
 
-  startTrip: (tripId: string, vehicle: string) => void;
   stopTrip: () => void;
 };
 
-export const useCurrentTripStore = create<Store>((set) => ({
-  tripId: null,
-  isTracking: false,
-  route: [],
-  startedAt: null,
-  speed: [],
-  vehicle: null,
-
-  setTripId: (tripId) => set({ tripId }),
-
-  addRoutePoint: (point) =>
-    set((store) => ({ route: [...store.route, point] })),
-  addSpeed: (speed) => set((store) => ({ speed: [...store.speed, speed] })),
-
-  startTrip: (tripId, vehicle) =>
-    set({ tripId, isTracking: true, vehicle, startedAt: new Date().getTime() }),
-  stopTrip: () =>
-    set({
-      tripId: null,
+export const useCurrentTripStore = create(
+  persist<Store>(
+    (set) => ({
       isTracking: false,
       route: [],
-      startedAt: null,
       speed: [],
-      vehicle: null,
+
+      setIsTracking: (isTracking) => set({ isTracking }),
+      stopTrip: () => set({ route: [], speed: [] }),
+      addSpeed: (speed) => set((store) => ({ speed: [...store.speed, speed] })),
+      addRoutePoint: (point) =>
+        set((store) => ({ route: [...store.route, point] })),
     }),
-}));
+    {
+      name: "current-trip",
+      storage: createJSONStorage(() => AsyncStorage),
+    },
+  ),
+);

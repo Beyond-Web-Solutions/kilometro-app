@@ -1,6 +1,6 @@
 import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView, { Polyline } from "react-native-maps";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { StartTripDialog } from "@/components/map/start-trip-dialog";
 import { FAB, useTheme } from "react-native-paper";
 import { useCurrentTripStore } from "@/store/current-trip";

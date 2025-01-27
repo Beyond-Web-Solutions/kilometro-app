@@ -1,7 +1,6 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Button, Divider, List, Text, useTheme } from "react-native-paper";
-import { useCurrentTripStore } from "@/store/current-trip";
 import { StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -10,9 +9,6 @@ import {
   StopTripSchema,
 } from "@/constants/definitions/trip/stop";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
-import { supabase } from "@/lib/supabase";
-import { encode } from "@googlemaps/polyline-codec";
 import { useCurrentTrip } from "@/hooks/use-current-trip";
 import { formatDateTime } from "@/utils/format";
 
