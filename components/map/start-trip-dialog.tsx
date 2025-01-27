@@ -36,6 +36,7 @@ export function StartTripDialog() {
   }, []);
 
   const { t } = useTranslation("map", { keyPrefix: "start-trip" });
+
   const { setIsTracking } = useCurrentTripStore();
 
   const { data: currentTrip } = useCurrentTrip();

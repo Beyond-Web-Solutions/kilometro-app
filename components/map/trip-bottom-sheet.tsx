@@ -6,18 +6,28 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import {
   stopTripSchema,
-  StopTripSchema,
+  StopTripFormData,
 } from "@/constants/definitions/trip/stop";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentTrip } from "@/hooks/use-current-trip";
 import { formatDateTime } from "@/utils/format";
+import { SegmentedButtonsField } from "@/components/_common/form/segmented-buttons";
+import * as Location from "expo-location";
+import { supabase } from "@/lib/supabase";
+import { useCurrentTripStore } from "@/store/current-trip";
+import { getAverage } from "@/utils/math";
+import { encode } from "@googlemaps/polyline-codec";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function TripBottomSheet() {
+  const queryClient = useQueryClient();
   const ref = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ["10%"], []);
 
   const { t } = useTranslation("map", { keyPrefix: "current-trip" });
   const { colors } = useTheme();
+
+  const { speed, route, stopTrip } = useCurrentTripStore();
   const { data: trip } = useCurrentTrip();
 
   useEffect(() => {
@@ -32,12 +42,47 @@ export function TripBottomSheet() {
     control,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<StopTripSchema>({
+  } = useForm<StopTripFormData>({
     resolver: zodResolver(stopTripSchema),
     defaultValues: { type: "business" },
   });
 
-  const onSubmit = useCallback(async (values: StopTripSchema) => {}, []);
+  const onSubmit = useCallback(
+    async (values: StopTripFormData) => {
+      if (!trip) return;
+
+      const { coords } = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.BestForNavigation,
+      });
+
+      const { error } = await supabase.functions.invoke("stop-trip", {
+        body: {
+          id: trip.id,
+          end_odometer: 0,
+          latitude: coords.latitude,
+          longitude: coords.latitude,
+          type: values.type,
+          codec: encode(
+            route.map((point) => [point.longitude, point.latitude]),
+          ),
+          avg_speed: getAverage(speed),
+          max_speed: Math.max(...speed),
+        },
+      });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      stopTrip();
+
+      await queryClient.invalidateQueries({
+        queryKey: ["current-trip"],
+      });
+    },
+    [trip, speed, route],
+  );
 
   return (
     <BottomSheetModal
@@ -69,7 +114,14 @@ export function TripBottomSheet() {
           onPress={() => {}}
         />
         <Divider style={styles.divider} />
-        <Text>HEllo</Text>
+        <SegmentedButtonsField<StopTripFormData>
+          name="type"
+          control={control}
+          buttons={[
+            { label: t("type.business"), value: "business", icon: "briefcase" },
+            { label: t("type.private"), value: "private", icon: "account" },
+          ]}
+        />
         <Divider style={styles.divider} />
         <Button
           mode="contained-tonal"

@@ -24,7 +24,7 @@ export const useCurrentTripStore = create(
       speed: [],
 
       setIsTracking: (isTracking) => set({ isTracking }),
-      stopTrip: () => set({ route: [], speed: [] }),
+      stopTrip: () => set({ route: [], speed: [], isTracking: false }),
       addSpeed: (speed) => set((store) => ({ speed: [...store.speed, speed] })),
       addRoutePoint: (point) =>
         set((store) => ({ route: [...store.route, point] })),

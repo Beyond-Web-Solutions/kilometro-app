@@ -1,6 +1,6 @@
 import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView, { Polyline } from "react-native-maps";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StartTripDialog } from "@/components/map/start-trip-dialog";
 import { FAB, useTheme } from "react-native-paper";
 import { useCurrentTripStore } from "@/store/current-trip";
@@ -12,9 +12,15 @@ export default function MapPage() {
   const scheme = useColorScheme();
   const { colors } = useTheme();
 
-  const { route } = useCurrentTripStore();
+  const { route, isTracking } = useCurrentTripStore();
 
   const [followsUser, setFollowsUser] = useState(false);
+
+  useEffect(() => {
+    if (isTracking) {
+      setFollowsUser(true);
+    }
+  }, [isTracking]);
 
   const toggleFollowsUser = useCallback(() => {
     setFollowsUser((prevState) => !prevState);
@@ -28,7 +34,9 @@ export default function MapPage() {
             showsCompass
             showsUserLocation
             showsScale
+            showsTraffic
             followsUserLocation={followsUser}
+            onPanDrag={toggleFollowsUser}
             userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
             style={styles.map}
           >
