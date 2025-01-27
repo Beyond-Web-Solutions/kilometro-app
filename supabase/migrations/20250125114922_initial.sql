@@ -3,6 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "postgis"
     SCHEMA "extensions";
 
 create type "public"."organization_roles" as enum ('driver', 'admin');
+create type "public"."trip_status" as enum ('done', 'ongoing');
 
 CREATE TABLE IF NOT EXISTS "public"."organizations"
 (
@@ -39,22 +40,25 @@ CREATE TABLE IF NOT EXISTS "public"."vehicles"
 
 CREATE TABLE IF NOT EXISTS "public"."trips"
 (
-    "id"             "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
+    "id"             "uuid"                                         DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
     "vehicle_id"     "uuid",
     "user_id"        "uuid",
     "codec"          "text",
     "avg_speed"      integer,
     "max_speed"      integer,
     "distance"       integer,
-    "start_odometer" integer                                              NOT NULL,
+    "start_odometer" integer                               NOT NULL,
     "end_odometer"   integer,
     "start_place_id" "text",
     "end_place_id"   "text",
-    "is_private"     boolean                  DEFAULT false,
-    "started_at"     timestamp with time zone DEFAULT "now"(),
-    "ended_at"       timestamp with time zone DEFAULT "now"(),
-    "start_point"    "extensions"."geography"(Point, 4326)                NOT NULL,
+    "is_private"     boolean                                        DEFAULT false,
+    "started_at"     timestamp with time zone                       DEFAULT "now"(),
+    "ended_at"       timestamp with time zone                       DEFAULT "now"(),
+    "start_point"    "extensions"."geography"(Point, 4326) NOT NULL,
     "end_point"      "extensions"."geography"(Point, 4326),
+    "start_address"  "text",
+    "end_address"    "text",
+    "status"         "trip_status"                         not null default 'ongoing'::trip_status,
     CONSTRAINT "trips_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE SET NULL,
     CONSTRAINT "trips_vehicle_id_fkey" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles" ("id") ON DELETE CASCADE
 );
@@ -135,26 +139,16 @@ create policy "Enable read access for organization members"
     to authenticated
     using ((organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)));
 
-create policy "Enable insert for organization members"
-    on "public"."trips"
-    as permissive
-    for insert
-    to authenticated
-    with check (
-    vehicle_id IN (SELECT id
-                   FROM vehicles
-                   WHERE organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))
-    );
-
-create policy "Enable read access for organization members"
+create policy "Enable access for organization members"
     on "public"."trips"
     as PERMISSIVE
-    for SELECT
+    for ALL
     to authenticated
     using (
     vehicle_id IN (SELECT id
                    FROM vehicles
                    WHERE organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))
     );
+
 
 

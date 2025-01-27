@@ -4,5 +4,7 @@
   "passwords-dont-match": "De wachtwoorden komen niet overeen.",
   "otp-must-be-6-digits": "De code moet 6 cijfers lang zijn.",
   "invalid-email-otp-type": "Ongeldig OTP-type",
-  "org-name-must-be-2-50-characters": "De organisatienaam moet tussen de 2 en 50 tekens lang zijn."
+  "org-name-must-be-2-50-characters": "De organisatienaam moet tussen de 2 en 50 tekens lang zijn.",
+  "odometer-must-be-positive": "De kilometerstand moet positief zijn.",
+  "invalid-vehicle": "Ongeldig voertuig."
 }

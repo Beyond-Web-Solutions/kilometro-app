@@ -4,14 +4,12 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { generateOrganizationCode } from "./utils/gen-org-code.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import Stripe from "npm:stripe@17.5.0";
 
-Deno.serve(async (req: Request) => {
-  const { name, email } = await req.json();
+Deno.serve(async (req) => {
+  const { vehicle_id, start_odometer, latitude, longitude } = await req.json();
 
-  const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "");
+  const mapsApiKey = Deno.env.get("GOOGLE_MAPS_API_KEY");
 
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
@@ -23,7 +21,6 @@ Deno.serve(async (req: Request) => {
     },
   );
 
-  // Get the session or user object
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
 
   const {
@@ -37,37 +34,34 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // Create a new customer
-  const customer = await stripe.customers.create({
-    name,
-    email,
-  });
+  const response = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&result_type=street_address&key=${mapsApiKey}`,
+  );
+
+  const geodata = await response.json();
+  const address = geodata.results[0];
 
   const { data, error } = await supabase
-    .from("organizations")
+    .from("trips")
     .insert({
-      name,
-      email,
-      code: generateOrganizationCode(),
-      stripe_customer_id: customer.id,
+      user_id: user.id,
+      start_odometer,
+      vehicle_id,
+      start_place_id: address?.place_id ?? null,
+      start_point: `POINT(${address?.geometry.location.lat ?? latitude} ${address?.geometry.location.lng ?? longitude})`,
+      start_address: address?.formatted_address ?? null,
     })
     .select("id")
     .single();
 
   if (error) {
-    return new Response(JSON.stringify({ ok: false, message: error.message }), {
-      status: 500,
+    console.error(error);
+    return new Response(JSON.stringify({ ok: false, error }), {
       headers: { "Content-Type": "application/json" },
     });
   }
 
-  await supabase.from("organization_members").insert({
-    user_id: user.id,
-    organization_id: data.id,
-    is_default: true,
-  });
-
-  return new Response(JSON.stringify({ ok: true }), {
+  return new Response(JSON.stringify({ ok: true, data }), {
     headers: { "Content-Type": "application/json" },
   });
 });
@@ -77,7 +71,7 @@ Deno.serve(async (req: Request) => {
   1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
   2. Make an HTTP request:
 
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/stripe-create-customer' \
+  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/start-trip' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
     --header 'Content-Type: application/json' \
     --data '{"name":"Functions"}'

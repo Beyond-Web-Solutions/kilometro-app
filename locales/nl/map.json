@@ -5,6 +5,20 @@
     "dialog-title": "Rit starten",
     "dialog-description": "Selecteer het voertuig voor je rit.",
 
+    "form": {
+      "vehicle": {},
+      "odometer": {
+        "label": "Odometer"
+      },
+      "type": {
+        "label": "type",
+        "options": {
+          "private": "Privé",
+          "business": "Zakelijk"
+        }
+      }
+    },
+
     "cancel": "Annuleer",
     "start": "Start"
   },
@@ -16,5 +30,16 @@
 
     "cancel": "Annuleer",
     "stop": "Stop"
+  },
+  "current-trip": {
+    "current-rit": "Huidige rit",
+    "stop": "Stop rit",
+
+    "unknown-location": "Onbekende locatie",
+
+    "type": {
+      "private": "Privé",
+      "business": "Zakelijk"
+    }
   }
 }

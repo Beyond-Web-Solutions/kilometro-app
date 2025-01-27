@@ -11,8 +11,9 @@ TaskManager.defineTask<{ locations: LocationObject[] }>(
       return;
     }
 
-    if (data) {
-      const store = useCurrentTripStore.getState();
+    const store = useCurrentTripStore.getState();
+
+    if (data && store.isTracking) {
       const location = data.locations[0];
 
       if (location.coords.speed) {
