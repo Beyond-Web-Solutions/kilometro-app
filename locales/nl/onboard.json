@@ -30,5 +30,21 @@
     "links": {
       "back": "Terug"
     }
+  },
+  "permissions": {
+    "title": "Toegang tot je locatie",
+    "description": "Om je ritten te kunnen volgen, hebben we toegang tot je locatie nodig. Kilometro houdt alleen je locatie bij tijdens je ritten en deelt je locatie niet met derden.",
+
+    "dialog": {
+      "title": "Locatie toegang is vereist",
+      "description": "Om gebruik te kunnen maken van Kilometro, moet je toegang geven tot je locatie. Ga naar instellingen en geef toestemming om door te gaan.",
+
+      "close": "Sluiten",
+      "settings": "Open instellingen"
+    },
+
+    "buttons": {
+      "give-permission": "Geef toestemming"
+    }
   }
 }

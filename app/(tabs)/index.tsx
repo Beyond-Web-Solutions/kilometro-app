@@ -1,10 +1,14 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView from "react-native-maps";
 import { useCallback, useState } from "react";
 import { StartTripFab } from "@/components/map/start-trip-fab";
 import { FAB } from "react-native-paper";
+import { useBackgroundPermissions } from "expo-location";
 
 export default function MapPage() {
+  const scheme = useColorScheme();
+
+  const [permission, requestPermission] = useBackgroundPermissions();
   const [followsUser, setFollowsUser] = useState(false);
 
   const toggleFollowsUser = useCallback(() => {
@@ -17,6 +21,7 @@ export default function MapPage() {
         showsCompass
         showsUserLocation
         followsUserLocation={followsUser}
+        userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
         style={styles.map}
       />
       <View style={styles.actions_container}>
@@ -28,7 +33,7 @@ export default function MapPage() {
             onPress={toggleFollowsUser}
           />
         </View>
-        <StartTripFab />
+        <StartTripFab permission={permission} />
       </View>
     </View>
   );
@@ -39,8 +44,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    width: "100%",
-    height: "100%",
+    ...StyleSheet.absoluteFillObject,
   },
   actions_container: {
     gap: 8,

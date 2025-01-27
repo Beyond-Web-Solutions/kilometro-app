@@ -2,12 +2,15 @@ import { router, Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import { TabBar } from "@/components/nav/tabs";
 import { useAuthState } from "@/hooks/use-auth-state";
-import { useDefaultOrganization } from "@/hooks/use-default-org.ts";
+import { useDefaultOrganization } from "@/hooks/use-default-org";
 import { useEffect } from "react";
-import { useOrganizations } from "@/hooks/use-organizations.ts";
+import { useOrganizations } from "@/hooks/use-organizations";
+import { useLocationsPermissions } from "@/hooks/use-locations-permissions";
 
 export default function TabsLayout() {
   useAuthState();
+  const { data: permissions, isFetched: isPermissionsFetched } =
+    useLocationsPermissions();
 
   const { isFetched: isDefaultOrganizationFetched, data: defaultOrganization } =
     useDefaultOrganization();
@@ -28,6 +31,13 @@ export default function TabsLayout() {
     organizations,
     isOrganizationsFetched,
   ]);
+
+  // make sure the user has given location permissions
+  useEffect(() => {
+    if (!permissions?.granted && isPermissionsFetched) {
+      return router.replace("/onboard/permissions");
+    }
+  }, [permissions, isPermissionsFetched]);
 
   return (
     <Tabs
