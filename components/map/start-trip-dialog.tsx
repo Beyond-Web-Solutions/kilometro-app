@@ -5,13 +5,12 @@ import { ScrollView, StyleSheet } from "react-native";
 import { useVehicles } from "@/hooks/use-vehicles";
 import { useCurrentTripStore } from "@/store/current-trip";
 import { LOCATION_TASK_NAME } from "@/constants/strings";
-import * as Location from "expo-location";
 import { LocationActivityType } from "expo-location";
+import * as Location from "expo-location";
+import { useStartTripMutation } from "@/hooks/use-start-trip";
 
 export function StartTripDialog() {
   const { t } = useTranslation("map", { keyPrefix: "start-trip" });
-  const { data, isSuccess } = useVehicles();
-  const { isTracking, startTrip } = useCurrentTripStore();
 
   const [selectedVehicle, setSelectedVehicle] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -20,27 +19,28 @@ export function StartTripDialog() {
     setIsVisible((prevState) => !prevState);
   }, []);
 
+  const { mutate, isPending } = useStartTripMutation(handleToggleDialog);
+  const { data, isSuccess } = useVehicles();
+  const { isTracking } = useCurrentTripStore();
+
   const handleStartTrip = useCallback(async () => {
-    if (selectedVehicle) {
-      const { status: foregroundStatus } =
-        await Location.requestForegroundPermissionsAsync();
-      if (foregroundStatus === "granted") {
-        const { status: backgroundStatus } =
-          await Location.requestBackgroundPermissionsAsync();
-        if (backgroundStatus === "granted") {
-          setIsVisible(false);
+    const vehicle = data?.find((vehicle) => vehicle.id === selectedVehicle);
 
-          startTrip(selectedVehicle);
+    const location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.BestForNavigation,
+    });
 
-          await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-            activityType: LocationActivityType.AutomotiveNavigation,
-            showsBackgroundLocationIndicator: true,
-            accuracy: Location.Accuracy.BestForNavigation,
-          });
-        }
-      }
+    if (vehicle) {
+      mutate({
+        vehicle_id: vehicle.id,
+        start_odometer: vehicle.odometer,
+        start_point: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        },
+      });
     }
-  }, [selectedVehicle, setIsVisible]);
+  }, [data, selectedVehicle]);
 
   return (
     <>
@@ -53,7 +53,7 @@ export function StartTripDialog() {
       />
       <Portal>
         <Dialog visible={isVisible} onDismiss={handleToggleDialog}>
-          <Dialog.Icon icon="car" />
+          <Dialog.Icon icon="car-select" />
           <Dialog.Title style={styles.text}>{t("dialog-title")}</Dialog.Title>
           {data && (
             <Dialog.ScrollArea style={styles.scroll_container}>
@@ -80,7 +80,8 @@ export function StartTripDialog() {
             <Button
               onPress={handleStartTrip}
               mode="contained"
-              disabled={!selectedVehicle}
+              loading={isPending}
+              disabled={!selectedVehicle || isPending}
             >
               {t("start")}
             </Button>

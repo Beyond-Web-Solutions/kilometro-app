@@ -1,13 +1,26 @@
 import { StyleSheet, useColorScheme, View } from "react-native";
-import MapView from "react-native-maps";
-import { useCallback, useState } from "react";
+import MapView, { Polyline } from "react-native-maps";
+import { useCallback, useEffect, useState } from "react";
 import { StartTripDialog } from "@/components/map/start-trip-dialog";
-import { FAB } from "react-native-paper";
+import { FAB, useTheme } from "react-native-paper";
+import { useCurrentTripStore } from "@/store/current-trip";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { TripBottomSheet } from "@/components/map/trip-bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function MapPage() {
   const scheme = useColorScheme();
+  const { colors } = useTheme();
+
+  const { route, isTracking } = useCurrentTripStore();
 
   const [followsUser, setFollowsUser] = useState(false);
+
+  useEffect(() => {
+    if (isTracking) {
+      setFollowsUser(true);
+    }
+  }, [isTracking]);
 
   const toggleFollowsUser = useCallback(() => {
     setFollowsUser((prevState) => !prevState);
@@ -15,25 +28,43 @@ export default function MapPage() {
 
   return (
     <View style={styles.container}>
-      <MapView
-        showsCompass
-        showsUserLocation
-        followsUserLocation={followsUser}
-        userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
-        style={styles.map}
-      />
-      <View style={styles.actions_container}>
-        <View style={styles.secondary_actions_container}>
-          <FAB size="small" icon="map-marker-distance" variant="secondary" />
-          <FAB
-            size="small"
-            icon="target"
-            variant="secondary"
-            onPress={toggleFollowsUser}
-          />
-        </View>
-        <StartTripDialog />
-      </View>
+      <GestureHandlerRootView>
+        <BottomSheetModalProvider>
+          <MapView
+            showsCompass
+            showsUserLocation
+            showsScale
+            followsUserLocation={followsUser}
+            userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
+            style={styles.map}
+          >
+            {route.length > 0 && (
+              <Polyline
+                coordinates={route}
+                strokeColor={colors.primary}
+                strokeWidth={5}
+              />
+            )}
+          </MapView>
+          <View style={styles.actions_container}>
+            <View style={styles.secondary_actions_container}>
+              <FAB
+                size="small"
+                icon="map-marker-distance"
+                variant="secondary"
+              />
+              <FAB
+                size="small"
+                icon="target"
+                variant="secondary"
+                onPress={toggleFollowsUser}
+              />
+            </View>
+            <StartTripDialog />
+          </View>
+          <TripBottomSheet />
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
     </View>
   );
 }

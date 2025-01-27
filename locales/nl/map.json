@@ -7,5 +7,14 @@
 
     "cancel": "Annuleer",
     "start": "Start"
+  },
+  "stop-trip": {
+    "button": "Stop rit",
+
+    "dialog-title": "Rit stoppen",
+    "dialog-description": "Weet je zeker dat je de rit wilt stoppen?",
+
+    "cancel": "Annuleer",
+    "stop": "Stop"
   }
 }

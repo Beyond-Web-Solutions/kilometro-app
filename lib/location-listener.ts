@@ -1,6 +1,7 @@
 import * as TaskManager from "expo-task-manager";
 import { LocationObject } from "expo-location";
 import { LOCATION_TASK_NAME } from "@/constants/strings";
+import { useCurrentTripStore } from "@/store/current-trip";
 
 TaskManager.defineTask<{ locations: LocationObject[] }>(
   LOCATION_TASK_NAME,
@@ -11,11 +12,17 @@ TaskManager.defineTask<{ locations: LocationObject[] }>(
     }
 
     if (data) {
+      const store = useCurrentTripStore.getState();
       const location = data.locations[0];
 
-      console.log("km/u: ", (location.coords.speed ?? 0) * 3.6);
-      console.log(data.locations);
-      // do something with the locations captured in the background
+      if (location.coords.speed) {
+        store.addSpeed(location.coords.speed);
+      }
+
+      store.addRoutePoint({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
     }
   },
 );

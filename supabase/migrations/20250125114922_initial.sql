@@ -134,3 +134,27 @@ create policy "Enable read access for organization members"
     for select
     to authenticated
     using ((organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)));
+
+create policy "Enable insert for organization members"
+    on "public"."trips"
+    as permissive
+    for insert
+    to authenticated
+    with check (
+    vehicle_id IN (SELECT id
+                   FROM vehicles
+                   WHERE organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))
+    );
+
+create policy "Enable read access for organization members"
+    on "public"."trips"
+    as PERMISSIVE
+    for SELECT
+    to authenticated
+    using (
+    vehicle_id IN (SELECT id
+                   FROM vehicles
+                   WHERE organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))
+    );
+
+
