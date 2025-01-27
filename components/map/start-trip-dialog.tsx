@@ -22,11 +22,10 @@ import { TextFormField } from "@/components/_common/form/text-input";
 import { RadioGroupField } from "@/components/_common/form/radio-group";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
+import { useCurrentTrip } from "@/hooks/use-current-trip";
 
 export function StartTripDialog() {
   const queryClient = useQueryClient();
-
-  const { t } = useTranslation("map", { keyPrefix: "start-trip" });
 
   const [isVisible, setIsVisible] = useState(false);
 
@@ -34,8 +33,10 @@ export function StartTripDialog() {
     setIsVisible((prevState) => !prevState);
   }, []);
 
-  const { data, isSuccess } = useVehicles();
-  const { isTracking } = useCurrentTripStore();
+  const { t } = useTranslation("map", { keyPrefix: "start-trip" });
+  const { data: currentTrip } = useCurrentTrip();
+  const { data: vehicles, isSuccess: areVehiclesLoadedSuccessfully } =
+    useVehicles();
 
   const {
     control,
@@ -56,7 +57,7 @@ export function StartTripDialog() {
       accuracy: Location.Accuracy.BestForNavigation,
     });
 
-    const { data, error } = await supabase.functions.invoke("start-trip", {
+    const { error } = await supabase.functions.invoke("start-trip", {
       body: {
         vehicle_id: values.vehicle_id,
         start_odometer: values.start_odometer,
@@ -66,51 +67,35 @@ export function StartTripDialog() {
     });
 
     if (error) {
-      // Handle error
       console.error(error);
+      return;
     }
 
-    // revalidate current trip query
-    console.log(data);
+    setIsVisible(false);
+
+    return queryClient.invalidateQueries({
+      queryKey: ["current-trip"],
+    });
   }, []);
 
   const vehicle_id = watch("vehicle_id");
 
   useEffect(() => {
-    const vehicle = data?.find((vehicle) => vehicle.id === vehicle_id);
+    const vehicle = vehicles?.find((vehicle) => vehicle.id === vehicle_id);
 
     if (vehicle) {
       const odometer = vehicle.odometer / 1000;
       setValue("start_odometer", odometer.toString());
     }
-  }, [vehicle_id, data, setValue]);
-
-  /*const handleStartTrip = useCallback(async () => {
-    const vehicle = data?.find((vehicle) => vehicle.id === selectedVehicle);
-
-    const location = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.BestForNavigation,
-    });
-
-    if (vehicle) {
-      mutate({
-        vehicle_id: vehicle.id,
-        start_odometer: vehicle.odometer,
-        start_point: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        },
-      });
-    }
-  }, [data, selectedVehicle]);*/
+  }, [vehicle_id, vehicles, setValue]);
 
   return (
     <>
       <FAB
         icon="car"
-        visible={!isTracking}
+        visible={!currentTrip}
         label={t("button")}
-        disabled={!isSuccess}
+        disabled={!areVehiclesLoadedSuccessfully}
         onPress={handleToggleDialog}
       />
       <Portal>
@@ -125,7 +110,7 @@ export function StartTripDialog() {
                 control={control}
                 name="vehicle_id"
               >
-                {data?.map((vehicle) => (
+                {vehicles?.map((vehicle) => (
                   <RadioButton.Item
                     mode="android"
                     style={styles.radio_button}

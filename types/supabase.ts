@@ -40,6 +40,7 @@ export type Database = {
           id: string
           is_default: boolean
           organization_id: string | null
+          role: Database["public"]["Enums"]["organization_roles"]
           user_id: string | null
         }
         Insert: {
@@ -47,6 +48,7 @@ export type Database = {
           id?: string
           is_default?: boolean
           organization_id?: string | null
+          role?: Database["public"]["Enums"]["organization_roles"]
           user_id?: string | null
         }
         Update: {
@@ -54,6 +56,7 @@ export type Database = {
           id?: string
           is_default?: boolean
           organization_id?: string | null
+          role?: Database["public"]["Enums"]["organization_roles"]
           user_id?: string | null
         }
         Relationships: [
@@ -98,6 +101,7 @@ export type Database = {
           avg_speed: number | null
           codec: string | null
           distance: number | null
+          end_address: string | null
           end_odometer: number | null
           end_place_id: string | null
           end_point: unknown | null
@@ -105,10 +109,12 @@ export type Database = {
           id: string
           is_private: boolean | null
           max_speed: number | null
+          start_address: string | null
           start_odometer: number
           start_place_id: string | null
           start_point: unknown
           started_at: string | null
+          status: Database["public"]["Enums"]["trip_status"]
           user_id: string | null
           vehicle_id: string | null
         }
@@ -116,6 +122,7 @@ export type Database = {
           avg_speed?: number | null
           codec?: string | null
           distance?: number | null
+          end_address?: string | null
           end_odometer?: number | null
           end_place_id?: string | null
           end_point?: unknown | null
@@ -123,10 +130,12 @@ export type Database = {
           id?: string
           is_private?: boolean | null
           max_speed?: number | null
+          start_address?: string | null
           start_odometer: number
           start_place_id?: string | null
           start_point: unknown
           started_at?: string | null
+          status?: Database["public"]["Enums"]["trip_status"]
           user_id?: string | null
           vehicle_id?: string | null
         }
@@ -134,6 +143,7 @@ export type Database = {
           avg_speed?: number | null
           codec?: string | null
           distance?: number | null
+          end_address?: string | null
           end_odometer?: number | null
           end_place_id?: string | null
           end_point?: unknown | null
@@ -141,10 +151,12 @@ export type Database = {
           id?: string
           is_private?: boolean | null
           max_speed?: number | null
+          start_address?: string | null
           start_odometer?: number
           start_place_id?: string | null
           start_point?: unknown
           started_at?: string | null
+          status?: Database["public"]["Enums"]["trip_status"]
           user_id?: string | null
           vehicle_id?: string | null
         }
@@ -212,7 +224,8 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      organization_roles: "driver" | "admin"
+      trip_status: "done" | "ongoing"
     }
     CompositeTypes: {
       [_ in never]: never

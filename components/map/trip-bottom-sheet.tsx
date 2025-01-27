@@ -13,22 +13,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
 import { supabase } from "@/lib/supabase";
 import { encode } from "@googlemaps/polyline-codec";
+import { useCurrentTrip } from "@/hooks/use-current-trip";
+import { formatDateTime } from "@/utils/format";
 
 export function TripBottomSheet() {
   const ref = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["7.5%", "40%"], []);
+  const snapPoints = useMemo(() => ["10%"], []);
 
   const { t } = useTranslation("map", { keyPrefix: "current-trip" });
   const { colors } = useTheme();
-  const { isTracking, route, stopTrip, tripId, speed } = useCurrentTripStore();
+  const { data: trip } = useCurrentTrip();
 
   useEffect(() => {
-    if (isTracking) {
+    if (trip) {
       ref.current?.present();
     } else {
       ref.current?.dismiss();
     }
-  }, [isTracking]);
+  }, [trip]);
 
   const {
     control,
@@ -39,34 +41,7 @@ export function TripBottomSheet() {
     defaultValues: { type: "business" },
   });
 
-  const onSubmit = useCallback(
-    async (values: StopTripSchema) => {
-      if (!tripId) return;
-
-      const location = await getCurrentPositionAsync({
-        accuracy: LocationAccuracy.BestForNavigation,
-      });
-
-      const codec = encode(
-        route.map((point) => [point.latitude, point.longitude]),
-      );
-
-      const { data, error } = await supabase
-        .from("trips")
-        .update({
-          codec,
-          start_point: `POINT(${location.coords.longitude} ${location.coords.latitude})`,
-          ended_at: new Date().toISOString(),
-          is_private: values.type === "private",
-        })
-        .eq("id", tripId);
-
-      console.log(error);
-
-      stopTrip();
-    },
-    [route, tripId, speed],
-  );
+  const onSubmit = useCallback(async (values: StopTripSchema) => {}, []);
 
   return (
     <BottomSheetModal
@@ -80,8 +55,12 @@ export function TripBottomSheet() {
         <Text variant="headlineSmall">{t("current-rit")}</Text>
         <Divider style={styles.divider} />
         <List.Item
-          title={t("unknown-location")}
-          description="10:35"
+          title={trip?.start_address ?? t("unknown-location")}
+          description={
+            trip?.started_at
+              ? formatDateTime(trip.started_at)
+              : t("unknown-time")
+          }
           left={(props) => <List.Icon {...props} icon="map-marker" />}
           right={(props) => <List.Icon {...props} icon="menu-right" />}
           onPress={() => {}}
@@ -94,7 +73,7 @@ export function TripBottomSheet() {
           onPress={() => {}}
         />
         <Divider style={styles.divider} />
-
+        <Text>HEllo</Text>
         <Divider style={styles.divider} />
         <Button
           mode="contained-tonal"

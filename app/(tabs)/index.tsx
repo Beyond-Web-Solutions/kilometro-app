@@ -12,15 +12,9 @@ export default function MapPage() {
   const scheme = useColorScheme();
   const { colors } = useTheme();
 
-  const { route, isTracking } = useCurrentTripStore();
+  const { route } = useCurrentTripStore();
 
   const [followsUser, setFollowsUser] = useState(false);
-
-  useEffect(() => {
-    if (isTracking) {
-      setFollowsUser(true);
-    }
-  }, [isTracking]);
 
   const toggleFollowsUser = useCallback(() => {
     setFollowsUser((prevState) => !prevState);
