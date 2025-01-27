@@ -15,7 +15,7 @@ export function OnboardPermissionsDialog() {
   return (
     <>
       <Button mode="contained" onPress={toggleDialog}>
-        {t("buttons.give-permission")}
+        {t("buttons.request-permissions")}
       </Button>
       <Portal>
         <Dialog visible={isOpen} onDismiss={toggleDialog}>

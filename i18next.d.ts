@@ -1,5 +1,6 @@
 import "i18next";
 import common from "./locales/nl/common.json";
+import map from "./locales/nl/map.json";
 import auth from "./locales/nl/auth.json";
 import onboard from "./locales/nl/onboard.json";
 import validation from "./locales/nl/validation.json";
@@ -12,6 +13,7 @@ declare module "i18next" {
     // custom resources type
     resources: {
       common: typeof common;
+      map: typeof map;
       auth: typeof auth;
       onboard: typeof onboard;
       validation: typeof validation;

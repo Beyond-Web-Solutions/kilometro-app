@@ -1,0 +1,11 @@
+{
+  "start-trip": {
+    "button": "Start rit",
+
+    "dialog-title": "Rit starten",
+    "dialog-description": "Selecteer het voertuig voor je rit.",
+
+    "cancel": "Annuleer",
+    "start": "Start"
+  }
+}

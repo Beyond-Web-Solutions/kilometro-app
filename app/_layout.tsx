@@ -10,6 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { darkTheme, lightTheme } from "@/constants/ui/themes";
 import { SplashScreenProvider } from "@/components/splash-screen-provider";
 import "react-native-reanimated";
+import "../lib/location-listener";
 import "../lib/i18n";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

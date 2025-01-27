@@ -37,14 +37,14 @@
 
     "dialog": {
       "title": "Locatie toegang is vereist",
-      "description": "Om gebruik te kunnen maken van Kilometro, moet je toegang geven tot je locatie. Ga naar instellingen en geef toestemming om door te gaan.",
+      "description": "Om je ritten te kunnen volgen, moet je locatie toegang verlenen. Ga naar instellingen en zet locatie op altijd.",
 
       "close": "Sluiten",
       "settings": "Open instellingen"
     },
 
     "buttons": {
-      "give-permission": "Geef toestemming"
+      "request-permissions": "Toegang verlenen tot je locatie"
     }
   }
 }

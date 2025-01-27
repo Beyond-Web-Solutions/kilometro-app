@@ -5,17 +5,25 @@ import { useAuthState } from "@/hooks/use-auth-state";
 import { useDefaultOrganization } from "@/hooks/use-default-org";
 import { useEffect } from "react";
 import { useOrganizations } from "@/hooks/use-organizations";
-import { useLocationsPermissions } from "@/hooks/use-locations-permissions";
+import { useTranslation } from "react-i18next";
+import { useIsBackgroundLocationAvailable } from "@/hooks/use-is-background-location-available";
 
 export default function TabsLayout() {
   useAuthState();
-  const { data: permissions, isFetched: isPermissionsFetched } =
-    useLocationsPermissions();
 
-  const { isFetched: isDefaultOrganizationFetched, data: defaultOrganization } =
-    useDefaultOrganization();
+  const { t } = useTranslation("common");
 
-  const { isFetched: isOrganizationsFetched, data: organizations } =
+  const {
+    data: isBackgroundLocationAvailable,
+    isFetchedAfterMount: isBackgroundLocationAvailbeFetched,
+  } = useIsBackgroundLocationAvailable();
+
+  const {
+    isFetchedAfterMount: isDefaultOrganizationFetched,
+    data: defaultOrganization,
+  } = useDefaultOrganization();
+
+  const { isFetchedAfterMount: isOrganizationsFetched, data: organizations } =
     useOrganizations();
 
   // ensure a user has an organization before they can use the app
@@ -34,10 +42,10 @@ export default function TabsLayout() {
 
   // make sure the user has given location permissions
   useEffect(() => {
-    if (!permissions?.granted && isPermissionsFetched) {
+    if (!isBackgroundLocationAvailable && isBackgroundLocationAvailbeFetched) {
       return router.replace("/onboard/permissions");
     }
-  }, [permissions, isPermissionsFetched]);
+  }, [isBackgroundLocationAvailable, isBackgroundLocationAvailbeFetched]);
 
   return (
     <Tabs
@@ -48,9 +56,9 @@ export default function TabsLayout() {
         key="index"
         name="index"
         options={{
-          title: "Home",
+          title: t("home"),
           tabBarIcon: ({ color, size }) => (
-            <Icon size={size} color={color} source="home" />
+            <Icon size={size} color={color} source="car" />
           ),
         }}
       />
@@ -59,7 +67,7 @@ export default function TabsLayout() {
         key="trips"
         name="trips"
         options={{
-          title: "Ritten",
+          title: t("trips"),
           tabBarIcon: ({ color, size }) => (
             <Icon size={size} color={color} source="history" />
           ),
@@ -70,7 +78,7 @@ export default function TabsLayout() {
         key="settings"
         name="settings"
         options={{
-          title: "Instellingen",
+          title: t("settings"),
           tabBarIcon: ({ color, size }) => (
             <Icon size={size} color={color} source="cog" />
           ),

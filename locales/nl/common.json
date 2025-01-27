@@ -1,4 +1,8 @@
 {
   "back": "Terug",
-  "ok": "OK"
+  "ok": "OK",
+
+  "home": "Home",
+  "trips": "Ritten",
+  "settings": "Instellingen"
 }

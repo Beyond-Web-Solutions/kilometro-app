@@ -84,11 +84,14 @@ CREATE OR REPLACE FUNCTION public.get_default_org()
     RETURNS record
     LANGUAGE sql
     STABLE SECURITY DEFINER
-AS $$
+AS
+$$
 SELECT org
 FROM organizations org
          INNER JOIN organization_members member ON org.id = member.organization_id
-WHERE member.user_id = auth.uid() AND member.is_default = true LIMIT 1;
+WHERE member.user_id = auth.uid()
+  AND member.is_default = true
+LIMIT 1;
 $$
 ;
 
@@ -124,3 +127,10 @@ create policy "Enable read access for authenticated users only"
     for select
     to authenticated
     using (true);
+
+create policy "Enable read access for organization members"
+    on "public"."vehicles"
+    as permissive
+    for select
+    to authenticated
+    using ((organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)));

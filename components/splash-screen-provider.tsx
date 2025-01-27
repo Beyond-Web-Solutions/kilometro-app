@@ -2,22 +2,26 @@ import { ReactNode, useEffect } from "react";
 import { useDefaultOrganization } from "@/hooks/use-default-org";
 import { useUser } from "@/hooks/use-user";
 import * as SplashScreen from "expo-splash-screen";
-import { useLocationsPermissions } from "@/hooks/use-locations-permissions";
 
 interface Props {
   children: ReactNode;
 }
 
 export function SplashScreenProvider({ children }: Props) {
-  const { isFetched: isDefaultOrganizationFetched } = useDefaultOrganization();
-  const { isFetched: isUserFetched } = useUser();
-  const { isFetched: isPermissionsFetched } = useLocationsPermissions();
+  const { isFetchedAfterMount: isDefaultOrganizationFetched } =
+    useDefaultOrganization();
+
+  const { isFetchedAfterMount: isUserFetched } = useUser();
 
   useEffect(() => {
-    if (isUserFetched && isDefaultOrganizationFetched && isPermissionsFetched) {
+    if (isUserFetched && isDefaultOrganizationFetched) {
       SplashScreen.hideAsync();
     }
-  }, [isUserFetched, isDefaultOrganizationFetched, isPermissionsFetched]);
+  }, [isUserFetched, isDefaultOrganizationFetched]);
+
+  if (!isUserFetched || !isDefaultOrganizationFetched) {
+    return null;
+  }
 
   return children;
 }

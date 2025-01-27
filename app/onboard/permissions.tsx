@@ -1,45 +1,46 @@
 import { OnboardAndAuthLayout } from "@/components/_common/layout/onboard";
 import { useTranslation } from "react-i18next";
-import { Button } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
-import { useEffect } from "react";
+import { useCallback } from "react";
+import { Button } from "react-native-paper";
 import {
-  useLocationsPermissions,
-  useLocationsPermissionsMutation,
-} from "@/hooks/use-locations-permissions";
+  requestBackgroundPermissionsAsync,
+  requestForegroundPermissionsAsync,
+  useBackgroundPermissions,
+} from "expo-location";
 import { router } from "expo-router";
-import { useQueryClient } from "@tanstack/react-query";
 import { OnboardPermissionsDialog } from "@/components/onboard/permissions/dialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function OnboardingPermissionsScreen() {
   const queryClient = useQueryClient();
 
   const { t } = useTranslation("onboard", { keyPrefix: "permissions" });
 
-  const { mutate, isPending, isSuccess } =
-    useLocationsPermissionsMutation(queryClient);
+  const [background] = useBackgroundPermissions();
 
-  const { data: permissions, isFetched: isPermissionsFetched } =
-    useLocationsPermissions();
+  const requestPermissions = useCallback(async () => {
+    const { status: foregroundStatus } =
+      await requestForegroundPermissionsAsync();
+    if (foregroundStatus === "granted") {
+      const { status: backgroundStatus } =
+        await requestBackgroundPermissionsAsync();
+      if (backgroundStatus === "granted") {
+        await queryClient.invalidateQueries({
+          queryKey: ["permissions", "background-location"],
+        });
 
-  // redirect users to the home screen if they have already given permissions
-  useEffect(() => {
-    if (permissions?.granted && isPermissionsFetched) {
-      return router.replace("/(tabs)");
+        return router.replace("/(tabs)");
+      }
     }
-  }, [permissions, isPermissionsFetched]);
+  }, []);
 
   return (
     <OnboardAndAuthLayout title={t("title")} description={t("description")}>
       <View style={styles.button_container}>
-        {permissions?.canAskAgain ? (
-          <Button
-            mode="contained"
-            disabled={isPending}
-            loading={isPending}
-            onPress={() => mutate()}
-          >
-            {t("buttons.give-permission")}
+        {background?.canAskAgain ? (
+          <Button mode="contained" onPress={requestPermissions}>
+            {t("buttons.request-permissions")}
           </Button>
         ) : (
           <OnboardPermissionsDialog />
@@ -51,6 +52,7 @@ export default function OnboardingPermissionsScreen() {
 
 const styles = StyleSheet.create({
   button_container: {
+    gap: 8,
     marginTop: 16,
   },
 });

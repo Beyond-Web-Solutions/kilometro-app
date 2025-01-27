@@ -7,5 +7,5 @@ type Store = {
 
 export const useAuthErrorStore = create<Store>((set) => ({
   error: "",
-  setError: (error) => set(() => ({ error })),
+  setError: (error) => set({ error }),
 }));
