@@ -6,6 +6,7 @@ import { useDefaultOrganization } from "@/hooks/use-default-org";
 import { useEffect } from "react";
 import { useOrganizations } from "@/hooks/use-organizations";
 import { useTranslation } from "react-i18next";
+import { BottomTabHeader } from "@/components/nav/bottom-tab-header";
 
 export default function TabsLayout() {
   useAuthState();
@@ -37,7 +38,10 @@ export default function TabsLayout() {
   return (
     <Tabs
       initialRouteName="index"
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: false,
+        header: (props) => <BottomTabHeader {...props} />,
+      }}
       tabBar={(props) => <TabBar {...props} />}
     >
       <Tabs.Screen
@@ -67,6 +71,7 @@ export default function TabsLayout() {
         name="settings"
         options={{
           title: t("settings"),
+          headerShown: true,
           tabBarIcon: ({ color, size }) => (
             <Icon size={size} color={color} source="cog" />
           ),

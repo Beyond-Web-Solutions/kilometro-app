@@ -50,10 +50,6 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
     },
   });
 
-  useEffect(() => {
-    console.log("Start Trip errors: ", errors);
-  }, [errors]);
-
   const onSubmit = useCallback(
     async (values: StartTripFormData) => {
       if (!status?.granted) {

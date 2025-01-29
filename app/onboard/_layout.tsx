@@ -1,12 +1,12 @@
 import { Stack } from "expo-router";
-import { Header } from "@/components/nav/header";
+import { StackHeader } from "@/components/nav/stack-header";
 import { useTranslation } from "react-i18next";
 
 export default function OnboardLayout() {
   const { t } = useTranslation("onboard");
 
   return (
-    <Stack screenOptions={{ header: (props) => <Header {...props} /> }}>
+    <Stack screenOptions={{ header: (props) => <StackHeader {...props} /> }}>
       <Stack.Screen key="index" name="index" options={{ headerShown: false }} />
       <Stack.Screen
         key="create-org"
@@ -20,13 +20,6 @@ export default function OnboardLayout() {
         name="join-org"
         options={{
           headerTitle: t("join.header-title"),
-        }}
-      />
-      <Stack.Screen
-        key="permissions"
-        name="permissions"
-        options={{
-          headerShown: false,
         }}
       />
     </Stack>

@@ -65,6 +65,7 @@ export function EditTripDetailsDialog({
         <Dialog.Title>{t("title")}</Dialog.Title>
         <Dialog.Content>
           <Searchbar
+            autoFocus
             loading={isPending}
             placeholder={t("input.placeholder")}
             value={input}

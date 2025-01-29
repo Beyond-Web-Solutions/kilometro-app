@@ -25,8 +25,11 @@ export async function handleOnStartTripSubmit(values: StartTripFormData) {
     user_id: user.id,
     vehicle_id: values.vehicle_id,
     start_odometer: Number(values.start_odometer) * 1000,
-    start_point: `POINT(${coords.latitude} ${coords.longitude})`,
-    start_place_id: geo.results[0].place_id,
-    start_address: geo.results[0].formatted_address,
+    start_point: {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    },
+    start_place_id: geo?.results[0]?.place_id ?? null,
+    start_address: geo?.results[0]?.formatted_address ?? null,
   });
 }

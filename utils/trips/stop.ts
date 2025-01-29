@@ -69,10 +69,13 @@ export async function handleOnStopTripSubmit(
       start_address: values.start_address,
       start_place_id: values.start_place_id,
 
-      end_address: values.end_place_id,
+      end_address: values.end_address,
       end_place_id: values.end_place_id,
 
-      end_point: `POINT(${values.end_point.latitude} ${values.end_point.longitude})`,
+      end_point: {
+        latitude: values.end_point.latitude,
+        longitude: values.end_point.longitude,
+      },
 
       ended_at: new Date().toISOString(),
       status: "done",

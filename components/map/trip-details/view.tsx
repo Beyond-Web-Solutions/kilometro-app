@@ -26,11 +26,18 @@ export function TripDetails({
   return (
     <View>
       <List.Item
-        title={origin ?? t("unknown-location")}
+        title={origin || t("unknown-location")}
+        titleStyle={{ color: origin ? undefined : colors.error }}
         description={
           departedAt ? formatDateTime(departedAt) : t("unknown-time")
         }
-        left={(props) => <List.Icon {...props} icon="map-marker" />}
+        left={(props) => (
+          <List.Icon
+            {...props}
+            icon="map-marker"
+            color={origin ? props.color : colors.error}
+          />
+        )}
         right={(props) => <List.Icon {...props} icon="menu-right" />}
         onPress={onOriginPress}
       />
@@ -40,9 +47,16 @@ export function TripDetails({
       </View>
 
       <List.Item
-        title={destination ?? t("unknown-location")}
+        title={destination || t("unknown-location")}
+        titleStyle={{ color: destination ? undefined : colors.error }}
         description={arrivedAt ? formatDateTime(arrivedAt) : t("unknown-time")}
-        left={(props) => <List.Icon {...props} icon="map-marker" />}
+        left={(props) => (
+          <List.Icon
+            {...props}
+            icon="map-marker"
+            color={destination ? props.color : colors.error}
+          />
+        )}
         right={(props) => <List.Icon {...props} icon="menu-right" />}
         onPress={onDestinationPress}
       />

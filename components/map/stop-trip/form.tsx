@@ -58,10 +58,6 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
     defaultValues: () => getDefaultValuesForStopTripForm(trip, points, speed),
   });
 
-  useEffect(() => {
-    console.log("Stop trip errors: ", errors);
-  }, [errors]);
-
   const default_odometer = defaultValues?.end_odometer;
   const end_odometer = watch("end_odometer");
 
@@ -88,8 +84,11 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       closeBottomSheet();
       reset();
 
-      return queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: ["current-trip"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["trips"],
       });
     },
     [trip, stopTrip],

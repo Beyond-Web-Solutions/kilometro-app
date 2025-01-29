@@ -104,7 +104,7 @@ export type Database = {
           end_address: string | null
           end_odometer: number | null
           end_place_id: string | null
-          end_point: unknown | null
+          end_point: Json | null
           ended_at: string | null
           id: string
           is_private: boolean | null
@@ -112,7 +112,7 @@ export type Database = {
           start_address: string | null
           start_odometer: number
           start_place_id: string | null
-          start_point: unknown
+          start_point: Json
           started_at: string | null
           status: Database["public"]["Enums"]["trip_status"]
           user_id: string | null
@@ -125,7 +125,7 @@ export type Database = {
           end_address?: string | null
           end_odometer?: number | null
           end_place_id?: string | null
-          end_point?: unknown | null
+          end_point?: Json | null
           ended_at?: string | null
           id?: string
           is_private?: boolean | null
@@ -133,7 +133,7 @@ export type Database = {
           start_address?: string | null
           start_odometer: number
           start_place_id?: string | null
-          start_point: unknown
+          start_point: Json
           started_at?: string | null
           status?: Database["public"]["Enums"]["trip_status"]
           user_id?: string | null
@@ -146,7 +146,7 @@ export type Database = {
           end_address?: string | null
           end_odometer?: number | null
           end_place_id?: string | null
-          end_point?: unknown | null
+          end_point?: Json | null
           ended_at?: string | null
           id?: string
           is_private?: boolean | null
@@ -154,7 +154,7 @@ export type Database = {
           start_address?: string | null
           start_odometer?: number
           start_place_id?: string | null
-          start_point?: unknown
+          start_point?: Json
           started_at?: string | null
           status?: Database["public"]["Enums"]["trip_status"]
           user_id?: string | null

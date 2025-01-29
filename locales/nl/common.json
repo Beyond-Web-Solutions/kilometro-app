@@ -7,7 +7,7 @@
   "settings": "Instellingen",
 
   "trip": {
-    "unknown-location": "Onbekende locatie",
+    "unknown-location": "Onbekende adres",
     "unknown-time": "Onbekende tijd"
   }
 }

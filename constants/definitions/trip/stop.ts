@@ -11,8 +11,8 @@ export const stopTripSchema = z
 
     codec: z.string(),
 
-    max_speed: z.number().positive(),
-    avg_speed: z.number().positive(),
+    max_speed: z.number(),
+    avg_speed: z.number(),
 
     start_place_id: z.string().min(3),
     start_address: z.string().min(3),
