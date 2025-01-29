@@ -10,9 +10,6 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "config": {
-        "googleMapsApiKey": ""
-      },
       "bundleIdentifier": "com.beyondwebsolutions.kilometro"
     },
     "android": {

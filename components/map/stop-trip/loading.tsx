@@ -12,7 +12,7 @@ export function LoadingTripDetails() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 32,
+    paddingVertical: 64,
     justifyContent: "center",
     alignItems: "center",
   },

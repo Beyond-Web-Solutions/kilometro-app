@@ -1,5 +1,5 @@
 import { Button, Dialog, Divider, FAB, Portal } from "react-native-paper";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import {
@@ -19,6 +19,7 @@ import { useCurrentTripStore } from "@/store/current-trip";
 import { SelectVehicleInput } from "@/components/map/start-trip/select-vehicle";
 import { router } from "expo-router";
 import { supabase } from "@/lib/supabase";
+import { handleOnStartTripSubmit } from "@/utils/trips/start";
 
 interface Props {
   isVisible: boolean;
@@ -40,7 +41,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
     watch,
     setValue,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<StartTripFormData>({
     resolver: zodResolver(startTripSchema),
     defaultValues: {
@@ -48,6 +49,10 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
       vehicle_id: "",
     },
   });
+
+  useEffect(() => {
+    console.log("Start Trip errors: ", errors);
+  }, [errors]);
 
   const onSubmit = useCallback(
     async (values: StartTripFormData) => {
@@ -59,18 +64,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
         }
       }
 
-      const { coords } = await getCurrentPositionAsync({
-        accuracy: LocationAccuracy.BestForNavigation,
-      });
-
-      const { error } = await supabase.functions.invoke("start-trip", {
-        body: {
-          vehicle_id: values.vehicle_id,
-          start_odometer: values.start_odometer,
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        },
-      });
+      const { error } = await handleOnStartTripSubmit(values);
 
       if (error) {
         console.error(error);

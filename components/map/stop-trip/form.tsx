@@ -1,10 +1,10 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useForm } from "react-hook-form";
-import { Tables } from "@/supabase/functions/stop-trip/supabase/types";
+import { Tables } from "@/types/supabase";
 import { TripDetails } from "@/components/map/trip-details";
-import { Button, Divider } from "react-native-paper";
+import { Button, Divider, IconButton, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   StopTripFormData,
   stopTripSchema,
@@ -12,59 +12,89 @@ import {
 import { SegmentedButtonsField } from "@/components/_common/form/segmented-buttons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentTripStore } from "@/store/current-trip";
-import { PolyUtil, SphericalUtil } from "node-geometry-library";
 import { TextFormField } from "@/components/_common/form/text-input";
-import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
-import { useBottomSheetInternal } from "@gorhom/bottom-sheet";
+import { formatDistance } from "@/utils/format";
+import { LoadingTripDetails } from "@/components/map/stop-trip/loading";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  getDefaultValuesForStopTripForm,
+  handleOnStopTripSubmit,
+} from "@/utils/trips/stop";
 
 interface Props {
   trip: Tables<"trips">;
+  closeBottomSheet: () => void;
 }
 
-export function StopTripForm({ trip }: Props) {
+export function StopTripForm({ trip, closeBottomSheet }: Props) {
+  const queryClient = useQueryClient();
+
   const { t } = useTranslation("map", { keyPrefix: "stop-trip-sheet.form" });
 
-  const { route } = useCurrentTripStore();
+  const { route, speed, stopTrip } = useCurrentTripStore();
 
-  const points = route.map((point) => ({
-    lat: point.latitude,
-    lng: point.longitude,
-  }));
+  const points = useMemo(
+    () =>
+      route.map((point) => ({
+        lat: point.latitude,
+        lng: point.longitude,
+      })),
+    [route],
+  );
 
   const {
     control,
+    watch,
+    setValue,
+    reset,
     getValues,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, defaultValues, isLoading, errors },
   } = useForm<StopTripFormData>({
     resolver: zodResolver(stopTripSchema),
-    defaultValues: async () => {
-      const distanceInKm = SphericalUtil.computeLength(points) / 1000;
-      const roundedDistance = Math.round(distanceInKm * 10) / 10;
-
-      const { coords } = await getCurrentPositionAsync({
-        accuracy: LocationAccuracy.BestForNavigation,
-      });
-
-      return {
-        start_address: trip.start_address ?? t("unknown-address"),
-        start_place_id: trip.start_place_id ?? "",
-
-        end_address: trip.start_address ?? t("unknown-address"),
-        end_place_id: trip.start_place_id ?? "",
-
-        codec: PolyUtil.encode(points),
-        distance: String(roundedDistance),
-
-        start_odometer: String(trip.start_odometer ?? 0),
-        end_odometer: String((trip.start_odometer ?? 0) + roundedDistance),
-
-        type: trip.is_private ? "private" : "business",
-      };
-    },
+    defaultValues: () => getDefaultValuesForStopTripForm(trip, points, speed),
   });
 
-  const onSubmit = useCallback((data: StopTripFormData) => {}, []);
+  useEffect(() => {
+    console.log("Stop trip errors: ", errors);
+  }, [errors]);
+
+  const default_odometer = defaultValues?.end_odometer;
+  const end_odometer = watch("end_odometer");
+
+  useEffect(() => {
+    const start_odometer = getValues("start_odometer");
+
+    if (end_odometer > start_odometer) {
+      setValue("distance", end_odometer - start_odometer);
+    } else {
+      setValue("distance", 0);
+    }
+  }, [end_odometer]);
+
+  const onSubmit = useCallback(
+    async (values: StopTripFormData) => {
+      const { error } = await handleOnStopTripSubmit(values, trip.id, points);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      stopTrip();
+      closeBottomSheet();
+      reset();
+
+      return queryClient.invalidateQueries({
+        queryKey: ["current-trip"],
+      });
+    },
+    [trip, stopTrip],
+  );
+
+  if (isLoading) {
+    return <LoadingTripDetails />;
+  }
 
   return (
     <View style={styles.container}>
@@ -86,22 +116,19 @@ export function StopTripForm({ trip }: Props) {
           ]}
         />
       </View>
+
       <Divider horizontalInset />
 
       <TripDetails
-        origin={getValues("start_address")}
-        destination={getValues("end_address")}
+        origin={watch("start_address") || t("unknown-address")}
+        destination={watch("end_address") || t("unknown-address")}
         departedAt={trip.started_at}
         arrivedAt={new Date().toISOString()}
       />
 
       <Divider horizontalInset />
       <View style={[styles.content, styles.container]}>
-        <KeyboardAvoidingView
-          style={styles.odometers_row}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          keyboardVerticalOffset={100}
-        >
+        <View style={styles.odometers_row}>
           <View style={styles.odometers_container}>
             <TextFormField<StopTripFormData>
               control={control}
@@ -121,20 +148,25 @@ export function StopTripForm({ trip }: Props) {
               returnKeyType="done"
             />
           </View>
-        </KeyboardAvoidingView>
-        <TextFormField<StopTripFormData>
-          disabled
-          control={control}
-          mode="outlined"
-          name="distance"
-          label={t("distance.label")}
-        />
+          {!!default_odometer && end_odometer !== default_odometer && (
+            <IconButton
+              icon="reload"
+              onPress={() => setValue("end_odometer", default_odometer)}
+            />
+          )}
+        </View>
+        <Text>
+          {t("total-distance", {
+            distance: formatDistance(watch("distance")),
+          })}
+        </Text>
       </View>
 
       <Divider horizontalInset />
       <View style={[styles.content, styles.submit_button_container]}>
         <Button
-          mode="contained-tonal"
+          mode="contained"
+          icon="car-off"
           disabled={isSubmitting}
           loading={isSubmitting}
           onPress={handleSubmit(onSubmit)}
@@ -160,6 +192,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   odometers_row: {
+    alignItems: "center",
     flexDirection: "row",
     gap: 8,
   },

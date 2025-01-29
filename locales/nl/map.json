@@ -20,9 +20,7 @@
     "form": {
       "unknown-address": "Onbekende address",
 
-      "distance": {
-        "label": "Afstand"
-      },
+      "total-distance": "Totale afstand: {{distance}}",
 
       "start_odometer": {
         "label": "Start kilometerstand"

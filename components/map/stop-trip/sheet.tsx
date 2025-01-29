@@ -31,7 +31,12 @@ export function StopTripSheet({ isVisible, hideSheet }: Props) {
     >
       <BottomSheetView>
         {isPending && <LoadingTripDetails />}
-        {data && <StopTripForm trip={data} />}
+        {data && (
+          <StopTripForm
+            trip={data}
+            closeBottomSheet={() => ref.current?.dismiss()}
+          />
+        )}
       </BottomSheetView>
     </BottomSheetModal>
   );

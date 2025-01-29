@@ -7,6 +7,13 @@ export function formatOdometer(odometer: number | null, showUnit?: boolean) {
   }).format((odometer ?? 0) / 1000);
 }
 
+export function formatDistance(km: number) {
+  return Intl.NumberFormat(i18n.language, {
+    style: "unit",
+    unit: "kilometer",
+  }).format(Math.round(km * 10) / 10);
+}
+
 export function formatDateTime(dateStr: string) {
   const date = new Date(dateStr);
 

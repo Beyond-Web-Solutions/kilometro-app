@@ -29,7 +29,7 @@ export function TextFormField<T extends FieldValues>({
     <View>
       <TextInput
         ref={field.ref}
-        value={field.value}
+        value={String(field.value)}
         onChangeText={field.onChange}
         error={Boolean(fieldState.error)}
         {...props}
