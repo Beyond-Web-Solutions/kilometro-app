@@ -4,11 +4,14 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { createClient } from "./supabase/client.ts";
+import { getUser } from "./utils/get-user.ts";
+import { getDistanceMatrix, reverseGeocode } from "./utils/g-maps-api.ts";
 
 Deno.serve(async (req) => {
   const {
     id,
+    distance,
     end_odometer,
     latitude,
     longitude,
@@ -18,34 +21,8 @@ Deno.serve(async (req) => {
     max_speed,
   } = await req.json();
 
-  console.log({
-    id,
-    end_odometer,
-    latitude,
-    longitude,
-    type,
-    codec,
-    avg_speed,
-    max_speed,
-  });
-
-  const mapsApiKey = Deno.env.get("GOOGLE_MAPS_API_KEY");
-
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-    {
-      global: {
-        headers: { Authorization: req.headers.get("Authorization")! },
-      },
-    },
-  );
-
-  const token = req.headers.get("Authorization")?.replace("Bearer ", "");
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser(token);
+  const supabase = createClient(req);
+  const user = await getUser(req);
 
   if (!user) {
     return new Response(
@@ -54,12 +31,8 @@ Deno.serve(async (req) => {
     );
   }
 
-  const response = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&result_type=street_address&key=${mapsApiKey}`,
-  );
-
-  const geodata = await response.json();
-  const address = geodata.results[0];
+  const geocoderResult = await reverseGeocode(latitude, longitude);
+  const address = geocoderResult.results[0];
 
   const { error } = await supabase
     .from("trips")
@@ -69,9 +42,9 @@ Deno.serve(async (req) => {
       avg_speed,
       max_speed,
       end_place_id: address?.place_id ?? null,
-      end_point: `POINT(${address?.geometry.location.lat ?? latitude} ${address?.geometry.location.lng ?? longitude})`,
+      end_point: `POINT(${address?.geometry?.location?.lat ?? latitude} ${address?.geometry?.location?.lng ?? longitude})`,
       end_address: address?.formatted_address ?? null,
-      distance: 0, // todo use distance matrix api
+      distance,
       ended_at: new Date().toISOString(),
       status: "done",
       is_private: type === "private",

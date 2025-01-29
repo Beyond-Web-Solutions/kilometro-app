@@ -16,8 +16,8 @@ import * as Location from "expo-location";
 import { supabase } from "@/lib/supabase";
 import { useCurrentTripStore } from "@/store/current-trip";
 import { getAverage } from "@/utils/math";
-import { encode } from "@googlemaps/polyline-codec";
 import { useQueryClient } from "@tanstack/react-query";
+import { PolyUtil, SphericalUtil, MathUtil } from "node-geometry-library";
 
 export function TripBottomSheet() {
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export function TripBottomSheet() {
   const { t } = useTranslation("map", { keyPrefix: "current-trip" });
   const { colors } = useTheme();
 
-  const { speed, route, stopTrip } = useCurrentTripStore();
+  const { route, speed, stopTrip } = useCurrentTripStore();
   const { data: trip } = useCurrentTrip();
 
   useEffect(() => {
@@ -55,18 +55,26 @@ export function TripBottomSheet() {
         accuracy: Location.Accuracy.BestForNavigation,
       });
 
+      const speeds = speed.filter((speed) => !!speed) as number[];
+      const points = route.map((point) => ({
+        lat: point.latitude,
+        lng: point.longitude,
+      }));
+
+      const codec = PolyUtil.encode(points);
+      const distance = SphericalUtil.computeLength(points);
+
       const { error } = await supabase.functions.invoke("stop-trip", {
         body: {
           id: trip.id,
           end_odometer: 0,
           latitude: coords.latitude,
-          longitude: coords.latitude,
+          longitude: coords.longitude,
           type: values.type,
-          codec: encode(
-            route.map((point) => [point.longitude, point.latitude]),
-          ),
-          avg_speed: getAverage(speed),
-          max_speed: Math.max(...speed),
+          codec,
+          distance: Math.trunc(distance),
+          avg_speed: getAverage(speeds),
+          max_speed: Math.max(...speeds),
         },
       });
 
@@ -102,13 +110,6 @@ export function TripBottomSheet() {
               ? formatDateTime(trip.started_at)
               : t("unknown-time")
           }
-          left={(props) => <List.Icon {...props} icon="map-marker" />}
-          right={(props) => <List.Icon {...props} icon="menu-right" />}
-          onPress={() => {}}
-        />
-        <List.Item
-          title={t("unknown-location")}
-          description="11:45"
           left={(props) => <List.Icon {...props} icon="map-marker" />}
           right={(props) => <List.Icon {...props} icon="menu-right" />}
           onPress={() => {}}

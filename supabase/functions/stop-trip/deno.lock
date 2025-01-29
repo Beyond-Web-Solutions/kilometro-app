@@ -1,0 +1,11 @@
+{
+  "version": "4",
+  "specifiers": {
+    "npm:@types/google.maps@3.43.0": "3.43.0"
+  },
+  "npm": {
+    "@types/google.maps@3.43.0": {
+      "integrity": "sha512-+NkrD4MqwVD902M+1CzbQbGjudVvcSgbHfucodNkQfm/A68Eq57IBh4e6yjw9cv+T8CXGxkuUJ2hN9XwvZPh7w=="
+    }
+  }
+}

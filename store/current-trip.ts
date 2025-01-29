@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { LatLng } from "react-native-maps";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LatLng } from "react-native-maps";
 
 type Store = {
   isTracking: boolean;
@@ -10,7 +10,7 @@ type Store = {
   speed: number[];
 
   setIsTracking: (isTracking: boolean) => void;
-  addRoutePoint: (point: LatLng) => void;
+  addWaypoint: (point: LatLng) => void;
   addSpeed: (speed: number) => void;
 
   stopTrip: () => void;
@@ -24,10 +24,13 @@ export const useCurrentTripStore = create(
       speed: [],
 
       setIsTracking: (isTracking) => set({ isTracking }),
-      stopTrip: () => set({ route: [], speed: [], isTracking: false }),
-      addSpeed: (speed) => set((store) => ({ speed: [...store.speed, speed] })),
-      addRoutePoint: (point) =>
-        set((store) => ({ route: [...store.route, point] })),
+      stopTrip: () => set({ route: [], isTracking: false }),
+
+      addSpeed: (speed) => set((state) => ({ speed: [...state.speed, speed] })),
+      addWaypoint: (location: LatLng) =>
+        set((state) => ({
+          route: [...state.route, location],
+        })),
     }),
     {
       name: "current-trip",

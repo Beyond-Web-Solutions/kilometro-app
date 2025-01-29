@@ -1,10 +1,10 @@
 import * as TaskManager from "expo-task-manager";
 import { LocationObject } from "expo-location";
-import { LOCATION_TASK_NAME } from "@/constants/strings";
+import { LOCATION_TRACKING } from "@/constants/strings";
 import { useCurrentTripStore } from "@/store/current-trip";
 
 TaskManager.defineTask<{ locations: LocationObject[] }>(
-  LOCATION_TASK_NAME,
+  LOCATION_TRACKING,
   async ({ data, error }) => {
     if (error) {
       console.error(error);
@@ -16,14 +16,14 @@ TaskManager.defineTask<{ locations: LocationObject[] }>(
     if (data && store.isTracking) {
       const location = data.locations[0];
 
-      if (location.coords.speed) {
-        store.addSpeed(location.coords.speed);
-      }
-
-      store.addRoutePoint({
+      store.addWaypoint({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       });
+
+      if (location.coords.speed) {
+        store.addSpeed(location.coords.speed);
+      }
     }
   },
 );

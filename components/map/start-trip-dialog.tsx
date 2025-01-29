@@ -23,7 +23,7 @@ import { RadioGroupField } from "@/components/_common/form/radio-group";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCurrentTrip } from "@/hooks/use-current-trip";
-import { LOCATION_TASK_NAME } from "@/constants/strings";
+import { LOCATION_TRACKING } from "@/constants/strings";
 import { useCurrentTripStore } from "@/store/current-trip";
 
 export function StartTripDialog() {
@@ -83,7 +83,7 @@ export function StartTripDialog() {
       queryKey: ["current-trip"],
     });
 
-    return Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+    return Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
       accuracy: LocationAccuracy.BestForNavigation,
       activityType: LocationActivityType.AutomotiveNavigation,
       showsBackgroundLocationIndicator: true,
