@@ -18,7 +18,6 @@ export function LocationSubscriber() {
           accuracy: LocationAccuracy.BestForNavigation,
         },
         (location) => {
-          console.log(location);
           if (location.coords.speed) {
             addSpeed(location.coords.speed);
           }

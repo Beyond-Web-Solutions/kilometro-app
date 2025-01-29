@@ -4,11 +4,11 @@ import { formatDateTime } from "@/utils/format";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  origin?: string;
-  departedAt?: string;
+  origin: string | null | undefined;
+  departedAt: string | null;
 
-  destination?: string;
-  arrivedAt?: string;
+  destination: string | null | undefined;
+  arrivedAt: string | null;
 }
 export function TripDetails({
   origin,

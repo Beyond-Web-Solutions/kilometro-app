@@ -1,31 +1,17 @@
 import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView, { Polyline } from "react-native-maps";
-import { useCallback, useEffect, useState } from "react";
 import { FAB, useTheme } from "react-native-paper";
 import { useCurrentTripStore } from "@/store/current-trip";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { TripBottomSheet } from "@/components/map/trip-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { StartTripDialog } from "@/components/map/start-trip/dialog";
 import { LocationSubscriber } from "@/components/map/location-subscriber";
+import { ToggleTripFab } from "@/components/map/toggle-trip-fab";
 
 export default function MapPage() {
   const scheme = useColorScheme();
 
   const { colors } = useTheme();
-  const { route, isTracking } = useCurrentTripStore();
-
-  const [followsUser, setFollowsUser] = useState(false);
-
-  useEffect(() => {
-    if (isTracking) {
-      setFollowsUser(true);
-    }
-  }, [isTracking]);
-
-  const toggleFollowsUser = useCallback(() => {
-    setFollowsUser((prevState) => !prevState);
-  }, []);
+  const { route } = useCurrentTripStore();
 
   return (
     <View style={styles.container}>
@@ -36,8 +22,6 @@ export default function MapPage() {
             showsUserLocation
             showsScale
             showsTraffic
-            followsUserLocation={followsUser}
-            onPanDrag={toggleFollowsUser}
             userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
             style={styles.map}
           >
@@ -56,16 +40,10 @@ export default function MapPage() {
                 icon="map-marker-distance"
                 variant="secondary"
               />
-              <FAB
-                size="small"
-                icon="target"
-                variant="secondary"
-                onPress={toggleFollowsUser}
-              />
+              <FAB size="small" icon="target" variant="secondary" />
             </View>
-            <StartTripDialog />
+            <ToggleTripFab />
           </View>
-          <TripBottomSheet />
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
       <LocationSubscriber />

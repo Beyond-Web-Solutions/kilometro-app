@@ -1,12 +1,10 @@
 import { Button, Dialog, Divider, FAB, Portal } from "react-native-paper";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import {
-  geocodeAsync,
   getCurrentPositionAsync,
   LocationAccuracy,
-  reverseGeocodeAsync,
   useForegroundPermissions,
 } from "expo-location";
 import { useForm } from "react-hook-form";
@@ -22,25 +20,26 @@ import { SelectVehicleInput } from "@/components/map/start-trip/select-vehicle";
 import { router } from "expo-router";
 import { supabase } from "@/lib/supabase";
 
-export function StartTripDialog() {
+interface Props {
+  isVisible: boolean;
+  hideDialog: () => void;
+}
+
+export function StartTripDialog({ isVisible, hideDialog }: Props) {
   const queryClient = useQueryClient();
 
-  const [isVisible, setIsVisible] = useState(false);
   const [status, request] = useForegroundPermissions();
 
-  const handleToggleDialog = useCallback(() => {
-    setIsVisible((prevState) => !prevState);
-  }, []);
+  const { t } = useTranslation("map", { keyPrefix: "start-trip-dialog" });
 
-  const { t } = useTranslation("map", { keyPrefix: "start-trip" });
-
-  const { isTracking, startTrip } = useCurrentTripStore();
+  const { startTrip } = useCurrentTripStore();
 
   const {
     control,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { isSubmitting },
   } = useForm<StartTripFormData>({
     resolver: zodResolver(startTripSchema),
@@ -78,67 +77,60 @@ export function StartTripDialog() {
         return;
       }
 
-      setIsVisible(false);
+      hideDialog();
+      reset();
       startTrip();
 
       return queryClient.invalidateQueries({
         queryKey: ["current-trip"],
       });
     },
-    [status],
+    [status, hideDialog],
   );
 
   return (
-    <>
-      <FAB
-        icon="car"
-        visible={!isTracking}
-        label={t("button")}
-        onPress={handleToggleDialog}
-      />
-      <Portal>
-        <Dialog visible={isVisible} onDismiss={handleToggleDialog}>
-          <Dialog.Icon icon="car-select" />
-          <Dialog.Title style={styles.text}>{t("dialog-title")}</Dialog.Title>
-          <Dialog.Content style={styles.form_container}>
-            <SelectVehicleInput
-              control={control}
-              watch={watch}
-              setValue={setValue}
-            />
+    <Portal>
+      <Dialog visible={isVisible} onDismiss={hideDialog}>
+        <Dialog.Icon icon="car-select" />
+        <Dialog.Title style={styles.text}>{t("title")}</Dialog.Title>
+        <Dialog.Content style={styles.form_container}>
+          <SelectVehicleInput
+            control={control}
+            watch={watch}
+            setValue={setValue}
+          />
 
-            <Divider />
+          <Divider />
 
-            <TextFormField<StartTripFormData>
-              disabled={watch("vehicle_id") === ""}
-              control={control}
-              name="start_odometer"
-              mode="outlined"
-              autoCapitalize="none"
-              inputMode="numeric"
-              label={t("form.odometer.label")}
-              keyboardType="numeric"
-              textContentType="none"
-              returnKeyType="go"
-              numberOfLines={1}
-              onSubmitEditing={handleSubmit(onSubmit)}
-            />
-          </Dialog.Content>
+          <TextFormField<StartTripFormData>
+            disabled={watch("vehicle_id") === ""}
+            control={control}
+            name="start_odometer"
+            mode="outlined"
+            autoCapitalize="none"
+            inputMode="numeric"
+            label={t("form.odometer.label")}
+            keyboardType="numeric"
+            textContentType="none"
+            returnKeyType="go"
+            numberOfLines={1}
+            onSubmitEditing={handleSubmit(onSubmit)}
+          />
+        </Dialog.Content>
 
-          <Dialog.Actions>
-            <Button onPress={handleToggleDialog}>{t("cancel")}</Button>
-            <Button
-              onPress={handleSubmit(onSubmit)}
-              mode="contained"
-              loading={isSubmitting}
-              disabled={isSubmitting}
-            >
-              {t("start")}
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-    </>
+        <Dialog.Actions>
+          <Button onPress={hideDialog}>{t("form.cancel")}</Button>
+          <Button
+            onPress={handleSubmit(onSubmit)}
+            mode="contained"
+            loading={isSubmitting}
+            disabled={isSubmitting}
+          >
+            {t("form.submit")}
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
+    </Portal>
   );
 }
 

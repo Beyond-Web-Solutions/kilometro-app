@@ -1,61 +1,45 @@
 {
-  "start-trip": {
-    "button": "Start rit",
 
-    "dialog-title": "Rit starten",
-    "dialog-description": "Selecteer het voertuig voor je rit.",
+  "start-trip": "Start rit",
+  "stop-trip": "Stop rit",
+
+  "start-trip-dialog": {
+    "title": "Start rit",
 
     "form": {
       "vehicle": {},
       "odometer": {
-        "label": "Odometer"
+        "label": "Kilometerstand"
       },
-      "type": {
-        "label": "type",
-        "options": {
-          "private": "Privé",
-          "business": "Zakelijk"
-        }
-      }
-    },
 
-    "cancel": "Annuleer",
-    "start": "Start"
+      "cancel": "Annuleren",
+      "submit": "Start rit"
+    }
   },
-  "stop-trip": {
-    "button": "Stop rit",
-
-    "dialog-title": "Rit stoppen?",
-    "dialog-description": "Weet je zeker dat je de rit wilt stoppen?",
-
+  "stop-trip-sheet": {
     "form": {
-      "start_odometer": {
-        "label": "Kilometerstand bij start"
+      "unknown-address": "Onbekende address",
+
+      "distance": {
+        "label": "Afstand"
       },
+
+      "start_odometer": {
+        "label": "Start kilometerstand"
+      },
+
+      "end_odometer": {
+        "label": "Eind kilometerstand"
+      },
+
       "type": {
-        "label": "type",
+        "label": "Type",
         "options": {
           "private": "Privé",
           "business": "Zakelijk"
         }
-      }
-    },
-
-    "cancel": "Annuleer",
-    "stop": "Stop"
-  },
-  "current-trip": {
-    "current-rit": "Huidige rit",
-    "stop": "Stop rit",
-
-    "details": {
-      "unknown-location": "Onbekende locatie",
-      "unknown-time": "Onbekende tijd"
-    },
-
-    "type": {
-      "private": "Privé",
-      "business": "Zakelijk"
+      },
+      "submit": "Stop rit"
     }
   }
 }

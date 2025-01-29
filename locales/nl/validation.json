@@ -6,5 +6,6 @@
   "invalid-email-otp-type": "Ongeldig OTP-type",
   "org-name-must-be-2-50-characters": "De organisatienaam moet tussen de 2 en 50 tekens lang zijn.",
   "odometer-must-be-positive": "De kilometerstand moet positief zijn.",
-  "invalid-vehicle": "Ongeldig voertuig."
+  "invalid-vehicle": "Ongeldig voertuig.",
+  "new-odometer-cannot-be-less-than-previous": "De nieuwe kilometerstand kan niet lager zijn dan de vorige."
 }
