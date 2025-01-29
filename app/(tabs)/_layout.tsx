@@ -36,6 +36,7 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{ headerShown: false }}
       tabBar={(props) => <TabBar {...props} />}
     >
@@ -44,7 +45,6 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: t("home"),
-          lazy: true,
           tabBarIcon: ({ color, size }) => (
             <Icon size={size} color={color} source="car" />
           ),

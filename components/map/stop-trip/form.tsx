@@ -1,10 +1,10 @@
 import { StyleSheet, View } from "react-native";
 import { useForm } from "react-hook-form";
 import { Tables } from "@/types/supabase";
-import { TripDetails } from "@/components/map/trip-details";
+import { TripDetails } from "@/components/map/trip-details/view";
 import { Button, Divider, IconButton, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   StopTripFormData,
   stopTripSchema,
@@ -20,6 +20,7 @@ import {
   getDefaultValuesForStopTripForm,
   handleOnStopTripSubmit,
 } from "@/utils/trips/stop";
+import { EditTripDetailsDialog } from "@/components/map/trip-details/edit";
 
 interface Props {
   trip: Tables<"trips">;
@@ -30,7 +31,6 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
   const queryClient = useQueryClient();
 
   const { t } = useTranslation("map", { keyPrefix: "stop-trip-sheet.form" });
-
   const { route, speed, stopTrip } = useCurrentTripStore();
 
   const points = useMemo(
@@ -41,6 +41,9 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       })),
     [route],
   );
+
+  const [isEditingOrigin, setIsEditingOrigin] = useState(false);
+  const [isEditingDestination, setIsEditingDestination] = useState(false);
 
   const {
     control,
@@ -120,10 +123,12 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       <Divider horizontalInset />
 
       <TripDetails
-        origin={watch("start_address") || t("unknown-address")}
-        destination={watch("end_address") || t("unknown-address")}
+        origin={getValues("start_address")}
+        destination={getValues("end_address")}
         departedAt={trip.started_at}
         arrivedAt={new Date().toISOString()}
+        onOriginPress={() => setIsEditingOrigin(true)}
+        onDestinationPress={() => setIsEditingDestination(true)}
       />
 
       <Divider horizontalInset />
@@ -174,6 +179,28 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
           {t("submit")}
         </Button>
       </View>
+
+      <EditTripDetailsDialog
+        isVisible={isEditingOrigin}
+        hideDialog={() => setIsEditingOrigin(false)}
+        address={getValues("start_address")}
+        callback={(placeId, address) => {
+          setValue("start_place_id", placeId);
+          setValue("start_address", address);
+          setIsEditingOrigin(false);
+        }}
+      />
+
+      <EditTripDetailsDialog
+        isVisible={isEditingDestination}
+        hideDialog={() => setIsEditingDestination(false)}
+        address={getValues("end_address")}
+        callback={(placeId, address) => {
+          setValue("end_place_id", placeId);
+          setValue("end_address", address);
+          setIsEditingDestination(false);
+        }}
+      />
     </View>
   );
 }

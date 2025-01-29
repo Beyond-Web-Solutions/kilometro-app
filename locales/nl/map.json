@@ -1,35 +1,27 @@
 {
-
   "start-trip": "Start rit",
   "stop-trip": "Stop rit",
-
   "start-trip-dialog": {
     "title": "Start rit",
-
     "form": {
       "vehicle": {},
       "odometer": {
         "label": "Kilometerstand"
       },
-
       "cancel": "Annuleren",
       "submit": "Start rit"
     }
   },
   "stop-trip-sheet": {
     "form": {
-      "unknown-address": "Onbekende address",
-
+      "unknown-address": "Onbekend address",
       "total-distance": "Totale afstand: {{distance}}",
-
       "start_odometer": {
         "label": "Start kilometerstand"
       },
-
       "end_odometer": {
         "label": "Eind kilometerstand"
       },
-
       "type": {
         "label": "Type",
         "options": {
@@ -39,5 +31,15 @@
       },
       "submit": "Stop rit"
     }
+  },
+  "edit-trip-details": {
+    "title": "Bewerk adres",
+
+    "input": {
+        "placeholder": "Zoeken..."
+    },
+
+    "cancel": "Annuleren",
+    "submit": "Opslaan"
   }
 }

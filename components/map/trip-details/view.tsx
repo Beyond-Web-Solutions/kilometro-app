@@ -4,16 +4,20 @@ import { formatDateTime } from "@/utils/format";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  origin: string | null | undefined;
+  origin: string | null;
   departedAt: string | null;
+  onOriginPress?: () => void;
 
-  destination: string | null | undefined;
+  destination: string | null;
   arrivedAt: string | null;
+  onDestinationPress?: () => void;
 }
 export function TripDetails({
   origin,
+  onOriginPress,
   departedAt,
   destination,
+  onDestinationPress,
   arrivedAt,
 }: Props) {
   const { colors } = useTheme();
@@ -27,14 +31,20 @@ export function TripDetails({
           departedAt ? formatDateTime(departedAt) : t("unknown-time")
         }
         left={(props) => <List.Icon {...props} icon="map-marker" />}
+        right={(props) => <List.Icon {...props} icon="menu-right" />}
+        onPress={onOriginPress}
       />
+
       <View style={styles.arrow}>
         <Icon size={24} source="arrow-down" color={colors.onSurfaceDisabled} />
       </View>
+
       <List.Item
         title={destination ?? t("unknown-location")}
         description={arrivedAt ? formatDateTime(arrivedAt) : t("unknown-time")}
         left={(props) => <List.Icon {...props} icon="map-marker" />}
+        right={(props) => <List.Icon {...props} icon="menu-right" />}
+        onPress={onDestinationPress}
       />
     </View>
   );
