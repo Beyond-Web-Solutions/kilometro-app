@@ -25,8 +25,21 @@
   "stop-trip": {
     "button": "Stop rit",
 
-    "dialog-title": "Rit stoppen",
+    "dialog-title": "Rit stoppen?",
     "dialog-description": "Weet je zeker dat je de rit wilt stoppen?",
+
+    "form": {
+      "start_odometer": {
+        "label": "Kilometerstand bij start"
+      },
+      "type": {
+        "label": "type",
+        "options": {
+          "private": "Privé",
+          "business": "Zakelijk"
+        }
+      }
+    },
 
     "cancel": "Annuleer",
     "stop": "Stop"
@@ -35,8 +48,10 @@
     "current-rit": "Huidige rit",
     "stop": "Stop rit",
 
-    "unknown-location": "Onbekende locatie",
-    "unknown-time": "Onbekende tijd",
+    "details": {
+      "unknown-location": "Onbekende locatie",
+      "unknown-time": "Onbekende tijd"
+    },
 
     "type": {
       "private": "Privé",

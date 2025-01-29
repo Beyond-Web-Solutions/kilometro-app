@@ -7,16 +7,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextFormField } from "@/components/_common/form/text-input";
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Button, TextInput } from "react-native-paper";
 import { supabase } from "@/lib/supabase";
 import { useAuthErrorStore } from "@/store/auth-error";
 import { router } from "expo-router";
-import { useBackgroundPermissions } from "expo-location";
 
 export function SignInForm() {
-  const [permission] = useBackgroundPermissions();
-
   const { t } = useTranslation("auth", { keyPrefix: "sign-in.form" });
   const { setError } = useAuthErrorStore();
 
@@ -39,25 +36,18 @@ export function SignInForm() {
     setIsPeaking((prev) => !prev);
   }, []);
 
-  const onSubmit = useCallback(
-    async (values: SignInFactorOneFormData) => {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      });
+  const onSubmit = useCallback(async (values: SignInFactorOneFormData) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
+    });
 
-      if (error) {
-        return setError(error.code ?? "unknown");
-      }
+    if (error) {
+      return setError(error.code ?? "unknown");
+    }
 
-      if (permission?.granted) {
-        return router.replace("/(tabs)");
-      }
-
-      return router.replace("/onboard/permissions");
-    },
-    [permission],
-  );
+    return router.replace("/(tabs)");
+  }, []);
 
   return (
     <View style={styles.container}>

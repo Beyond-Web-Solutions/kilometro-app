@@ -1,17 +1,18 @@
 import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView, { Polyline } from "react-native-maps";
 import { useCallback, useEffect, useState } from "react";
-import { StartTripDialog } from "@/components/map/start-trip-dialog";
 import { FAB, useTheme } from "react-native-paper";
 import { useCurrentTripStore } from "@/store/current-trip";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { TripBottomSheet } from "@/components/map/trip-bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StartTripDialog } from "@/components/map/start-trip/dialog";
+import { LocationSubscriber } from "@/components/map/location-subscriber";
 
 export default function MapPage() {
   const scheme = useColorScheme();
-  const { colors } = useTheme();
 
+  const { colors } = useTheme();
   const { route, isTracking } = useCurrentTripStore();
 
   const [followsUser, setFollowsUser] = useState(false);
@@ -67,6 +68,7 @@ export default function MapPage() {
           <TripBottomSheet />
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
+      <LocationSubscriber />
     </View>
   );
 }

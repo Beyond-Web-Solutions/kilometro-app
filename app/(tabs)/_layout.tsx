@@ -6,17 +6,11 @@ import { useDefaultOrganization } from "@/hooks/use-default-org";
 import { useEffect } from "react";
 import { useOrganizations } from "@/hooks/use-organizations";
 import { useTranslation } from "react-i18next";
-import { useIsBackgroundLocationAvailable } from "@/hooks/use-is-background-location-available";
 
 export default function TabsLayout() {
   useAuthState();
 
   const { t } = useTranslation("common");
-
-  const {
-    data: isBackgroundLocationAvailable,
-    isFetchedAfterMount: isBackgroundLocationAvailbeFetched,
-  } = useIsBackgroundLocationAvailable();
 
   const {
     isFetchedAfterMount: isDefaultOrganizationFetched,
@@ -40,13 +34,6 @@ export default function TabsLayout() {
     isOrganizationsFetched,
   ]);
 
-  // make sure the user has given location permissions
-  useEffect(() => {
-    if (!isBackgroundLocationAvailable && isBackgroundLocationAvailbeFetched) {
-      return router.replace("/onboard/permissions");
-    }
-  }, [isBackgroundLocationAvailable, isBackgroundLocationAvailbeFetched]);
-
   return (
     <Tabs
       screenOptions={{ headerShown: false }}
@@ -57,6 +44,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: t("home"),
+          lazy: true,
           tabBarIcon: ({ color, size }) => (
             <Icon size={size} color={color} source="car" />
           ),

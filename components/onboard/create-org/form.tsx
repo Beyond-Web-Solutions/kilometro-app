@@ -43,6 +43,7 @@ export function CreatOrganizationForm() {
       await queryClient.invalidateQueries({
         queryKey: ["orgs-for-user"],
       });
+
       return router.push("/(tabs)");
     }
   }, []);

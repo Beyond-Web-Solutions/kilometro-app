@@ -1,8 +1,9 @@
 import i18n from "@/lib/i18n";
 
-export function formatOdometer(odometer: number | null) {
+export function formatOdometer(odometer: number | null, showUnit?: boolean) {
   return Intl.NumberFormat(i18n.language, {
-    unit: "kilometer-per-hour",
+    style: showUnit ? "unit" : undefined,
+    unit: "kilometer",
   }).format((odometer ?? 0) / 1000);
 }
 

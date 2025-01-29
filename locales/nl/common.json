@@ -4,5 +4,10 @@
 
   "home": "Home",
   "trips": "Ritten",
-  "settings": "Instellingen"
+  "settings": "Instellingen",
+
+  "trip": {
+    "unknown-location": "Onbekende locatie",
+    "unknown-time": "Onbekende tijd"
+  }
 }
