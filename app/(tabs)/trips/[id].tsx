@@ -1,16 +1,20 @@
 import { StyleSheet, useColorScheme, View } from "react-native";
-import MapView, { LatLng, Polyline, Region } from "react-native-maps";
+import MapView, { LatLng, Marker, Polyline, Region } from "react-native-maps";
 import { FAB, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useTrip } from "@/hooks/use-trip";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { PolyUtil } from "node-geometry-library";
+import { ViewTripDetailsBottomSheet } from "@/components/trips/details/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useTranslation } from "react-i18next";
 
 export default function Trip() {
   const scheme = useColorScheme();
   const navigation = useNavigation();
 
+  const { t } = useTranslation("trips", { keyPrefix: "details" });
   const { colors } = useTheme();
   const { id } = useLocalSearchParams();
   const { top, left } = useSafeAreaInsets();
@@ -18,6 +22,18 @@ export default function Trip() {
   const { data } = useTrip(id as string);
 
   const [region, setRegion] = useState<Region>();
+
+  const startPoint = useMemo(() => {
+    if (!data?.start_point) return null;
+
+    return data?.start_point as LatLng;
+  }, [data]);
+
+  const endPoint = useMemo(() => {
+    if (!data?.end_point) return null;
+
+    return data?.end_point as LatLng;
+  }, [data]);
 
   const polyline = useMemo(() => {
     if (data?.codec) {
@@ -33,45 +49,65 @@ export default function Trip() {
   }, [data]);
 
   useLayoutEffect(() => {
-    if (!data?.start_point && !data?.end_point) return;
+    if (startPoint === null || endPoint === null) return;
 
-    const start = data.start_point as LatLng;
-    const end = data.end_point as LatLng;
-
-    const latDelta = Math.abs(start.latitude - end.latitude) + 0.1;
-    const lonDelta = Math.abs(start.longitude - end.longitude) + 0.1;
+    const latDelta = Math.abs(startPoint.latitude - endPoint.latitude) + 0.1;
+    const lonDelta = Math.abs(startPoint.longitude - endPoint.longitude) + 0.1;
 
     setRegion({
-      latitude: (start.latitude + end.latitude) / 2,
-      longitude: (start.longitude + end.longitude) / 2,
+      latitude: (startPoint.latitude + endPoint.latitude) / 2,
+      longitude: (startPoint.longitude + endPoint.longitude) / 2,
       latitudeDelta: latDelta,
       longitudeDelta: lonDelta,
     });
-  }, [data]);
+  }, [startPoint, endPoint]);
 
   return (
     <View style={styles.container}>
-      <View style={[styles.back_button, { top: 16 + top, left: 16 + left }]}>
-        <FAB
-          variant="surface"
-          icon="close"
-          size="small"
-          onPress={() => navigation.goBack()}
-        />
-      </View>
-      <MapView
-        showsCompass
-        showsScale
-        region={region}
-        userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
-        style={styles.map}
-      >
-        <Polyline
-          strokeColor={colors.primary}
-          strokeWidth={5}
-          coordinates={polyline}
-        />
-      </MapView>
+      <GestureHandlerRootView>
+        <View style={[styles.back_button, { top: 16 + top, left: 16 + left }]}>
+          <FAB
+            variant="surface"
+            icon="close"
+            size="small"
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+        <MapView
+          showsCompass
+          showsScale
+          region={region}
+          userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
+          style={styles.map}
+        >
+          {startPoint && (
+            <Marker
+              title={t("starting-point")}
+              description={data?.start_address ?? undefined}
+              coordinate={{
+                latitude: startPoint.latitude,
+                longitude: startPoint.longitude,
+              }}
+            />
+          )}
+          {endPoint && (
+            <Marker
+              title={t("destination")}
+              description={data?.end_address ?? undefined}
+              coordinate={{
+                latitude: endPoint.latitude,
+                longitude: endPoint.longitude,
+              }}
+            />
+          )}
+          <Polyline
+            strokeColor={colors.primary}
+            strokeWidth={5}
+            coordinates={polyline}
+          />
+        </MapView>
+        {data && <ViewTripDetailsBottomSheet trip={data} />}
+      </GestureHandlerRootView>
     </View>
   );
 }

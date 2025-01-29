@@ -1,4 +1,6 @@
 import i18n from "@/lib/i18n";
+import { formatDistanceStrict } from "date-fns";
+import { nl } from "date-fns/locale";
 
 export function formatOdometer(odometer: number | null, showUnit?: boolean) {
   return Intl.NumberFormat(i18n.language, {
@@ -28,4 +30,20 @@ export function formatDateTime(dateStr: string) {
     dateStyle: "medium",
     timeStyle: "short",
   });
+}
+
+export function formatDuration(
+  dateStr1: string | null,
+  dateStr2: string | null,
+) {
+  if (!dateStr1 || !dateStr2) {
+    return null;
+  }
+
+  const date1 = new Date(dateStr1);
+  const date2 = new Date(dateStr2);
+
+  const diff = new Date(date2.getTime() - date1.getTime());
+
+  return formatDistanceStrict(date2, date1, { locale: nl });
 }

@@ -1,7 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS "postgis"
-    WITH
-    SCHEMA "extensions";
-
 create type "public"."organization_roles" as enum ('driver', 'admin');
 create type "public"."trip_status" as enum ('done', 'ongoing');
 
@@ -44,8 +40,8 @@ CREATE TABLE IF NOT EXISTS "public"."trips"
     "vehicle_id"     "uuid",
     "user_id"        "uuid",
     "codec"          "text",
-    "avg_speed"      integer,
-    "max_speed"      integer,
+    "avg_speed"      real,
+    "max_speed"      real,
     "distance"       integer,
     "start_odometer" integer                               NOT NULL,
     "end_odometer"   integer,
@@ -54,8 +50,8 @@ CREATE TABLE IF NOT EXISTS "public"."trips"
     "is_private"     boolean                                        DEFAULT false,
     "started_at"     timestamp with time zone                       DEFAULT "now"(),
     "ended_at"       timestamp with time zone                       DEFAULT "now"(),
-    "start_point"    "extensions"."geography"(Point, 4326) NOT NULL,
-    "end_point"      "extensions"."geography"(Point, 4326),
+    "start_point"    json NOT NULL,
+    "end_point"      json,
     "start_address"  "text",
     "end_address"    "text",
     "status"         "trip_status"                         not null default 'ongoing'::trip_status,

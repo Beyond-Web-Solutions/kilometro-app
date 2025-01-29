@@ -7,10 +7,11 @@ export function useTrip(id: string) {
     queryFn: () => getTrip(id),
   });
 }
-async function getTrip(id: string) {
+
+export async function getTrip(id: string) {
   const { data } = await supabase
     .from("trips")
-    .select("*")
+    .select("*, vehicles(*)")
     .eq("id", id)
     .eq("status", "done")
     .single();

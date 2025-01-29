@@ -85,10 +85,10 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       reset();
 
       await queryClient.invalidateQueries({
-        queryKey: ["current-trip"],
+        queryKey: ["trips"],
       });
       await queryClient.invalidateQueries({
-        queryKey: ["trips"],
+        queryKey: ["current-trip"],
       });
     },
     [trip, stopTrip],

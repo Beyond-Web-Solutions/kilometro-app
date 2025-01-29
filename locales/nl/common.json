@@ -6,6 +6,8 @@
   "trips": "Ritten",
   "settings": "Instellingen",
 
+  "km-h": "km/h",
+
   "trip": {
     "unknown-location": "Onbekende adres",
     "unknown-time": "Onbekende tijd"

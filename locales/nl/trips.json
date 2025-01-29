@@ -6,5 +6,21 @@
     "to": "Naar: ",
 
     "unknown-time": "Onbekende tijd"
+  },
+
+  "details": {
+    "starting-point": "Vertrekpunt",
+    "destination": "Bestemming",
+
+    "trip": "Rit",
+
+    "vehicle": "Voertuig",
+    "user": "User",
+    "distance": "Afstand",
+    "duration": "Duur",
+    "avg-speed": "Gem. snelheid",
+
+    "start-odometer": "Start kilometerstand",
+    "end-odometer": "Eind kilometerstand"
   }
 }
