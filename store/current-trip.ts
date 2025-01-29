@@ -7,6 +7,7 @@ type Store = {
   isTracking: boolean;
 
   route: LatLng[];
+  currentSpeed: number | null;
   speed: number[];
   heading: number | null;
 
@@ -25,14 +26,21 @@ export const useCurrentTripStore = create(
       isTracking: false,
       route: [],
       speed: [],
+      currentSpeed: null,
       heading: null,
 
-      startTrip: () => set({ isTracking: true, route: [], speed: [] }),
-      stopTrip: () => set({ route: [], speed: [], isTracking: false }),
+      startTrip: () =>
+        set({ isTracking: true, route: [], speed: [], currentSpeed: null }),
+      stopTrip: () =>
+        set({ isTracking: false, route: [], speed: [], currentSpeed: null }),
 
       setIsTracking: (isTracking) => set({ isTracking }),
       setHeading: (heading) => set({ heading }),
-      addSpeed: (speed) => set((state) => ({ speed: [...state.speed, speed] })),
+      addSpeed: (speed) =>
+        set((state) => ({
+          speed: [...state.speed, speed],
+          currentSpeed: speed,
+        })),
       addWaypoint: (location: LatLng) =>
         set((state) => ({
           route: [...state.route, location],

@@ -7,9 +7,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LocationSubscriber } from "@/components/map/location-subscriber";
 import { ToggleTripFab } from "@/components/map/toggle-trip-fab";
 import { CenterOnUserFab } from "@/components/map/actions/center-on-user";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useCurrentPosition } from "@/hooks/use-current-position";
 import { ViewRouteFab } from "@/components/map/actions/view-route";
+import { SpeedIndicator } from "@/components/map/speed-indicator";
 
 export default function MapPage() {
   const ref = useRef<MapView>(null);
@@ -33,10 +34,13 @@ export default function MapPage() {
     });
   }, [data]);
 
+  // when the animation of centering is finished we can start following the user
   const handleCenterOnUser = useCallback((region: Region) => {
-    setIsFollowingUser(true);
-
     ref.current?.animateToRegion(region, 1000);
+
+    setTimeout(() => {
+      setIsFollowingUser(true);
+    }, 1000);
   }, []);
 
   const handleViewRoute = useCallback((region: Region) => {
@@ -79,6 +83,7 @@ export default function MapPage() {
             </View>
             <ToggleTripFab />
           </View>
+          <SpeedIndicator />
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
       <LocationSubscriber />

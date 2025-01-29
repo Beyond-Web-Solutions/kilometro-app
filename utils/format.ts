@@ -14,6 +14,13 @@ export function formatDistance(km: number) {
   }).format(Math.round(km * 10) / 10);
 }
 
+export function formatSpeed(metersPerSecond: number, showUnit?: boolean) {
+  return Intl.NumberFormat(i18n.language, {
+    style: showUnit ? "unit" : undefined,
+    unit: "kilometer-per-hour",
+  }).format(Math.round(metersPerSecond * 3.6));
+}
+
 export function formatDateTime(dateStr: string) {
   const date = new Date(dateStr);
 
