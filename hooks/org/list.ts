@@ -4,7 +4,7 @@ import { Tables } from "@/types/supabase";
 
 export function useOrganizations() {
   return useQuery({
-    queryKey: ["orgs-for-user"],
+    queryKey: ["organizations"],
     queryFn: getOrganizations,
   });
 }

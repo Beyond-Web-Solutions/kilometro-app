@@ -145,7 +145,7 @@ create policy "Enable read access for organization members" on "public"."vehicle
 create policy "Enable delete for admins" on "public"."organization_members" as permissive for delete to authenticated using (
     (
         (
-            (SELECT get_user_role() AS get_user_role) = 'admin'::text
+                (SELECT get_user_role() AS get_user_role) = 'admin'::text
             )
             AND (
             organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
@@ -171,7 +171,7 @@ create policy "Enable admins to update every trip" on "public"."trips" as permis
     to authenticated using (
     (
         (
-            (SELECT get_user_role() AS get_user_role) = 'admin'::text
+                (SELECT get_user_role() AS get_user_role) = 'admin'::text
             )
             AND (
             vehicle_id IN (SELECT vehicles.id
@@ -211,7 +211,7 @@ create policy "Enable admins to view their all trips" on "public"."trips" as per
 create policy "Enable drivers to delete their own trips" on "public"."trips" as permissive for delete to authenticated using (
     (
         (
-            (SELECT get_user_role() AS get_user_role) = 'driver'::text
+                (SELECT get_user_role() AS get_user_role) = 'driver'::text
             )
             AND (user_id = auth.uid())
         )
@@ -257,7 +257,7 @@ create policy "Enable insert for organization admins" on "public"."vehicles" as 
             organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
             )
             AND (
-            (SELECT get_user_role() AS get_user_role) = 'admin'::text
+                (SELECT get_user_role() AS get_user_role) = 'admin'::text
             )
         )
     );

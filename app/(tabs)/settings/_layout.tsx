@@ -12,6 +12,11 @@ export default function SettingsLayout() {
         name="index"
         options={{ headerTitle: t("header-title") }}
       />
+      <Stack.Screen
+        key="new-organization"
+        name="new-organization"
+        options={{ headerTitle: t("new-organization.header-title") }}
+      />
     </Stack>
   );
 }

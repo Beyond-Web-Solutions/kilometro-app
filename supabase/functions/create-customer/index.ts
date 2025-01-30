@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
     is_default: true,
   });
 
-  return new Response(JSON.stringify({ ok: true }), {
+  return new Response(JSON.stringify({ ok: true, id: data.id }), {
     headers: { "Content-Type": "application/json" },
   });
 });

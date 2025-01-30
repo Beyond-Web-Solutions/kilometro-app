@@ -1,0 +1,27 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "XMYC9426P4.com.beyondwebsolutions.kilometro"
+        ],
+        "components": [
+          {
+            "/": "*",
+            "comment": "Matches all routes"
+          }
+        ]
+      }
+    ]
+  },
+  "activitycontinuation": {
+    "apps": [
+      "XMYC9426P4.com.beyondwebsolutions.kilometro"
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "XMYC9426P4.com.beyondwebsolutions.kilometro"
+    ]
+  }
+}

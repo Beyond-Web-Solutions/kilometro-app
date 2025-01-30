@@ -1,6 +1,18 @@
 {
   "header-title": "Instellingen",
+
+  "account-settings-menu": {
+    "account": "Accountinstellingen",
+    "organization": "Wijzig organisatie",
+  },
+
   "organization-switcher": {
+    "title": "Wijzig organisatie",
+
+    "new": "Nieuw",
+
+    "cancel": "Annuleren",
+    "submit": "Opslaan"
   },
   "general": {
     "title": "Algemeen",
@@ -55,5 +67,36 @@
     "app-version": "Versie",
     "app-terms": "Gebruiksvoorwaarden",
     "app-privacy": "Privacybeleid"
+  },
+
+  "new-organization": {
+    "header-title": "Nieuwe organisatie",
+
+    "create": {
+      "button": "Maak een nieuwe organisatie aan",
+
+      "dialog-title": "Maak een nieuwe organisatie aan",
+
+      "form": {
+        "name": {
+          "label": "Bedrijfsnaam"
+        },
+        "email": {
+          "label": "Bedrijfse-mail"
+        },
+        "cancel": "Annuleren",
+        "submit": "Aanmaken"
+      }
+    },
+    "join": {
+      "button": "Voeg je bij een bestaande organisatie",
+
+      "dialog-title": "Voeg je bij een bestaande organisatie",
+
+      "form": {
+        "cancel": "Annuleren",
+        "submit": "Voeg toe"
+      }
+    }
   }
 }

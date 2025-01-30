@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useOrganizationRole() {
   return useQuery({
-    queryKey: ["organization-role"],
+    queryKey: ["organizations"],
     queryFn: getOrganizationRole,
   });
 }

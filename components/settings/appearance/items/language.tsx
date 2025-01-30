@@ -1,17 +1,8 @@
-import {
-  Button,
-  Dialog,
-  List,
-  Portal,
-  RadioButton,
-  Text,
-} from "react-native-paper";
+import { Button, Dialog, List, Portal, RadioButton } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import i18n from "@/lib/i18n";
-import { RadioGroupField } from "@/components/_common/form/radio-group";
-import { StartTripFormData } from "@/constants/definitions/trip/start";
 
 export function LanguageSettings() {
   const { t } = useTranslation("settings", {
@@ -44,9 +35,10 @@ export function LanguageSettings() {
                 {i18n.languages.map((lang) => (
                   <RadioButton.Item
                     key={lang}
-                    style={styles.language}
-                    label={t(`options.${lang}` as never)}
                     value={lang}
+                    mode="android"
+                    label={t(`options.${lang}` as never)}
+                    style={styles.language}
                   />
                 ))}
               </RadioButton.Group>
@@ -69,6 +61,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   language: {
-    marginHorizontal: 16,
+    marginHorizontal: 8,
   },
 });

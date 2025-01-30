@@ -8,7 +8,7 @@ export function useUser() {
   });
 }
 
-async function getUser() {
+export async function getUser() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
