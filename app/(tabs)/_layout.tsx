@@ -1,17 +1,20 @@
 import { router, Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import { TabBar } from "@/components/nav/tabs";
-import { useAuthState } from "@/hooks/use-auth-state";
-import { useDefaultOrganization } from "@/hooks/use-default-org";
+import { useAuthState } from "@/hooks/auth/auth-listener";
+import { useDefaultOrganization } from "@/hooks/org/default";
 import { useEffect } from "react";
-import { useOrganizations } from "@/hooks/use-organizations";
+import { useOrganizations } from "@/hooks/org/list";
 import { useTranslation } from "react-i18next";
 import { BottomTabHeader } from "@/components/nav/bottom-tab-header";
+import { useOrganizationRole } from "@/hooks/org/role";
 
 export default function TabsLayout() {
   useAuthState();
 
   const { t } = useTranslation("common");
+
+  const { data: role } = useOrganizationRole();
 
   const {
     isFetchedAfterMount: isDefaultOrganizationFetched,
@@ -42,7 +45,7 @@ export default function TabsLayout() {
         headerShown: false,
         header: (props) => <BottomTabHeader {...props} />,
       }}
-      tabBar={(props) => <TabBar {...props} />}
+      tabBar={(props) => <TabBar {...props} role={role ?? "driver"} />}
     >
       <Tabs.Screen
         key="index"
@@ -50,7 +53,7 @@ export default function TabsLayout() {
         options={{
           title: t("home"),
           tabBarIcon: ({ color, size }) => (
-            <Icon size={size} color={color} source="car" />
+            <Icon size={size} color={color} source="map" />
           ),
         }}
       />
@@ -65,6 +68,19 @@ export default function TabsLayout() {
           ),
         }}
       />
+
+      {role === "admin" && (
+        <Tabs.Screen
+          key="vehicles"
+          name="vehicles"
+          options={{
+            title: t("vehicles"),
+            tabBarIcon: ({ color, size }) => (
+              <Icon size={size} color={color} source="car" />
+            ),
+          }}
+        />
+      )}
 
       <Tabs.Screen
         key="settings"

@@ -1,5 +1,5 @@
 import { FAB } from "react-native-paper";
-import { useCurrentTrip } from "@/hooks/use-current-trip";
+import { current } from "@/hooks/trip/current";
 import { useMutation } from "@tanstack/react-query";
 import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
 import { LatLng, Region } from "react-native-maps";
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function ViewRouteFab({ callback }: Props) {
-  const { data: trip } = useCurrentTrip();
+  const { data: trip } = current();
 
   const { isPending, mutate } = useMutation({
     onSuccess: ({ coords }) => {

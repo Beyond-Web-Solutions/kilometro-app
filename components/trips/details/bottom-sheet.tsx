@@ -10,7 +10,7 @@ import {
   formatOdometer,
   formatSpeed,
 } from "@/utils/format";
-import { getTrip } from "@/hooks/use-trip";
+import { getTrip } from "@/hooks/trip/use-trip";
 
 interface Props {
   trip: Awaited<ReturnType<typeof getTrip>>;

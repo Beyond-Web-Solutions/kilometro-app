@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
-export function useCurrentTrip() {
+export function current() {
   return useQuery({
     queryKey: ["current-trip"],
     queryFn: getCurrentTrip,

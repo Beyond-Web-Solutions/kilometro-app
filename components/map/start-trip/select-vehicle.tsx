@@ -3,9 +3,9 @@ import { ActivityIndicator, RadioButton } from "react-native-paper";
 import { RadioGroupField } from "@/components/_common/form/radio-group";
 import { Control } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
-import { useVehicles } from "@/hooks/use-vehicles";
 import { UseFormSetValue, UseFormWatch } from "react-hook-form/dist/types/form";
 import { useEffect } from "react";
+import { useVehicles } from "@/hooks/vehicles/list";
 
 interface Props {
   control: Control<StartTripFormData>;

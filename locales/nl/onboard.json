@@ -31,20 +31,16 @@
       "back": "Terug"
     }
   },
-  "permissions": {
-    "title": "Toegang tot je locatie",
-    "description": "Om je ritten te kunnen volgen, hebben we toegang tot je locatie nodig. Kilometro houdt alleen je locatie bij tijdens je ritten en deelt je locatie niet met derden.",
+  "create-vehicles": {
+    "header-title": "Voertuigen",
 
-    "dialog": {
-      "title": "Locatie toegang is vereist",
-      "description": "Om je ritten te kunnen volgen, moet je locatie toegang verlenen. Ga naar instellingen en zet locatie op altijd.",
+    "title": "Voeg voertuigen toe",
+    "description": "Voeg voertuigen toe aan je organisatie om ritten te kunnen bijhouden.",
 
-      "close": "Sluiten",
-      "settings": "Open instellingen"
-    },
+   "add-vehicle": "Voeg voertuig toe",
 
-    "buttons": {
-      "request-permissions": "Toegang verlenen tot je locatie"
+    "links": {
+      "continue": "Doorgaan"
     }
   }
 }

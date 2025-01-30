@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
-import { useDefaultOrganization } from "@/hooks/use-default-org";
-import { useUser } from "@/hooks/use-user";
+import { useDefaultOrganization } from "@/hooks/org/default";
+import { useUser } from "@/hooks/auth/user";
 import * as SplashScreen from "expo-splash-screen";
 
 interface Props {

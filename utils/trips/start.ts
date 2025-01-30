@@ -1,6 +1,6 @@
 import { StartTripFormData } from "@/constants/definitions/trip/start";
 import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
-import { reverseGeocode } from "@/hooks/use-reverse-geocode";
+import { reverseGeocode } from "@/hooks/geo/reverse-geocode";
 import { supabase } from "@/lib/supabase";
 
 export async function handleOnStartTripSubmit(values: StartTripFormData) {

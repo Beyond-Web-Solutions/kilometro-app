@@ -55,6 +55,7 @@ export function SignInForm() {
         control={control}
         name="email"
         mode="outlined"
+        autoComplete="email"
         autoCapitalize="none"
         label={t("email.label")}
         placeholder={t("email.placeholder")}
@@ -67,6 +68,7 @@ export function SignInForm() {
       <TextFormField<SignInFactorOneFormData>
         control={control}
         name="password"
+        autoComplete="password"
         mode="outlined"
         autoCapitalize="none"
         label={t("password.label")}

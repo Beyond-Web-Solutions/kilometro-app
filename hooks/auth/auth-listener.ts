@@ -6,11 +6,11 @@ export function useAuthState() {
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT") {
-        router.replace("/(auth)/sign-in");
+        router.replace("/auth/sign-in");
       }
 
       if (!session) {
-        router.replace("/(auth)/sign-in");
+        router.replace("/auth/sign-in");
       }
 
       if (session) {

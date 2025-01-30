@@ -16,7 +16,7 @@ export function SignOutButton() {
       return setError(error.code ?? "unknown");
     }
 
-    return router.replace("/(auth)/sign-in");
+    return router.replace("/auth/sign-in");
   }, []);
 
   return <Button onPress={handleSignOut}>{t("sign-out")}</Button>;

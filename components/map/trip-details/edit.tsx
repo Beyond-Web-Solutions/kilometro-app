@@ -9,7 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useDebounce } from "use-debounce";
 import { useCallback, useEffect, useState } from "react";
-import { useAddressAutocomplete } from "@/hooks/use-address-autocomplete";
+import { useAddressAutocomplete } from "@/hooks/geo/address-autocomplete";
 import { ScrollView, StyleSheet } from "react-native";
 
 interface Props {
@@ -28,7 +28,7 @@ export function EditTripDetailsDialog({
 }: Props) {
   const { colors } = useTheme();
   const { t } = useTranslation("map", { keyPrefix: "edit-trip-details" });
-  const { mutate, isPending, data } = useAddressAutocomplete();
+  const { mutate, data } = useAddressAutocomplete();
 
   const [placeId, setPlaceId] = useState<string>("");
 
@@ -66,7 +66,8 @@ export function EditTripDetailsDialog({
         <Dialog.Content>
           <Searchbar
             autoFocus
-            loading={isPending}
+            autoComplete="address-line1"
+            autoCorrect={false}
             placeholder={t("input.placeholder")}
             value={input}
             onChangeText={setInput}

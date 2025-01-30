@@ -1,7 +1,8 @@
 create type "public"."organization_roles" as enum ('driver', 'admin');
 create type "public"."trip_status" as enum ('done', 'ongoing');
 
-CREATE TABLE IF NOT EXISTS "public"."organizations"
+CREATE TABLE IF NOT EXISTS
+    "public"."organizations"
 (
     "id"                 "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
     "name"               "text"                                               NOT NULL,
@@ -11,7 +12,8 @@ CREATE TABLE IF NOT EXISTS "public"."organizations"
     "created_at"         timestamp with time zone DEFAULT "now"()             NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "public"."organization_members"
+CREATE TABLE IF NOT EXISTS
+    "public"."organization_members"
 (
     "id"              "uuid"                        DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
     "user_id"         "uuid",
@@ -23,7 +25,8 @@ CREATE TABLE IF NOT EXISTS "public"."organization_members"
     CONSTRAINT "organization_members_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations" ("id") ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS "public"."vehicles"
+CREATE TABLE IF NOT EXISTS
+    "public"."vehicles"
 (
     "id"              "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
     "organization_id" "uuid",
@@ -34,29 +37,30 @@ CREATE TABLE IF NOT EXISTS "public"."vehicles"
     CONSTRAINT "vehicles_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations" ("id") ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS "public"."trips"
+CREATE TABLE IF NOT EXISTS
+    "public"."trips"
 (
-    "id"             "uuid"                                         DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
+    "id"             "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
     "vehicle_id"     "uuid",
     "user_id"        "uuid",
     "codec"          "text",
     "avg_speed"      real,
     "max_speed"      real,
     "distance"       integer,
-    "start_odometer" integer                               NOT NULL,
+    "start_odometer" integer       NOT NULL,
     "end_odometer"   integer,
     "start_place_id" "text",
     "end_place_id"   "text",
-    "is_private"     boolean                                        DEFAULT false,
-    "started_at"     timestamp with time zone                       DEFAULT "now"(),
-    "ended_at"       timestamp with time zone                       DEFAULT "now"(),
-    "start_point"    json NOT NULL,
+    "is_private"     boolean                  DEFAULT false,
+    "started_at"     timestamp with time zone DEFAULT "now"(),
+    "ended_at"       timestamp with time zone DEFAULT "now"(),
+    "start_point"    json          NOT NULL,
     "end_point"      json,
     "start_address"  "text",
     "end_address"    "text",
-    "status"         "trip_status"                         not null default 'ongoing'::trip_status,
+    "status"         "trip_status" not null   default 'ongoing'::trip_status,
     CONSTRAINT "trips_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE SET NULL,
-    CONSTRAINT "trips_vehicle_id_fkey" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles" ("id") ON DELETE CASCADE
+    CONSTRAINT "trips_vehicle_id_fkey" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles" ("id") ON DELETE SET NULL
 );
 
 -- functions
@@ -80,71 +84,180 @@ WHERE member.user_id = auth.uid();
 $$ stable language sql
    security definer;
 
-CREATE OR REPLACE FUNCTION public.get_default_org()
-    RETURNS record
+CREATE
+    OR REPLACE FUNCTION public.get_default_org() RETURNS record
     LANGUAGE sql
-    STABLE SECURITY DEFINER
-AS
-$$
+    STABLE SECURITY DEFINER AS
+$function$
 SELECT org
 FROM organizations org
          INNER JOIN organization_members member ON org.id = member.organization_id
 WHERE member.user_id = auth.uid()
   AND member.is_default = true
 LIMIT 1;
-$$
-;
+$function$;
+
+CREATE
+    OR REPLACE FUNCTION public.get_user_role() RETURNS text
+    LANGUAGE sql
+    STABLE SECURITY DEFINER AS
+$function$
+SELECT role
+FROM organization_members member
+WHERE member.user_id = auth.uid()
+  AND member.is_default = true
+LIMIT 1;
+$function$;
 
 --    RLS
 ALTER TABLE "public"."organization_members"
     ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE "public"."organizations"
     ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE "public"."trips"
     ENABLE ROW LEVEL SECURITY;
+
 ALTER TABLE "public"."vehicles"
     ENABLE ROW LEVEL SECURITY;
 
-create policy "Enable insert for authenticated users only"
-    on "public"."organization_members"
-    as permissive
-    for insert
-    to authenticated
-    with check (true);
+create policy "Enable insert for authenticated users only" on "public"."organization_members" as permissive for insert to authenticated
+    with
+    check (true);
 
+create policy "Enable insert for authenticated users only" on "public"."organizations" as permissive for insert to authenticated
+    with
+    check (true);
 
-create policy "Enable insert for authenticated users only"
-    on "public"."organizations"
-    as permissive
-    for insert
-    to authenticated
-    with check (true);
+create policy "Enable read access for authenticated users only" on "public"."organizations" as permissive for
+    select
+    to authenticated using (true);
 
-
-create policy "Enable read access for authenticated users only"
-    on "public"."organizations"
-    as permissive
-    for select
-    to authenticated
-    using (true);
-
-create policy "Enable read access for organization members"
-    on "public"."vehicles"
-    as permissive
-    for select
-    to authenticated
-    using ((organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)));
-
-create policy "Enable access for organization members"
-    on "public"."trips"
-    as PERMISSIVE
-    for ALL
-    to authenticated
-    using (
-    vehicle_id IN (SELECT id
-                   FROM vehicles
-                   WHERE organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))
+create policy "Enable read access for organization members" on "public"."vehicles" as permissive for
+    select
+    to authenticated using (
+    (
+        organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+        )
     );
 
+create policy "Enable delete for admins" on "public"."organization_members" as permissive for delete to authenticated using (
+    (
+        (
+            (SELECT get_user_role() AS get_user_role) = 'admin'::text
+            )
+            AND (
+            organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+            )
+        )
+    );
 
+create policy "Enable admins to delete all trips" on "public"."trips" as permissive for delete to authenticated using (
+    (
+        (
+            vehicle_id IN (SELECT vehicles.id
+                           FROM vehicles
+                           WHERE (
+                                     vehicles.organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+                                     ))
+            )
+            AND (SELECT (get_user_role() = 'admin'::text))
+        )
+    );
 
+create policy "Enable admins to update every trip" on "public"."trips" as permissive
+    for update
+    to authenticated using (
+    (
+        (
+            (SELECT get_user_role() AS get_user_role) = 'admin'::text
+            )
+            AND (
+            vehicle_id IN (SELECT vehicles.id
+                           FROM vehicles
+                           WHERE (
+                                     vehicles.organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+                                     ))
+            )
+        )
+    )
+    with
+    check (
+    (
+        vehicle_id IN (SELECT vehicles.id
+                       FROM vehicles
+                       WHERE (
+                                 vehicles.organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+                                 ))
+        )
+    );
+
+create policy "Enable admins to view their all trips" on "public"."trips" as permissive for
+    select
+    to authenticated using (
+    (
+        (
+            vehicle_id IN (SELECT vehicles.id
+                           FROM vehicles
+                           WHERE (
+                                     vehicles.organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+                                     ))
+            )
+            AND (SELECT (get_user_role() = 'admin'::text))
+        )
+    );
+
+create policy "Enable drivers to delete their own trips" on "public"."trips" as permissive for delete to authenticated using (
+    (
+        (
+            (SELECT get_user_role() AS get_user_role) = 'driver'::text
+            )
+            AND (user_id = auth.uid())
+        )
+    );
+
+create policy "Enable drivers to update their own trips" on "public"."trips" as permissive
+    for update
+    to authenticated using (
+    (
+        (user_id = auth.uid())
+            AND (SELECT (get_user_role() = 'driver'::text))
+        )
+    )
+    with
+    check ((user_id = auth.uid()));
+
+create policy "Enable drivers to view their own trips" on "public"."trips" as permissive for
+    select
+    to authenticated using (
+    (
+        (user_id = auth.uid())
+            AND (SELECT (get_user_role() = 'driver'::text))
+        )
+    );
+
+create policy "Enable insert for organization members" on "public"."trips" as permissive for insert to authenticated
+    with
+    check (
+    (
+        vehicle_id IN (SELECT vehicles.id
+                       FROM vehicles
+                       WHERE (
+                                 vehicles.organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+                                 ))
+        )
+    );
+
+create policy "Enable insert for organization admins" on "public"."vehicles" as permissive for insert to authenticated
+    with
+    check (
+    (
+        (
+            organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user)
+            )
+            AND (
+            (SELECT get_user_role() AS get_user_role) = 'admin'::text
+            )
+        )
+    );

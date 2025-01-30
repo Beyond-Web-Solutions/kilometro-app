@@ -44,7 +44,7 @@ export function CreatOrganizationForm() {
         queryKey: ["orgs-for-user"],
       });
 
-      return router.push("/(tabs)");
+      return router.push("/onboard/create-vehicles");
     }
   }, []);
 
@@ -65,6 +65,7 @@ export function CreatOrganizationForm() {
         control={control}
         name="email"
         mode="outlined"
+        autoComplete="email"
         autoCapitalize="none"
         label={t("business-email.label")}
         textContentType="emailAddress"

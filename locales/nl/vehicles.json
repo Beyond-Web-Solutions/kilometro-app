@@ -1,0 +1,38 @@
+{
+  "list": {
+    "title": "Voertuigen",
+
+    "menu": {
+      "edit": "Bewerken",
+      "delete": "Verwijderen"
+    }
+  },
+  "create": {
+    "title": "Voertuig toevoegen",
+
+    "fab": "Toevoegen",
+
+    "form": {
+      "name": {
+        "label": "Naam van het voertuig"
+      },
+      "licence-plate": {
+        "label": "Kenteken",
+        "placeholder": "X-999-XX"
+      },
+      "odometer": {
+        "label": "Kilometerstand (km)"
+      }
+    },
+
+    "cancel": "Annuleren",
+    "submit": "Toevoegen"
+  },
+  "delete": {
+    "title": "Voertuig verwijderen?",
+    "description": "Dit kan niet ongedaan worden gemaakt. De gemaaakte ritten zullen niet worden verwijderd.",
+
+    "cancel": "Annuleren",
+    "submit": "Verwijderen"
+  }
+}

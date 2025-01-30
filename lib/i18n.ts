@@ -7,6 +7,7 @@ import nl_trips from "../locales/nl/trips.json";
 import nl_auth from "../locales/nl/auth.json";
 import nl_onboard from "../locales/nl/onboard.json";
 import nl_validation from "../locales/nl/validation.json";
+import nl_vehicles from "../locales/nl/vehicles.json";
 
 export const defaultNS = "common";
 export const resources = {
@@ -17,6 +18,7 @@ export const resources = {
     onboard: nl_onboard,
     validation: nl_validation,
     trips: nl_trips,
+    vehicles: nl_vehicles,
   },
 } as const;
 
@@ -26,7 +28,7 @@ i18n
     resources,
     defaultNS,
     fallbackLng: "nl",
-    ns: ["common", "auth", "onboard", "validation", "map", "trips"],
+    ns: ["common", "auth", "onboard", "validation", "map", "trips", "vehicles"],
     interpolation: {
       escapeValue: false, // react already safes from xss
     },

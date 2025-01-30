@@ -1,7 +1,7 @@
 import { StopTripFormData } from "@/constants/definitions/trip/stop";
 import { PolyUtil, SphericalUtil } from "node-geometry-library";
 import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
-import { reverseGeocode } from "@/hooks/use-reverse-geocode";
+import { reverseGeocode } from "@/hooks/geo/reverse-geocode";
 import { getAverage } from "@/utils/math";
 import { supabase } from "@/lib/supabase";
 import { Tables } from "@/types/supabase";

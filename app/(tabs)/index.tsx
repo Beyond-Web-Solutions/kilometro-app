@@ -7,8 +7,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LocationSubscriber } from "@/components/map/location-subscriber";
 import { ToggleTripFab } from "@/components/map/toggle-trip-fab";
 import { CenterOnUserFab } from "@/components/map/actions/center-on-user";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useCurrentPosition } from "@/hooks/use-current-position";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCurrentPosition } from "@/hooks/geo/current-position";
 import { ViewRouteFab } from "@/components/map/actions/view-route";
 import { SpeedIndicator } from "@/components/map/speed-indicator";
 
@@ -61,7 +61,6 @@ export default function MapPage() {
             ref={ref}
             showsCompass
             showsUserLocation
-            showsScale
             showsTraffic
             followsUserLocation={isFollowingUser}
             onPanDrag={handlePanDrag}

@@ -9,7 +9,7 @@ export function useDefaultOrganization() {
   });
 }
 
-async function getOrganization() {
+export async function getOrganization() {
   const { data } = await supabase.rpc("get_default_org");
 
   return data as Tables<"organizations">;

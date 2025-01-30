@@ -53,7 +53,7 @@ export function SignUpForm() {
       return setError(error.code ?? "unknown");
     }
 
-    return router.push(`/(auth)/confirm-email?email=${values.email}`);
+    return router.push(`/auth/confirm-email?email=${values.email}`);
   }, []);
 
   return (
@@ -61,6 +61,7 @@ export function SignUpForm() {
       <TextFormField<SignUpFormData>
         control={control}
         name="email"
+        autoComplete="email"
         mode="outlined"
         autoCapitalize="none"
         label={t("email.label")}
@@ -74,6 +75,7 @@ export function SignUpForm() {
       <TextFormField<SignUpFormData>
         control={control}
         name="password"
+        autoComplete="password"
         mode="outlined"
         autoCapitalize="none"
         label={t("password.label")}
@@ -94,6 +96,7 @@ export function SignUpForm() {
       <TextFormField<SignUpFormData>
         control={control}
         name="confirm"
+        autoComplete="password"
         mode="outlined"
         autoCapitalize="none"
         label={t("confirm.label")}

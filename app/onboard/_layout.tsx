@@ -16,6 +16,13 @@ export default function OnboardLayout() {
         }}
       />
       <Stack.Screen
+        key="create-vehicles"
+        name="create-vehicles"
+        options={{
+          headerTitle: t("create-vehicles.header-title"),
+        }}
+      />
+      <Stack.Screen
         key="join-org"
         name="join-org"
         options={{

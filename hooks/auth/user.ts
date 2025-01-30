@@ -9,7 +9,9 @@ export function useUser() {
 }
 
 async function getUser() {
-  const { data } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return data;
+  return user;
 }

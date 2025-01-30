@@ -222,6 +222,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Record<string, unknown>[]
       }
+      get_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       organization_roles: "driver" | "admin"

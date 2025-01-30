@@ -3,7 +3,7 @@ import MapView, { LatLng, Marker, Polyline, Region } from "react-native-maps";
 import { FAB, useTheme } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useTrip } from "@/hooks/use-trip";
+import { useTrip } from "@/hooks/trip/single";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { PolyUtil } from "node-geometry-library";
 import { ViewTripDetailsBottomSheet } from "@/components/trips/details/bottom-sheet";

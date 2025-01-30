@@ -1,4 +1,4 @@
-import { useTrips } from "@/hooks/use-trips";
+import { useTrips } from "@/hooks/trip/list";
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { Tables } from "@/types/supabase";
 import { TripsOverviewListItem } from "@/components/trips/overview/list-item";

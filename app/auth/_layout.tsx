@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { useAuthState } from "@/hooks/use-auth-state";
+import { useAuthState } from "@/hooks/auth/auth-listener";
 
 export default function AuthLayout() {
   useAuthState();
