@@ -10,7 +10,7 @@
   "km-h": "km/h",
 
   "trip": {
-    "unknown-location": "Onbekende adres",
+    "unknown-location": "Onbekend adres",
     "unknown-time": "Onbekende tijd"
   }
 }

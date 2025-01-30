@@ -6,6 +6,7 @@ import onboard from "./locales/nl/onboard.json";
 import validation from "./locales/nl/validation.json";
 import trips from "./locales/nl/trips.json";
 import vehicles from "./locales/nl/vehicles.json";
+import settings from "./locales/nl/settings.json";
 
 declare module "i18next" {
   // Extend CustomTypeOptions
@@ -21,6 +22,7 @@ declare module "i18next" {
       validation: typeof validation;
       trips: typeof trips;
       vehicles: typeof vehicles;
+      settings: typeof settings;
     };
     // other
   }
