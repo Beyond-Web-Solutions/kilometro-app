@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CreateOrganizationFormData,
   createOrganizationSchema,
-} from "@/constants/definitions/onboard/create-org";
+} from "@/constants/definitions/organizations/create";
 import { StyleSheet } from "react-native";
 import { TextFormField } from "@/components/_common/form/text-input";
 import { supabase } from "@/lib/supabase";
@@ -66,7 +66,7 @@ export function CreateOrganizationDialog() {
         <Dialog visible={isVisible} onDismiss={() => setIsVisible(false)}>
           <Dialog.Icon icon="office-building" />
           <Dialog.Title>{t("dialog-title")}</Dialog.Title>
-          <Dialog.Content>
+          <Dialog.Content style={styles.dialog_content}>
             <TextFormField<CreateOrganizationFormData>
               control={control}
               autoFocus

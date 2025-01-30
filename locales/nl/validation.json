@@ -9,5 +9,6 @@
   "invalid-vehicle": "Ongeldig voertuig.",
   "new-odometer-cannot-be-less-than-previous": "De nieuwe kilometerstand kan niet lager zijn dan de vorige.",
   "name-too-short": "De naam moet minimaal 3 tekens lang zijn.",
-  "licence-plate-must-be-8-characters": "Het kenteken moet 8 tekens lang zijn."
+  "licence-plate-must-be-8-characters": "Het kenteken moet 8 tekens lang zijn.",
+  "organization-code-must-be-6-characters": "De organisatiecode moet 6 tekens lang zijn."
 }

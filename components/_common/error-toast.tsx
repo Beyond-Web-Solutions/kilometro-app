@@ -1,11 +1,11 @@
-import { Portal, Snackbar } from "react-native-paper";
-import { useAuthErrorStore } from "@/store/auth-error";
 import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
+import { Portal, Snackbar } from "react-native-paper";
+import { useErrorStore } from "@/store/error";
 
-export function AuthErrorToast() {
-  const { t } = useTranslation(["auth", "common"]);
-  const { error, setError } = useAuthErrorStore();
+export function ErrorToast() {
+  const { t } = useTranslation("common");
+  const { error, setError } = useErrorStore();
 
   const dismissError = useCallback(() => {
     setError(null);
@@ -17,11 +17,11 @@ export function AuthErrorToast() {
         visible={!!error}
         onDismiss={dismissError}
         action={{
-          label: t("common:ok"),
+          label: t("ok"),
           onPress: dismissError,
         }}
       >
-        {t(`auth:errors.${error}` as never)}
+        {error}
       </Snackbar>
     </Portal>
   );

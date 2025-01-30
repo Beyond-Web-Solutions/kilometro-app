@@ -12,6 +12,7 @@ import { SplashScreenProvider } from "@/components/splash-screen-provider";
 import "react-native-reanimated";
 import "../lib/location-listener";
 import "../lib/i18n";
+import { ErrorToast } from "@/components/_common/error-toast";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -50,6 +51,7 @@ export default function RootLayout() {
           <StatusBar style="auto" />
           <Slot />
           <AuthErrorToast />
+          <ErrorToast />
         </SplashScreenProvider>
       </PaperProvider>
     </QueryClientProvider>

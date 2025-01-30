@@ -16,7 +16,7 @@ export async function setDefaultOrganization(id: string) {
     return null;
   }
 
-  const res = await supabase
+  await supabase
     .from("organization_members")
     .update({ is_default: false })
     .eq("user_id", user.id);

@@ -16,27 +16,11 @@ export default function TabsLayout() {
 
   const { data: role } = useOrganizationRole();
 
-  const {
-    isFetchedAfterMount: isDefaultOrganizationFetched,
-    data: defaultOrganization,
-  } = useDefaultOrganization();
-
-  const { isFetchedAfterMount: isOrganizationsFetched, data: organizations } =
-    useOrganizations();
-
-  // ensure a user has an organization before they can use the app
   useEffect(() => {
-    if (isDefaultOrganizationFetched && isOrganizationsFetched) {
-      if (!defaultOrganization && organizations?.length === 0) {
-        return router.replace("/onboard");
-      }
+    if (!role) {
+      router.push("/onboard");
     }
-  }, [
-    isDefaultOrganizationFetched,
-    defaultOrganization,
-    organizations,
-    isOrganizationsFetched,
-  ]);
+  }, [role]);
 
   return (
     <Tabs

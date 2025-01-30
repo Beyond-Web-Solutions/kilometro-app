@@ -4,6 +4,8 @@ import { OnboardAndAuthLayout } from "@/components/_common/layout/onboard";
 import { useDefaultOrganization } from "@/hooks/org/default";
 import { useEffect } from "react";
 import { CreateOrganizationDialog } from "@/components/settings/organization/create/dialog";
+import { JoinOrganizationDialog } from "@/components/settings/organization/join/dialog";
+import { StyleSheet, View } from "react-native";
 
 export default function CreateOrJoinOrganizationScreen() {
   const { t } = useTranslation("onboard", { keyPrefix: "create-or-join" });
@@ -22,7 +24,17 @@ export default function CreateOrJoinOrganizationScreen() {
       description={t("description")}
       showDivider={false}
     >
-      <CreateOrganizationDialog />
+      <View style={styles.container}>
+        <CreateOrganizationDialog />
+        <JoinOrganizationDialog />
+      </View>
     </OnboardAndAuthLayout>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    gap: 8,
+    paddingTop: 16,
+  },
+});

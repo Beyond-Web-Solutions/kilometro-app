@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import {
   CreateOrganizationFormData,
   createOrganizationSchema,
-} from "@/constants/definitions/onboard/create-org";
+} from "@/constants/definitions/organizations/create";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";

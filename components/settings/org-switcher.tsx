@@ -1,7 +1,7 @@
 import { Button, Dialog, Portal, RadioButton, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useOrganizations } from "@/hooks/org/list";
 import { useDefaultOrganization } from "@/hooks/org/default";
 import { Link } from "expo-router";
@@ -16,17 +16,14 @@ interface Props {
 export function OrganizationSwitcher({ isVisible, hideDialog }: Props) {
   const queryClient = useQueryClient();
 
-  const onSwitchOrganizationSuccess = useCallback(async () => {
+  const { mutate, isPending } = useSetDefaultOrganization(async () => {
     await queryClient.invalidateQueries({
       queryKey: ["organizations"],
+      refetchType: "all",
     });
 
     hideDialog();
-  }, []);
-
-  const { mutate, isPending } = useSetDefaultOrganization(
-    onSwitchOrganizationSuccess,
-  );
+  });
 
   const { t } = useTranslation("settings", {
     keyPrefix: "organization-switcher",
