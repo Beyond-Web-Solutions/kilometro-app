@@ -17,6 +17,11 @@ export default function SettingsLayout() {
         name="new-organization"
         options={{ headerTitle: t("new-organization.header-title") }}
       />
+      <Stack.Screen
+        key="members"
+        name="members"
+        options={{ headerTitle: t("organization.members.overview.page-title") }}
+      />
     </Stack>
   );
 }

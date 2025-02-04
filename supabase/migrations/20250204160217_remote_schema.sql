@@ -9,6 +9,16 @@ CREATE TYPE "public"."trip_status" AS ENUM (
     'ongoing'
     );
 
+CREATE TABLE IF NOT EXISTS "public"."organizations"
+(
+    "id"                 "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
+    "name"               "text"                                               NOT NULL,
+    "code"               "text"                                               NOT NULL UNIQUE,
+    "email"              "text"                                               NOT NULL,
+    "stripe_customer_id" "text",
+    "created_at"         timestamp with time zone DEFAULT "now"()             NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS "public"."organization_members"
 (
     "id"              "uuid"                        DEFAULT "gen_random_uuid"()                    NOT NULL PRIMARY KEY,
@@ -21,16 +31,6 @@ CREATE TABLE IF NOT EXISTS "public"."organization_members"
     CONSTRAINT "organization_members_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS "public"."organizations"
-(
-    "id"                 "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
-    "name"               "text"                                               NOT NULL,
-    "code"               "text"                                               NOT NULL UNIQUE,
-    "email"              "text"                                               NOT NULL,
-    "stripe_customer_id" "text",
-    "created_at"         timestamp with time zone DEFAULT "now"()             NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS "public"."profiles"
 (
     "id"         "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
@@ -41,6 +41,21 @@ CREATE TABLE IF NOT EXISTS "public"."profiles"
     "email"      "text",
 
     CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS "public"."vehicles"
+(
+    "id"              "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
+    "organization_id" "uuid",
+    "name"            "text"                                               NOT NULL,
+    "licence_plate"   "text"                                               NOT NULL,
+    "odometer"        integer                  DEFAULT 0                   NOT NULL,
+    "created_at"      timestamp with time zone DEFAULT "now"()             NOT NULL,
+    "year"            smallint,
+    "model"           "text",
+    "brand"           "text",
+
+    CONSTRAINT "vehicles_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS "public"."trips"
@@ -68,22 +83,6 @@ CREATE TABLE IF NOT EXISTS "public"."trips"
     CONSTRAINT "trips_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE SET NULL,
     CONSTRAINT "trips_vehicle_id_fkey" FOREIGN KEY ("vehicle_id") REFERENCES "public"."vehicles" ("id") ON DELETE SET NULL
 );
-
-CREATE TABLE IF NOT EXISTS "public"."vehicles"
-(
-    "id"              "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
-    "organization_id" "uuid",
-    "name"            "text"                                               NOT NULL,
-    "licence_plate"   "text"                                               NOT NULL,
-    "odometer"        integer                  DEFAULT 0                   NOT NULL,
-    "created_at"      timestamp with time zone DEFAULT "now"()             NOT NULL,
-    "year"            smallint,
-    "model"           "text",
-    "brand"           "text",
-
-    CONSTRAINT "vehicles_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations" ("id") ON DELETE CASCADE
-);
-
 
 ALTER TABLE "public"."organization_members"
     ENABLE ROW LEVEL SECURITY;
@@ -162,7 +161,7 @@ BEGIN
     SELECT role
     FROM organization_members member
     WHERE member.user_id = auth.uid()
-      AND (organization_id = (select auth.jwt() - > 'user_metadata' - > 'organization_id'));
+      AND (organization_id = (select auth.jwt() -> 'user_metadata' -> 'organization_id'));
 
     RETURN user_role;
 END;
