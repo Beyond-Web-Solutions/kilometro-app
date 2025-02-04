@@ -24,5 +24,18 @@
 
     "start-odometer": "Start kilometerstand",
     "end-odometer": "Eind kilometerstand"
+  },
+
+  "delete": {
+    "menu-item": "Verwijderen",
+
+    "dialog-title": "Rit verwijderen",
+    "dialog-description": "Dit kan niet ongedaan worden gemaakt. De kilometerstand van het voertuig zal worden aangepast naar de kilometerstand van voor deze rit.",
+
+    "cancel": "Annuleren",
+    "submit": "Verwijderen"
+  },
+  "edit": {
+    "menu-item": "Bewerken"
   }
 }

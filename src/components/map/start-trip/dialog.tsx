@@ -1,5 +1,5 @@
 import { Button, Dialog, Divider, Portal } from "react-native-paper";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 import { useForegroundPermissions } from "expo-location";
@@ -15,6 +15,7 @@ import { useCurrentTripStore } from "@/src/store/current-trip";
 import { SelectVehicleInput } from "@/src/components/map/start-trip/select-vehicle";
 import { router } from "expo-router";
 import { handleOnStartTripSubmit } from "@/src/utils/trips/start";
+import { useVehicles } from "@/src/hooks/vehicles/list";
 
 interface Props {
   isVisible: boolean;
@@ -29,6 +30,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
   const { t } = useTranslation("map", { keyPrefix: "start-trip-dialog" });
 
   const { startTrip } = useCurrentTripStore();
+  const { data: vehicles } = useVehicles();
 
   const {
     control,
@@ -40,7 +42,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
   } = useForm<StartTripFormData>({
     resolver: zodResolver(startTripSchema),
     defaultValues: {
-      start_odometer: "",
+      start_odometer: 0,
       vehicle_id: "",
     },
   });
@@ -73,17 +75,23 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
     [status, hideDialog],
   );
 
+  const vehicle_id = watch("vehicle_id");
+
+  useEffect(() => {
+    const vehicle = vehicles?.find((v) => v.id === vehicle_id);
+
+    if (vehicle) {
+      setValue("start_odometer", vehicle.odometer / 1000);
+    }
+  }, [vehicle_id, vehicles]);
+
   return (
     <Portal>
       <Dialog visible={isVisible} onDismiss={hideDialog}>
         <Dialog.Icon icon="car-select" />
         <Dialog.Title style={styles.text}>{t("title")}</Dialog.Title>
         <Dialog.Content style={styles.form_container}>
-          <SelectVehicleInput
-            control={control}
-            watch={watch}
-            setValue={setValue}
-          />
+          <SelectVehicleInput control={control} />
 
           <Divider />
 

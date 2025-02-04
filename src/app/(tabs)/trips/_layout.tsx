@@ -18,7 +18,16 @@ export default function TripsLayout() {
         name="[id]"
         options={{
           title: t("details.title"),
-          header: (props) => <StackHeader {...props} />,
+          header: (props) => (
+            <StackHeader
+              {...props}
+              right={
+                <TripsOptionsMenu
+                  params={props.route.params as TripDetailsParams}
+                />
+              }
+            />
+          ),
         }}
       />
     </Stack>
