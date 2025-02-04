@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { StackHeader } from "@/src/components/nav/stack-header";
 import { useTranslation } from "react-i18next";
+import { VehicleMenu } from "@/src/components/vehicles/menu";
 
 export default function VehiclesLayout() {
   const { t } = useTranslation("vehicles");
@@ -12,7 +13,25 @@ export default function VehiclesLayout() {
         name="index"
         options={{ headerTitle: t("list.title") }}
       />
-      <Stack.Screen key="[id]" name="[id]" />
+      <Stack.Screen
+        key="[id]"
+        name="[id]"
+        options={{
+          title: t("edit.header-title"),
+          header: (props) => (
+            <StackHeader
+              {...props}
+              right={
+                <VehicleMenu
+                  params={props.route.params as VehicleRouteParams}
+                />
+              }
+            />
+          ),
+        }}
+      />
     </Stack>
   );
 }
+
+type VehicleRouteParams = { id?: string };

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
 import { useDeleteVehicle } from "@/src/hooks/vehicles/delete";
 import { useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 
 interface Props {
   id: string;
@@ -21,6 +22,8 @@ export function DeleteVehicleDialog({ id, isVisible, hideDialog }: Props) {
     });
 
     hideDialog();
+
+    return router.back();
   }, []);
 
   const { mutate, isPending } = useDeleteVehicle(handleOnDeleteSuccess);

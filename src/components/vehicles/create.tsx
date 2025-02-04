@@ -73,6 +73,7 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
         <Dialog.Content style={{ gap: 4 }}>
           <TextFormField<CreateVehicleFormData>
             control={control}
+            autoFocus
             name="name"
             mode="outlined"
             autoCapitalize="words"

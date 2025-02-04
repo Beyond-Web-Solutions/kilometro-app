@@ -8,6 +8,7 @@ import { PolyUtil } from "node-geometry-library";
 import { ViewTripDetailsBottomSheet } from "@/src/components/trips/details/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
+import { useProfile } from "@/src/hooks/profile/get";
 
 export default function Trip() {
   const scheme = useColorScheme();
@@ -16,25 +17,26 @@ export default function Trip() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams();
 
-  const { data } = useTrip(id as string);
+  const { data: trip } = useTrip(id as string);
+  const { data: profile } = useProfile(trip?.user_id ?? undefined);
 
   const [region, setRegion] = useState<Region>();
 
   const startPoint = useMemo(() => {
-    if (!data?.start_point) return null;
+    if (!trip?.start_point) return null;
 
-    return data?.start_point as LatLng;
-  }, [data]);
+    return trip?.start_point as LatLng;
+  }, [trip]);
 
   const endPoint = useMemo(() => {
-    if (!data?.end_point) return null;
+    if (!trip?.end_point) return null;
 
-    return data?.end_point as LatLng;
-  }, [data]);
+    return trip?.end_point as LatLng;
+  }, [trip]);
 
   const polyline = useMemo(() => {
-    if (data?.codec) {
-      const points = PolyUtil.decode(data.codec);
+    if (trip?.codec) {
+      const points = PolyUtil.decode(trip.codec);
 
       return points.map((point) => ({
         latitude: point.lat,
@@ -43,7 +45,7 @@ export default function Trip() {
     }
 
     return [];
-  }, [data]);
+  }, [trip]);
 
   useLayoutEffect(() => {
     if (startPoint === null || endPoint === null) return;
@@ -72,7 +74,7 @@ export default function Trip() {
           {startPoint && (
             <Marker
               title={t("starting-point")}
-              description={data?.start_address ?? undefined}
+              description={trip?.start_address ?? undefined}
               coordinate={{
                 latitude: startPoint.latitude,
                 longitude: startPoint.longitude,
@@ -82,7 +84,7 @@ export default function Trip() {
           {endPoint && (
             <Marker
               title={t("destination")}
-              description={data?.end_address ?? undefined}
+              description={trip?.end_address ?? undefined}
               coordinate={{
                 latitude: endPoint.latitude,
                 longitude: endPoint.longitude,
@@ -95,7 +97,7 @@ export default function Trip() {
             coordinates={polyline}
           />
         </MapView>
-        {data && <ViewTripDetailsBottomSheet trip={data} />}
+        {trip && <ViewTripDetailsBottomSheet trip={trip} profile={profile} />}
       </GestureHandlerRootView>
     </View>
   );

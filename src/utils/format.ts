@@ -45,3 +45,20 @@ export function formatDuration(
 
   return formatDistanceStrict(date2, date1, { locale: nl });
 }
+
+export function formatUsername(
+  empty: string,
+  firstName?: string,
+  lastName?: string,
+  email?: string,
+) {
+  if (!firstName && !lastName) {
+    return email;
+  }
+
+  if (firstName && lastName) {
+    return `${firstName} ${lastName}`;
+  }
+
+  return empty;
+}

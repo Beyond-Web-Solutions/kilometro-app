@@ -28,6 +28,38 @@
     "cancel": "Annuleren",
     "submit": "Toevoegen"
   },
+  "edit": {
+    "header-title": "Voertuig bewerken",
+    "form": {
+      "name": {
+        "label": "Naam van het voertuig"
+      },
+      "licence-plate": {
+        "label": "Kenteken",
+        "placeholder": "X-999-XX"
+      },
+      "odometer": {
+          "label": "Kilometerstand (km)"
+      },
+      "brand": {
+        "label": "Merk",
+        "placeholder": "Volkswagen"
+      },
+      "model": {
+        "label": "Model",
+        "placeholder": "Golf"
+      },
+      "year": {
+        "label": "Bouwjaar",
+        "placeholder": "2010"
+      },
+
+      "errors": {
+        "saving": "Er is een fout opgetreden bij het opslaan van het voertuig."
+      },
+      "submit": "Opslaan"
+    }
+  },
   "delete": {
     "title": "Voertuig verwijderen?",
     "description": "Dit kan niet ongedaan worden gemaakt. De gemaaakte ritten zullen niet worden verwijderd.",

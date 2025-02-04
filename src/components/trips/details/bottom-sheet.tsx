@@ -9,14 +9,17 @@ import {
   formatDuration,
   formatOdometer,
   formatSpeed,
+  formatUsername,
 } from "@/src/utils/format";
 import { getTrip } from "@/src/hooks/trip/single";
+import { Tables } from "@/src/types/supabase";
 
 interface Props {
   trip: Awaited<ReturnType<typeof getTrip>>;
+  profile: Tables<"profiles"> | null | undefined;
 }
 
-export function ViewTripDetailsBottomSheet({ trip }: Props) {
+export function ViewTripDetailsBottomSheet({ trip, profile }: Props) {
   const ref = useRef<BottomSheet>(null);
 
   const { t } = useTranslation("trips", { keyPrefix: "details" });
@@ -51,7 +54,11 @@ export function ViewTripDetailsBottomSheet({ trip }: Props) {
           />
           <List.Item
             title={t("user")}
-            description={trip.user_id}
+            description={formatUsername(
+              t("unknown-user"),
+              profile?.first_name,
+              profile?.last_name,
+            )}
             left={(props) => <List.Icon {...props} icon="account" />}
           />
 

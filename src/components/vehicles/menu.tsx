@@ -4,14 +4,15 @@ import { useTranslation } from "react-i18next";
 import { router, useNavigation } from "expo-router";
 import { Tables } from "@/src/types/supabase";
 import { DeleteVehicleDialog } from "@/src/components/vehicles/delete";
+import { useVehicle } from "@/src/hooks/vehicles/get";
 
 interface Props {
-  vehicle: Tables<"vehicles">;
-  color: string;
-  style?: any;
+  params: { id?: string };
 }
 
-export function VehicleMenu(props: Props) {
+export function VehicleMenu({ params }: Props) {
+  const { data } = useVehicle(params.id);
+
   const { t } = useTranslation("vehicles", { keyPrefix: "list.menu" });
 
   const [isVisible, setIsVisible] = useState(false);
@@ -24,22 +25,9 @@ export function VehicleMenu(props: Props) {
         onDismiss={() => setIsVisible(false)}
         anchorPosition="bottom"
         anchor={
-          <IconButton
-            iconColor={props.color}
-            style={props.style}
-            onPress={() => setIsVisible(true)}
-            icon="dots-vertical"
-          />
+          <IconButton icon="dots-vertical" onPress={() => setIsVisible(true)} />
         }
       >
-        <Menu.Item
-          title={t("edit")}
-          leadingIcon="pencil"
-          onPress={() => {
-            setIsVisible(false);
-            router.navigate(`/vehicles/${props.vehicle.id}`);
-          }}
-        />
         <Menu.Item
           title={t("delete")}
           leadingIcon="trash-can-outline"
@@ -49,11 +37,13 @@ export function VehicleMenu(props: Props) {
           }}
         />
       </Menu>
-      <DeleteVehicleDialog
-        id={props.vehicle.id}
-        isVisible={isDeleteDialogVisible}
-        hideDialog={() => setIsDeleteDialogVisible(false)}
-      />
+      {data && (
+        <DeleteVehicleDialog
+          id={data?.id}
+          isVisible={isDeleteDialogVisible}
+          hideDialog={() => setIsDeleteDialogVisible(false)}
+        />
+      )}
     </>
   );
 }

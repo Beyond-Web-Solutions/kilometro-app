@@ -15,7 +15,8 @@
     "trip": "Rit",
 
     "vehicle": "Voertuig",
-    "user": "User",
+    "user": "Bestuurder",
+    "unknown-user": "Onbekende bestuurder",
     "distance": "Afstand",
     "duration": "Duur",
     "avg-speed": "Gem. snelheid",

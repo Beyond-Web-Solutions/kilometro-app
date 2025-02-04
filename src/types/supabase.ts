@@ -99,21 +99,21 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string
           first_name: string
           id?: string
           last_name: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           created_at?: string
           first_name?: string
           id?: string
           last_name?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -220,28 +220,37 @@ export type Database = {
       }
       vehicles: {
         Row: {
+          brand: string | null
           created_at: string
           id: string
           licence_plate: string
+          model: string | null
           name: string
           odometer: number
           organization_id: string | null
+          year: number | null
         }
         Insert: {
+          brand?: string | null
           created_at?: string
           id?: string
           licence_plate: string
+          model?: string | null
           name: string
           odometer?: number
           organization_id?: string | null
+          year?: number | null
         }
         Update: {
+          brand?: string | null
           created_at?: string
           id?: string
           licence_plate?: string
+          model?: string | null
           name?: string
           odometer?: number
           organization_id?: string | null
+          year?: number | null
         }
         Relationships: [
           {
@@ -258,10 +267,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_default_org: {
-        Args: Record<PropertyKey, never>
-        Returns: Record<string, unknown>
-      }
       get_org_ids_for_user: {
         Args: Record<PropertyKey, never>
         Returns: string[]
@@ -269,6 +274,10 @@ export type Database = {
       get_orgs_for_user: {
         Args: Record<PropertyKey, never>
         Returns: Record<string, unknown>[]
+      }
+      get_selected_organization: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       get_user_role: {
         Args: Record<PropertyKey, never>
