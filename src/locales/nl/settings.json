@@ -14,6 +14,20 @@
     "cancel": "Annuleren",
     "submit": "Opslaan"
   },
+  "organization": {
+    "title": "Organisatie",
+    "switch": {
+      "title": "Wijzig organisatie"
+    },
+    "members": {
+      "title": "Leden",
+
+      "overview": {
+        "page-title": "Organisatieleden"
+      },
+      "delete": {}
+    }
+  },
   "general": {
     "title": "Algemeen",
     "location": {
@@ -42,9 +56,6 @@
         "cancel": "Annuleren",
         "submit": "Opslaan"
       }
-    },
-    "organization": {
-      "title": "Organisatie"
     }
   },
   "appearance": {

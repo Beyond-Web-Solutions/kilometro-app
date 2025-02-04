@@ -1,4 +1,4 @@
-import { Button, Dialog, Portal, Text } from "react-native-paper";
+import { Button, Dialog, Portal } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import {
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import { TextFormField } from "@/src/components/_common/form/text-input";
 import { supabase } from "@/src/lib/supabase";
-import { getOrganization } from "@/src/hooks/org/default";
+import { getDefaultOrganization } from "@/src/hooks/org/default";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
@@ -38,7 +38,7 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
   });
 
   const onSubmit = useCallback(async (values: CreateVehicleFormData) => {
-    const org = await getOrganization();
+    const org = await getDefaultOrganization();
 
     if (!org) {
       console.error("Organization not found");

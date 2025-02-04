@@ -6,11 +6,11 @@ import { getUser } from "@/src/hooks/auth/user";
 export function useDefaultOrganization() {
   return useQuery({
     queryKey: ["organizations", "default"],
-    queryFn: getOrganization,
+    queryFn: getDefaultOrganization,
   });
 }
 
-export async function getOrganization() {
+export async function getDefaultOrganization() {
   const user = await getUser();
 
   if (!user) {

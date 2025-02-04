@@ -5,6 +5,7 @@ import { ProfileSettings } from "@/src/components/settings/header";
 import { GeneralSettings } from "@/src/components/settings/general/list";
 import { ScrollView } from "react-native";
 import { AppearanceSettings } from "@/src/components/settings/appearance/list";
+import { OrganizationSettings } from "@/src/components/settings/organization/list";
 
 export default function SettingsPage() {
   return (
@@ -13,6 +14,8 @@ export default function SettingsPage() {
         <ProfileSettings />
         <Divider horizontalInset />
         <GeneralSettings />
+        <Divider horizontalInset />
+        <OrganizationSettings />
         <Divider horizontalInset />
         <AppearanceSettings />
         <Divider horizontalInset />
