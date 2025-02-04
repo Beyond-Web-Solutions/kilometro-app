@@ -1,0 +1,147 @@
+{
+  "header-title": "Instellingen",
+
+  "account-settings-menu": {
+    "account": "Accountinstellingen",
+    "organization": "Wijzig organisatie"
+  },
+
+  "organization-switcher": {
+    "title": "Wijzig organisatie",
+
+    "new": "Nieuw",
+
+    "cancel": "Annuleren",
+    "submit": "Opslaan"
+  },
+  "general": {
+    "title": "Algemeen",
+    "location": {
+      "title": "Locatie"
+    },
+    "account": {
+      "title": "Account",
+
+      "dialog": {
+        "title": "Accountinstellingen",
+
+        "form": {
+          "first-name": {
+            "label": "Voornaam"
+          },
+          "last-name": {
+              "label": "Achternaam"
+          },
+
+          "errors": {
+            "no-user": "Geen gebruiker gevonden",
+            "error-saving-user": "Er is een fout opgetreden bij het opslaan van de gebruiker"
+          }
+        },
+
+        "cancel": "Annuleren",
+        "submit": "Opslaan"
+      }
+    },
+    "organization": {
+      "title": "Organisatie"
+    }
+  },
+  "appearance": {
+    "title": "Weergave",
+    "theme": {
+      "title": "Donkere modus"
+    },
+    "language": {
+      "title": "Taal",
+      "dialog-title": "Taal wijzigen",
+      "cancel": "Annuleren",
+      "submit": "Opslaan",
+
+      "options": {
+        "bg": "Български",
+        "hr": "Hrvatski",
+        "cs": "Čeština",
+        "da": "Dansk",
+        "nl": "Nederlands",
+        "en": "English",
+        "et": "Eesti",
+        "fi": "Suomi",
+        "fr": "Français",
+        "de": "Deutsch",
+        "el": "Ελληνικά",
+        "hu": "Magyar",
+        "ga": "Gaeilge",
+        "it": "Italiano",
+        "lv": "Latviešu",
+        "lt": "Lietuvių",
+        "mt": "Malti",
+        "pl": "Polski",
+        "pt": "Português",
+        "ro": "Română",
+        "sk": "Slovenčina",
+        "sl": "Slovenščina",
+        "es": "Español",
+        "sv": "Svenska"
+      }
+
+    }
+  },
+  "footer": {
+    "sign-out": "Uitloggen",
+    "support": "Ondersteuning",
+    "app-website": "Website",
+    "app-version": "Versie",
+    "app-terms": "Gebruiksvoorwaarden",
+    "app-privacy": "Privacybeleid"
+  },
+
+  "new-organization": {
+    "header-title": "Nieuwe organisatie",
+
+    "create": {
+      "button": "Maak een nieuwe organisatie aan",
+
+      "dialog-title": "Maak een nieuwe organisatie aan",
+
+      "form": {
+        "name": {
+          "label": "Bedrijfsnaam"
+        },
+        "email": {
+          "label": "Bedrijfse-mail"
+        },
+
+        "errors": {
+          "error-creating-org": "Er is een fout opgetreden bij het aanmaken van de organisatie",
+          "error-creating-member": "Er is een fout opgetreden bij het aanmaken van de gebruiker",
+          "no-user": "Geen gebruiker gevonden"
+        },
+
+        "cancel": "Annuleren",
+        "submit": "Aanmaken"
+      }
+    },
+    "join": {
+      "button": "Voeg je bij een bestaande organisatie",
+
+      "dialog-title": "Voeg je bij een bestaande organisatie",
+
+      "organization-code": {
+        "label": "Organisatiecode"
+      },
+
+      "errors": {
+        "org-not-found": "Organisatie niet gevonden",
+        "no-user": "Geen gebruiker gevonden",
+        "error-adding-member": "Er is een fout opgetreden bij het toevoegen van de gebruiker aan de organisatie",
+        "already-member": "Je bent al lid van deze organisatie"
+      },
+
+      "form": {
+        "cancel": "Annuleren",
+        "submit": "Voeg toe"
+      }
+    }
+  }
+}

@@ -2,8 +2,9 @@
 module.exports = {
   extends: ["expo", "prettier"],
   ignorePatterns: ["/dist/*"],
-  plugins: ["prettier"],
+  plugins: ["prettier", "eslint-plugin-react-compiler"],
   rules: {
     "prettier/prettier": "error",
+    "react-compiler/react-compiler": "error",
   },
 };

@@ -1,0 +1,41 @@
+{
+  "overview": {
+    "title": "Ritten",
+
+    "from": "Van: ",
+    "to": "Naar: ",
+
+    "unknown-time": "Onbekende tijd"
+  },
+
+  "details": {
+    "title": "Rit details",
+    "starting-point": "Vertrekpunt",
+    "destination": "Bestemming",
+
+    "trip": "Rit",
+
+    "vehicle": "Voertuig",
+    "user": "Bestuurder",
+    "unknown-user": "Onbekende bestuurder",
+    "distance": "Afstand",
+    "duration": "Duur",
+    "avg-speed": "Gem. snelheid",
+
+    "start-odometer": "Start kilometerstand",
+    "end-odometer": "Eind kilometerstand"
+  },
+
+  "delete": {
+    "menu-item": "Verwijderen",
+
+    "dialog-title": "Rit verwijderen",
+    "dialog-description": "Dit kan niet ongedaan worden gemaakt. De kilometerstand van het voertuig zal worden aangepast naar de kilometerstand van voor deze rit.",
+
+    "cancel": "Annuleren",
+    "submit": "Verwijderen"
+  },
+  "edit": {
+    "menu-item": "Bewerken"
+  }
+}

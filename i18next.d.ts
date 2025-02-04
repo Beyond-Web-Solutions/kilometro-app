@@ -1,12 +1,12 @@
 import "i18next";
-import common from "./locales/nl/common.json";
-import map from "./locales/nl/map.json";
-import auth from "./locales/nl/auth.json";
-import onboard from "./locales/nl/onboard.json";
-import validation from "./locales/nl/validation.json";
-import trips from "./locales/nl/trips.json";
-import vehicles from "./locales/nl/vehicles.json";
-import settings from "./locales/nl/settings.json";
+import common from "@/src/locales/nl/common.json";
+import map from "@/src/locales/nl/map.json";
+import auth from "@/src/locales/nl/auth.json";
+import onboard from "@/src/locales/nl/onboard.json";
+import validation from "@/src/locales/nl/validation.json";
+import trips from "@/src/locales/nl/trips.json";
+import vehicles from "@/src/locales/nl/vehicles.json";
+import settings from "@/src/locales/nl/settings.json";
 
 declare module "i18next" {
   // Extend CustomTypeOptions
