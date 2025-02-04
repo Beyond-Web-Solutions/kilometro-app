@@ -3,29 +3,14 @@ import { ActivityIndicator, RadioButton } from "react-native-paper";
 import { RadioGroupField } from "@/src/components/_common/form/radio-group";
 import { Control } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
-import { UseFormSetValue, UseFormWatch } from "react-hook-form/dist/types/form";
-import { useEffect } from "react";
 import { useVehicles } from "@/src/hooks/vehicles/list";
 
 interface Props {
   control: Control<StartTripFormData>;
-  watch: UseFormWatch<StartTripFormData>;
-  setValue: UseFormSetValue<StartTripFormData>;
 }
 
-export function SelectVehicleInput({ control, watch, setValue }: Props) {
+export function SelectVehicleInput({ control }: Props) {
   const { data, isPending } = useVehicles();
-
-  const vehicle_id = watch("vehicle_id");
-
-  useEffect(() => {
-    const vehicle = data?.find((vehicle) => vehicle.id === vehicle_id);
-
-    if (vehicle) {
-      const odometer = vehicle.odometer / 1000;
-      setValue("start_odometer", odometer.toString());
-    }
-  }, [vehicle_id, data, setValue]);
 
   if (isPending) {
     return (
