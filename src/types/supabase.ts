@@ -39,6 +39,7 @@ export type Database = {
           created_at: string
           id: string
           organization_id: string
+          profile_id: string | null
           role: Database["public"]["Enums"]["organization_roles"]
           user_id: string
         }
@@ -46,6 +47,7 @@ export type Database = {
           created_at?: string
           id?: string
           organization_id: string
+          profile_id?: string | null
           role?: Database["public"]["Enums"]["organization_roles"]
           user_id: string
         }
@@ -53,6 +55,7 @@ export type Database = {
           created_at?: string
           id?: string
           organization_id?: string
+          profile_id?: string | null
           role?: Database["public"]["Enums"]["organization_roles"]
           user_id?: string
         }
@@ -62,6 +65,13 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_members_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -96,23 +106,26 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
-          first_name: string
+          email: string | null
+          first_name: string | null
           id: string
-          last_name: string
+          last_name: string | null
           user_id: string
         }
         Insert: {
           created_at?: string
-          first_name: string
+          email?: string | null
+          first_name?: string | null
           id?: string
-          last_name: string
+          last_name?: string | null
           user_id: string
         }
         Update: {
           created_at?: string
-          first_name?: string
+          email?: string | null
+          first_name?: string | null
           id?: string
-          last_name?: string
+          last_name?: string | null
           user_id?: string
         }
         Relationships: []

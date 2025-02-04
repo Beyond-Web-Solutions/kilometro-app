@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { OrganizationSwitcher } from "@/src/components/settings/org-switcher";
 
-export function OrganizationSettings() {
+export function SwitchOrganizationSetting() {
   const { t } = useTranslation("settings", {
-    keyPrefix: "general.organization",
+    keyPrefix: "organization.switch",
   });
 
   const [isVisible, setIsVisible] = useState(false);
