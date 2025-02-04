@@ -85,6 +85,10 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       reset();
 
       await queryClient.invalidateQueries({
+        queryKey: ["vehicles"],
+        refetchType: "all",
+      });
+      await queryClient.invalidateQueries({
         queryKey: ["trips"],
       });
       await queryClient.invalidateQueries({

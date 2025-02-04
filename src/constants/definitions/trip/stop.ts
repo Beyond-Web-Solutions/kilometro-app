@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export const stopTripSchema = z
   .object({
+    vehicle_id: z.string().uuid(),
+
     type: z.enum(["business", "private"]),
 
     start_odometer: z.coerce.number().positive(),

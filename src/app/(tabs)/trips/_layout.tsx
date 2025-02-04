@@ -16,18 +16,9 @@ export default function TripsLayout() {
       <Stack.Screen
         key="[id]"
         name="[id]"
-        initialParams={{ id: "" }}
         options={{
-          header: (props) => (
-            <StackHeader
-              {...props}
-              right={
-                <TripsOptionsMenu
-                  params={props.route.params as TripDetailsParams}
-                />
-              }
-            />
-          ),
+          title: t("details.title"),
+          header: (props) => <StackHeader {...props} />,
         }}
       />
     </Stack>

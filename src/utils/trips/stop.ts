@@ -29,6 +29,8 @@ export async function getDefaultValuesForStopTripForm(
   return {
     type: trip.is_private ? "private" : "business",
 
+    vehicle_id: trip.vehicle_id ?? "",
+
     start_odometer: trip.start_odometer / 1000,
     end_odometer: Math.round(newOdometer * 10) / 10,
 
@@ -56,6 +58,13 @@ export async function handleOnStopTripSubmit(
   tripId: string,
   waypoints: Point[],
 ) {
+  const end_odometer = Math.trunc(values.end_odometer * 1000);
+
+  await supabase
+    .from("vehicles")
+    .update({ odometer: end_odometer })
+    .eq("id", values.vehicle_id);
+
   return supabase
     .from("trips")
     .update({
