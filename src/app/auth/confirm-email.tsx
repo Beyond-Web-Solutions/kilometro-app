@@ -1,8 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { VerifyEmailOtpForm } from "@/src/components/auth/otp/email-otp-form";
-import { useCallback } from "react";
 import { OnboardAndAuthLayout } from "@/src/components/_common/layout/onboard";
 
 export default function OTPPage() {
@@ -11,12 +9,8 @@ export default function OTPPage() {
   const { t } = useTranslation("auth", { keyPrefix: "otp.sign-up" });
 
   if (!params.email) {
-    return <View />;
+    return null;
   }
-
-  const handleOnSuccess = useCallback(() => {
-    router.replace("/onboard");
-  }, []);
 
   return (
     <OnboardAndAuthLayout
@@ -32,7 +26,7 @@ export default function OTPPage() {
       <VerifyEmailOtpForm
         email={params.email}
         type="signup"
-        onSuccess={handleOnSuccess}
+        onSuccess={() => router.replace("/onboard")}
       />
     </OnboardAndAuthLayout>
   );

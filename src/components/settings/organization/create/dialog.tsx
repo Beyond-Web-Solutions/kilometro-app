@@ -39,55 +39,53 @@ export function CreateOrganizationDialog() {
     },
   });
 
-  const onSubmit = useCallback(async (values: CreateOrganizationFormData) => {
-    const { data: organization, error: createOrganizationError } =
-      await supabase
-        .from("organizations")
+  const onSubmit = useCallback(
+    async (values: CreateOrganizationFormData) => {
+      const { data: organization, error: createOrganizationError } =
+        await supabase
+          .from("organizations")
+          .insert({
+            name: values.name,
+            email: values.email,
+            code: generateOrganizationCode(),
+          })
+          .select("id")
+          .single();
+
+      if (createOrganizationError) {
+        console.error(createOrganizationError);
+        return setError(t("form.errors.error-creating-org"));
+      }
+
+      const user = await getUser();
+
+      if (!user) {
+        return setError(t("form.errors.no-user"));
+      }
+
+      const { error: createMemberError } = await supabase
+        .from("organization_members")
         .insert({
-          name: values.name,
-          email: values.email,
-          code: generateOrganizationCode(),
-        })
-        .select("id")
-        .single();
+          organization_id: organization.id,
+          user_id: user.id,
+          profile_id: user.id,
+        });
 
-    if (createOrganizationError) {
-      console.error(createOrganizationError);
-      return setError(t("form.errors.error-creating-org"));
-    }
+      if (createMemberError) {
+        console.error(createMemberError);
+        return setError(t("form.errors.error-creating-member"));
+      }
 
-    const user = await getUser();
+      await setDefaultOrganization(organization.id);
 
-    if (!user) {
-      return setError(t("form.errors.no-user"));
-    }
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["organizations"] });
+      queryClient.invalidateQueries({ queryKey: ["role"] });
 
-    const { error: createMemberError } = await supabase
-      .from("organization_members")
-      .insert({
-        organization_id: organization.id,
-        user_id: user.id,
-      });
-
-    if (createMemberError) {
-      console.error(createMemberError);
-      return setError(t("form.errors.error-creating-member"));
-    }
-
-    await queryClient.invalidateQueries({
-      queryKey: ["user"],
-      refetchType: "all",
-    });
-
-    await queryClient.invalidateQueries({
-      queryKey: ["organizations"],
-      refetchType: "all",
-    });
-
-    await setDefaultOrganization(organization.id);
-
-    setIsVisible(false);
-  }, []);
+      setIsVisible(false);
+    },
+    [queryClient],
+  );
 
   return (
     <>

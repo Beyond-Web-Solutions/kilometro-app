@@ -1,4 +1,4 @@
-import { Button, Dialog, Portal, RadioButton, Text } from "react-native-paper";
+import { Button, Dialog, Portal, RadioButton } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
@@ -17,15 +17,8 @@ export function OrganizationSwitcher({ isVisible, hideDialog }: Props) {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useSetDefaultOrganization(async () => {
-    await queryClient.invalidateQueries({
-      queryKey: ["organizations"],
-      refetchType: "all",
-    });
-
-    await queryClient.invalidateQueries({
-      queryKey: ["user"],
-      refetchType: "all",
-    });
+    await queryClient.invalidateQueries({ queryKey: ["organizations"] });
+    await queryClient.invalidateQueries({ queryKey: ["user"] });
 
     hideDialog();
   });

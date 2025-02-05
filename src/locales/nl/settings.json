@@ -23,9 +23,34 @@
       "title": "Leden",
 
       "overview": {
-        "page-title": "Organisatieleden"
+        "page-title": "Organisatieleden",
+
+        "unknown-member-name": "Onbekende naam",
+        "yourself": "Jij",
+
+        "menu": {
+          "edit": "Bewerk",
+          "delete": "Verwijder"
+        }
       },
-      "delete": {}
+      "edit": {
+        "title": "Bewerk lid",
+
+        "options": {
+          "admin": "Beheerder",
+          "driver": "Bestuurder"
+        },
+
+        "cancel": "Annuleren",
+        "submit": "Opslaan"
+      },
+      "delete": {
+        "title": "Verwijder lid",
+        "description": "Dit lid zal worden verwijderd uit de organisatie en kan geen toegang meer krijgen tot de gegevens van de organisatie.",
+
+        "cancel": "Annuleren",
+        "submit": "Opslaan"
+      }
     }
   },
   "general": {

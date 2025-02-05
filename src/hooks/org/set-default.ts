@@ -19,4 +19,6 @@ export async function setDefaultOrganization(id: string) {
   await supabase.auth.updateUser({
     data: { organization_id: id },
   });
+
+  await supabase.auth.refreshSession();
 }

@@ -50,6 +50,7 @@ export function SignUpForm() {
     });
 
     if (error) {
+      console.error(error);
       return setError(error.code ?? "unknown");
     }
 
@@ -61,6 +62,7 @@ export function SignUpForm() {
       <TextFormField<SignUpFormData>
         control={control}
         name="email"
+        autoCorrect={false}
         autoComplete="email"
         mode="outlined"
         autoCapitalize="none"
