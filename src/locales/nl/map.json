@@ -30,6 +30,15 @@
         }
       },
       "submit": "Stop rit"
+    },
+    "cancel": {
+      "button": "Annuleren",
+
+      "dialog-title": "Trip annuleren",
+      "dialog-description": "Deze actie kan niet ongedaan worden gemaakt. Weet je zeker dat je de trip wilt annuleren?",
+
+      "cancel": "Annuleren",
+      "submit": "Bevestigen"
     }
   },
   "edit-trip-details": {

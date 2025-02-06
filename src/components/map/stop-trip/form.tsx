@@ -21,6 +21,7 @@ import {
   handleOnStopTripSubmit,
 } from "@/src/utils/trips/stop";
 import { EditTripDetailsDialog } from "@/src/components/map/trip-details/edit";
+import { CancelTripDialog } from "@/src/components/map/stop-trip/cancel";
 
 interface Props {
   trip: Tables<"trips">;
@@ -165,7 +166,14 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
 
       <Divider horizontalInset />
       <View style={[styles.content, styles.submit_button_container]}>
+        <CancelTripDialog
+          id={trip.id}
+          onSubmit={() => {
+            closeBottomSheet();
+          }}
+        />
         <Button
+          style={styles.button}
           mode="contained"
           icon="car-off"
           disabled={isSubmitting}
@@ -205,11 +213,16 @@ const styles = StyleSheet.create({
   container: {
     gap: 8,
   },
+  button: {
+    flex: 1,
+  },
   content: {
     paddingHorizontal: 16,
   },
   submit_button_container: {
     paddingBottom: 8,
+    flexDirection: "row",
+    gap: 8,
   },
   odometers_container: {
     flex: 1,
