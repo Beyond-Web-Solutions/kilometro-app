@@ -62,3 +62,17 @@ export function formatUsername(
 
   return empty;
 }
+
+export function formatName(
+  empty: string,
+  youTranslation: string,
+  firstName: string | null | undefined,
+  lastName: string | null | undefined,
+  isYou?: boolean,
+) {
+  if (firstName && lastName) {
+    return `${firstName} ${lastName} ${isYou ? `(${youTranslation})` : ""}`;
+  }
+
+  return isYou ? `${empty} (${youTranslation})` : empty;
+}

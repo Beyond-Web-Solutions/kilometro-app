@@ -80,20 +80,13 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
         return;
       }
 
+      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+      queryClient.invalidateQueries({ queryKey: ["trips"] });
+      queryClient.invalidateQueries({ queryKey: ["current-trip"] });
+
       stopTrip();
       closeBottomSheet();
       reset();
-
-      await queryClient.invalidateQueries({
-        queryKey: ["vehicles"],
-        refetchType: "all",
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["trips"],
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["current-trip"],
-      });
     },
     [trip, stopTrip],
   );

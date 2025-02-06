@@ -8,7 +8,7 @@ export function useOrganizationRole() {
   });
 }
 
-async function getOrganizationRole() {
+export async function getOrganizationRole() {
   const { data } = await supabase.rpc("get_user_role");
 
   return data as "admin" | "driver" | null | undefined;

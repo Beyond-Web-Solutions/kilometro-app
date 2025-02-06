@@ -66,6 +66,7 @@ export function JoinOrganizationDialog() {
       .insert({
         organization_id: data.id,
         user_id: user.id,
+        profile_id: user.id,
         role: "driver",
       });
 
@@ -75,15 +76,9 @@ export function JoinOrganizationDialog() {
 
     await setDefaultOrganization(data.id);
 
-    await queryClient.invalidateQueries({
-      queryKey: ["user"],
-      refetchType: "all",
-    });
-
-    await queryClient.invalidateQueries({
-      queryKey: ["organizations"],
-      refetchType: "all",
-    });
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+    queryClient.invalidateQueries({ queryKey: ["organizations"] });
+    queryClient.invalidateQueries({ queryKey: ["role"] });
 
     setIsVisible(false);
   }, []);

@@ -1,22 +1,22 @@
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
 import { OnboardAndAuthLayout } from "@/src/components/_common/layout/onboard";
-import { useDefaultOrganization } from "@/src/hooks/org/default";
 import { useEffect } from "react";
 import { CreateOrganizationDialog } from "@/src/components/settings/organization/create/dialog";
 import { JoinOrganizationDialog } from "@/src/components/settings/organization/join/dialog";
 import { StyleSheet, View } from "react-native";
+import { useOrganizationRole } from "@/src/hooks/org/role";
 
 export default function CreateOrJoinOrganizationScreen() {
   const { t } = useTranslation("onboard", { keyPrefix: "create-or-join" });
 
-  const { isFetched, data } = useDefaultOrganization();
+  const { data: role, isFetched } = useOrganizationRole();
 
   useEffect(() => {
-    if (isFetched && data) {
+    if (isFetched && role) {
       return router.replace("/(tabs)");
     }
-  }, [isFetched, data]);
+  }, [isFetched, role]);
 
   return (
     <OnboardAndAuthLayout

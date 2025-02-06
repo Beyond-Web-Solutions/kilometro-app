@@ -1,13 +1,25 @@
+create extension if not exists "wrappers" with schema "extensions";
+
 CREATE TYPE "public"."organization_roles" AS ENUM (
     'driver',
     'admin'
     );
 
-
 CREATE TYPE "public"."trip_status" AS ENUM (
     'done',
     'ongoing'
     );
+
+CREATE TABLE IF NOT EXISTS "public"."profiles"
+(
+    "user_id"    "uuid"                                   NOT NULL PRIMARY KEY,
+    "first_name" "text",
+    "last_name"  "text",
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "email"      "text",
+
+    CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE CASCADE
+);
 
 CREATE TABLE IF NOT EXISTS "public"."organizations"
 (
@@ -24,23 +36,13 @@ CREATE TABLE IF NOT EXISTS "public"."organization_members"
     "id"              "uuid"                        DEFAULT "gen_random_uuid"()                    NOT NULL PRIMARY KEY,
     "user_id"         "uuid"                                                                       NOT NULL,
     "organization_id" "uuid"                                                                       NOT NULL,
+    "profile_id"      "uuid"                                                                       NOT NULL,
     "role"            "public"."organization_roles" DEFAULT 'admin'::"public"."organization_roles" NOT NULL,
     "created_at"      timestamp with time zone      DEFAULT "now"()                                NOT NULL,
 
     CONSTRAINT "organization_members_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations" ("id") ON DELETE CASCADE,
-    CONSTRAINT "organization_members_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS "public"."profiles"
-(
-    "id"         "uuid"                   DEFAULT "gen_random_uuid"() NOT NULL PRIMARY KEY,
-    "user_id"    "uuid"                                               NOT NULL UNIQUE,
-    "first_name" "text",
-    "last_name"  "text",
-    "created_at" timestamp with time zone DEFAULT "now"()             NOT NULL,
-    "email"      "text",
-
-    CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE CASCADE
+    CONSTRAINT "organization_members_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users" ("id") ON DELETE CASCADE,
+    CONSTRAINT "organization_members_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "public"."profiles" ("user_id") ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS "public"."vehicles"
@@ -167,33 +169,34 @@ BEGIN
 END;
 $$;
 
-CREATE
-    OR REPLACE FUNCTION "public"."get_user_role"() RETURNS "text"
-    LANGUAGE "sql"
+CREATE OR REPLACE FUNCTION public.get_user_role()
+    RETURNS text
+    LANGUAGE sql
     STABLE SECURITY DEFINER
 AS
-$$
+$function$
 SELECT role
 FROM organization_members member
 WHERE member.user_id = auth.uid()
   AND member.organization_id = (SELECT (auth.jwt() -> 'user_metadata' ->> 'organization_id')::uuid)
 LIMIT 1;
-$$;
+$function$;
 
-CREATE
-    OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+    RETURNS trigger
+    LANGUAGE plpgsql
     SECURITY DEFINER
-    SET "search_path" TO ''
+    SET search_path TO ''
 AS
-$$
+$function$
 begin
-    insert into public.profiles (id, email, first_name, last_name)
-    values (new.id, new.raw_user_meta_data ->> 'email', new.raw_user_meta_data ->> 'first_name',
+    insert into public.profiles (user_id, email, first_name, last_name)
+    values (new.id, new.email, new.raw_user_meta_data ->> 'first_name',
             new.raw_user_meta_data ->> 'last_name');
     return new;
 end;
-$$;
+$function$
+;
 
 CREATE
     OR REPLACE TRIGGER "on_organizations_insert"
@@ -202,13 +205,17 @@ CREATE
     FOR EACH ROW
 EXECUTE FUNCTION "public"."create_stripe_customer"();
 
+create trigger on_auth_user_created
+    after insert
+    on auth.users
+    for each row
+execute procedure public.handle_new_user();
+
 CREATE
     POLICY "Allow update for all organization members" ON "public"."vehicles" FOR
     UPDATE TO "authenticated" USING (("organization_id" IN
                                       (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")))
     WITH CHECK (("organization_id" IN (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")));
-
-
 
 CREATE
     POLICY "Enable admins to delete all trips" ON "public"."trips" FOR DELETE
@@ -217,8 +224,6 @@ CREATE
                                                  WHERE ("vehicles"."organization_id" IN
                                                         (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")))) AND
                                (SELECT ("public"."get_user_role"() = 'admin'::"text"))));
-
-
 
 CREATE
     POLICY "Enable admins to update every trip" ON "public"."trips" FOR
@@ -232,8 +237,6 @@ CREATE
                                   WHERE ("vehicles"."organization_id" IN
                                          (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")))));
 
-
-
 CREATE
     POLICY "Enable admins to view their all trips" ON "public"."trips" FOR
     SELECT TO "authenticated" USING ((("vehicle_id" IN (SELECT "vehicles"."id"
@@ -242,15 +245,11 @@ CREATE
                                                                (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")))) AND
                                       (SELECT ("public"."get_user_role"() = 'admin'::"text"))));
 
-
-
 CREATE
     POLICY "Enable delete for admins" ON "public"."organization_members" FOR DELETE
     TO "authenticated" USING ((((SELECT "public"."get_user_role"() AS "get_user_role") = 'admin'::"text") AND
                                ("organization_id" IN
                                 (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user"))));
-
-
 
 CREATE
     POLICY "Enable delete for admins only" ON "public"."vehicles" FOR DELETE
@@ -258,39 +257,27 @@ CREATE
     ("organization_id" IN (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")) AND
     ((SELECT "public"."get_user_role"() AS "get_user_role") = 'admin'::"text")));
 
-
-
 CREATE
     POLICY "Enable drivers to update their own trips" ON "public"."trips" FOR
     UPDATE TO "authenticated" USING ((("user_id" = "auth"."uid"()) AND
                                       (SELECT ("public"."get_user_role"() = 'driver'::"text"))))
     WITH CHECK (("user_id" = "auth"."uid"()));
 
-
-
 CREATE
     POLICY "Enable drivers to view their own trips" ON "public"."trips" FOR
     SELECT TO "authenticated" USING ((("user_id" = "auth"."uid"()) AND
                                       (SELECT ("public"."get_user_role"() = 'driver'::"text"))));
 
-
-
 CREATE
     POLICY "Enable insert for authenticated users only" ON "public"."organization_members" FOR INSERT TO "authenticated" WITH CHECK (true);
 
-
-
 CREATE
     POLICY "Enable insert for authenticated users only" ON "public"."organizations" FOR INSERT TO "authenticated" WITH CHECK (true);
-
-
 
 CREATE
     POLICY "Enable insert for organization admins" ON "public"."vehicles" FOR INSERT TO "authenticated" WITH CHECK ((
     ("organization_id" IN (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")) AND
     ((SELECT "public"."get_user_role"() AS "get_user_role") = 'admin'::"text")));
-
-
 
 CREATE
     POLICY "Enable insert for organization members" ON "public"."trips" FOR INSERT TO "authenticated" WITH CHECK ((
@@ -299,51 +286,62 @@ CREATE
                      WHERE ("vehicles"."organization_id" IN
                             (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")))));
 
-
-
 CREATE
     POLICY "Enable read access for all users" ON "public"."profiles" FOR
     SELECT USING (true);
 
-
-
 CREATE
     POLICY "Enable read access for authenticated users only" ON "public"."organizations" FOR
     SELECT TO "authenticated" USING (true);
-
-
 
 CREATE
     POLICY "Enable read access for organization members" ON "public"."vehicles" FOR
     SELECT TO "authenticated" USING (("organization_id" IN
                                       (SELECT "public"."get_org_ids_for_user"() AS "get_org_ids_for_user")));
 
-
-
-CREATE
-    POLICY "Enable select for users based on user_id" ON "public"."organization_members" FOR
-    SELECT USING (("auth"."uid"() = "user_id"));
-
-
-
-CREATE
-    POLICY "Enable update for users based on their id" ON "public"."organization_members" FOR
-    UPDATE USING (((SELECT "auth"."uid"() AS "uid") = "user_id"));
-
-
-
 CREATE
     POLICY "Enable user to delete their own data only" ON "public"."profiles" FOR DELETE
     TO "authenticated" USING (((SELECT "auth"."uid"() AS "uid") = "user_id"));
 
-
-
 CREATE
     POLICY "Enable users to insert their own data only" ON "public"."profiles" FOR INSERT TO "authenticated" WITH CHECK (((SELECT "auth"."uid"() AS "uid") = "user_id"));
-
-
 
 CREATE
     POLICY "Enable users to update their own data only" ON "public"."profiles" FOR
     UPDATE TO "authenticated" USING (("auth"."uid"() = "user_id"))
     WITH CHECK (("auth"."uid"() = "user_id"));
+
+create policy "Enable admins to view all members"
+    on "public"."organization_members"
+    as permissive
+    for select
+    to authenticated
+    using ((((SELECT get_user_role() AS get_user_role) = 'admin'::text) AND
+            (organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))));
+
+
+create policy "Enable update for admins"
+    on "public"."organization_members"
+    as permissive
+    for update
+    to authenticated
+    using ((((SELECT get_user_role() AS get_user_role) = 'admin'::text) AND
+            (organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))))
+    with check ((((SELECT get_user_role() AS get_user_role) = 'admin'::text) AND
+                 (organization_id IN (SELECT get_org_ids_for_user() AS get_org_ids_for_user))));
+
+
+create policy "Enable users to view their own data only"
+    on "public"."organization_members"
+    as permissive
+    for select
+    to authenticated
+    using (((SELECT auth.uid() AS uid) = user_id));
+
+
+create policy "Enable update for users based on their id"
+    on "public"."organization_members"
+    as permissive
+    for update
+    to authenticated
+    using (((SELECT auth.uid() AS uid) = user_id));
