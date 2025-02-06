@@ -1,7 +1,7 @@
 import { Button, Dialog, Divider, Portal } from "react-native-paper";
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { useForegroundPermissions } from "expo-location";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -88,40 +88,44 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
   return (
     <Portal>
       <Dialog visible={isVisible} onDismiss={hideDialog}>
-        <Dialog.Icon icon="car-select" />
-        <Dialog.Title style={styles.text}>{t("title")}</Dialog.Title>
-        <Dialog.Content style={styles.form_container}>
-          <SelectVehicleInput control={control} />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <Dialog.Icon icon="car-select" />
+          <Dialog.Title style={styles.text}>{t("title")}</Dialog.Title>
+          <Dialog.Content style={styles.form_container}>
+            <SelectVehicleInput control={control} />
 
-          <Divider />
+            <Divider />
 
-          <TextFormField<StartTripFormData>
-            disabled={watch("vehicle_id") === ""}
-            control={control}
-            name="start_odometer"
-            mode="outlined"
-            autoCapitalize="none"
-            inputMode="numeric"
-            label={t("form.odometer.label")}
-            keyboardType="numeric"
-            textContentType="none"
-            returnKeyType="go"
-            numberOfLines={1}
-            onSubmitEditing={handleSubmit(onSubmit)}
-          />
-        </Dialog.Content>
+            <TextFormField<StartTripFormData>
+              disabled={watch("vehicle_id") === ""}
+              control={control}
+              name="start_odometer"
+              mode="outlined"
+              autoCapitalize="none"
+              inputMode="numeric"
+              label={t("form.odometer.label")}
+              keyboardType="numeric"
+              textContentType="none"
+              returnKeyType="go"
+              numberOfLines={1}
+              onSubmitEditing={handleSubmit(onSubmit)}
+            />
+          </Dialog.Content>
 
-        <Dialog.Actions>
-          <Button onPress={hideDialog}>{t("form.cancel")}</Button>
-          <Button
-            onPress={handleSubmit(onSubmit)}
-            mode="contained"
-            loading={isSubmitting}
-            disabled={isSubmitting}
-          >
-            {t("form.submit")}
-          </Button>
-        </Dialog.Actions>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>{t("form.cancel")}</Button>
+            <Button
+              onPress={handleSubmit(onSubmit)}
+              mode="contained"
+              loading={isSubmitting}
+              disabled={isSubmitting}
+            >
+              {t("form.submit")}
+            </Button>
+          </Dialog.Actions>
+        </KeyboardAvoidingView>
       </Dialog>
     </Portal>
   );

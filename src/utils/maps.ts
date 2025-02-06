@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 
 export function getGoogleMapsApiKey() {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.EAS_BUILD_PROFILE === "production") {
     if (Platform.OS === "ios") {
       return process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY_IOS;
     }

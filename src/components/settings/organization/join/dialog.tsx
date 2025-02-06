@@ -96,6 +96,7 @@ export function JoinOrganizationDialog() {
             <TextFormField<JoinOrganizationFormData>
               control={control}
               autoFocus
+              autoCapitalize="characters"
               name="code"
               mode="outlined"
               label={t("organization-code.label")}
