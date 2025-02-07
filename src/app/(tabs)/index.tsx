@@ -11,8 +11,10 @@ import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useCurrentPosition } from "@/src/hooks/geo/current-position";
 import { ViewRouteFab } from "@/src/components/map/actions/view-route";
 import { SpeedIndicator } from "@/src/components/map/speed-indicator";
+import { useKeepAwake } from "expo-keep-awake";
 
 export default function MapPage() {
+  useKeepAwake();
   const ref = useRef<MapView>(null);
   const scheme = useColorScheme();
 

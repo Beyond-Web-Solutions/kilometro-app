@@ -6,7 +6,7 @@
     "form": {
       "vehicle": {},
       "odometer": {
-        "label": "Kilometerstand"
+        "label": "Kilometerstand (km)"
       },
       "cancel": "Annuleren",
       "submit": "Start rit"

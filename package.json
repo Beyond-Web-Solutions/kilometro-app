@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "gen:types": "npx supabase gen types --linked --lang=typescript > src/types/supabase.ts"
+    "gen:types": "npx supabase gen types --local --lang=typescript > src/types/supabase.ts"
   },
   "jest": {
     "preset": "jest-expo"
@@ -22,6 +22,7 @@
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "@reduxjs/toolkit": "^2.5.1",
     "@supabase/supabase-js": "^2.48.0",
     "@tanstack/react-query": "^5.64.2",
     "@types/google.maps": "^3.58.1",
@@ -59,10 +60,13 @@
     "react-native-screens": "~4.4.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
+    "react-redux": "^9.2.0",
     "stripe": "^17.5.0",
     "use-debounce": "^10.0.4",
     "zod": "^3.24.1",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "expo-image": "~2.0.4",
+    "expo-keep-awake": "~14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

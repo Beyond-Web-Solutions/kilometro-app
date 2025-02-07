@@ -1,18 +1,16 @@
-import { router, Tabs } from "expo-router";
+import { Redirect, router, Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import { TabBar } from "@/src/components/nav/tabs";
-import { useAuthState } from "@/src/hooks/auth/auth-listener";
-import { useDefaultOrganization } from "@/src/hooks/org/default";
 import { useEffect } from "react";
-import { useOrganizations } from "@/src/hooks/org/list";
 import { useTranslation } from "react-i18next";
 import { BottomTabHeader } from "@/src/components/nav/bottom-tab-header";
 import { useOrganizationRole } from "@/src/hooks/org/role";
+import { useAppSelector } from "@/src/store/hooks";
 
 export default function TabsLayout() {
-  useAuthState();
-
   const { t } = useTranslation("common");
+
+  const user = useAppSelector((state) => state.auth.user);
 
   const { data: role, isFetchedAfterMount } = useOrganizationRole();
 
@@ -21,6 +19,10 @@ export default function TabsLayout() {
       router.push("/onboard");
     }
   }, [role, isFetchedAfterMount]);
+
+  if (!user) {
+    return <Redirect href="/auth/sign-in" />;
+  }
 
   return (
     <Tabs

@@ -1,13 +1,19 @@
-import { useCurrentTripStore } from "@/src/store/current-trip";
 import { useEffect } from "react";
 import {
   LocationAccuracy,
   LocationSubscription,
   watchPositionAsync,
 } from "expo-location";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
+import {
+  addSpeed,
+  addWaypoint,
+  setHeading,
+} from "@/src/store/features/current-trip.slice";
 
 export function LocationSubscriber() {
-  const { isTracking, addWaypoint, addSpeed } = useCurrentTripStore();
+  const dispatch = useAppDispatch();
+  const isTracking = useAppSelector((state) => state.current_trip.isTracking);
 
   useEffect(() => {
     let subscription: Promise<LocationSubscription> | undefined;
@@ -18,14 +24,22 @@ export function LocationSubscriber() {
           accuracy: LocationAccuracy.BestForNavigation,
         },
         (location) => {
+          console.log(location);
+
           if (location.coords.speed) {
-            addSpeed(location.coords.speed);
+            dispatch(addSpeed(location.coords.speed));
           }
 
-          addWaypoint({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          });
+          if (location.coords.heading) {
+            dispatch(setHeading(location.coords.heading));
+          }
+
+          dispatch(
+            addWaypoint({
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }),
+          );
         },
       );
     } else {

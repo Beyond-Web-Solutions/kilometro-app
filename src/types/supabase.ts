@@ -39,7 +39,7 @@ export type Database = {
           created_at: string
           id: string
           organization_id: string
-          profile_id: string | null
+          profile_id: string
           role: Database["public"]["Enums"]["organization_roles"]
           user_id: string
         }
@@ -47,7 +47,7 @@ export type Database = {
           created_at?: string
           id?: string
           organization_id: string
-          profile_id?: string | null
+          profile_id: string
           role?: Database["public"]["Enums"]["organization_roles"]
           user_id: string
         }
@@ -55,7 +55,7 @@ export type Database = {
           created_at?: string
           id?: string
           organization_id?: string
-          profile_id?: string | null
+          profile_id?: string
           role?: Database["public"]["Enums"]["organization_roles"]
           user_id?: string
         }
@@ -170,7 +170,7 @@ export type Database = {
           start_address: string | null
           start_odometer: number
           start_place_id: string | null
-          start_point: Json
+          start_point: Json | null
           started_at: string | null
           status: Database["public"]["Enums"]["trip_status"]
           user_id: string | null
@@ -191,7 +191,7 @@ export type Database = {
           start_address?: string | null
           start_odometer: number
           start_place_id?: string | null
-          start_point: Json
+          start_point?: Json | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["trip_status"]
           user_id?: string | null
@@ -212,7 +212,7 @@ export type Database = {
           start_address?: string | null
           start_odometer?: number
           start_place_id?: string | null
-          start_point?: Json
+          start_point?: Json | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["trip_status"]
           user_id?: string | null
@@ -287,7 +287,14 @@ export type Database = {
       }
       get_selected_organization: {
         Args: Record<PropertyKey, never>
-        Returns: string
+        Returns: {
+          code: string
+          created_at: string
+          email: string
+          id: string
+          name: string
+          stripe_customer_id: string | null
+        }
       }
       get_user_role: {
         Args: Record<PropertyKey, never>
@@ -400,3 +407,4 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+

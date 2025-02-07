@@ -1,8 +1,7 @@
-import { Button, Dialog, Divider, Portal } from "react-native-paper";
+import { Button, Dialog, Portal } from "react-native-paper";
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
-import { useForegroundPermissions } from "expo-location";
+import { ScrollView, StyleSheet } from "react-native";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -11,11 +10,12 @@ import {
 } from "@/src/constants/definitions/trip/start";
 import { TextFormField } from "@/src/components/_common/form/text-input";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCurrentTripStore } from "@/src/store/current-trip";
 import { SelectVehicleInput } from "@/src/components/map/start-trip/select-vehicle";
-import { router } from "expo-router";
-import { handleOnStartTripSubmit } from "@/src/utils/trips/start";
-import { useVehicles } from "@/src/hooks/vehicles/list";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
+import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
+import { startTrip } from "@/src/store/features/current-trip.slice";
+import { Trip } from "@/src/types/trips";
+import { supabase } from "@/src/lib/supabase";
 
 interface Props {
   isVisible: boolean;
@@ -25,12 +25,11 @@ interface Props {
 export function StartTripDialog({ isVisible, hideDialog }: Props) {
   const queryClient = useQueryClient();
 
-  const [status, request] = useForegroundPermissions();
-
   const { t } = useTranslation("map", { keyPrefix: "start-trip-dialog" });
 
-  const { startTrip } = useCurrentTripStore();
-  const { data: vehicles } = useVehicles();
+  const dispatch = useAppDispatch();
+  const vehicles = useAppSelector(vehiclesSelector.selectAll);
+  const user = useAppSelector((state) => state.auth.user);
 
   const {
     control,
@@ -49,30 +48,36 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
 
   const onSubmit = useCallback(
     async (values: StartTripFormData) => {
-      if (!status?.granted) {
-        if (status?.canAskAgain) {
-          await request();
-        } else {
-          return router.navigate("/(tabs)/settings");
-        }
+      if (!user) {
+        // todo
+        return;
       }
 
-      const { error } = await handleOnStartTripSubmit(values);
+      const { data, error } = await supabase
+        .from("trips")
+        .insert({
+          user_id: user.id,
+          vehicle_id: values.vehicle_id,
+          start_odometer: Number(values.start_odometer) * 1000,
+        })
+        .select("*")
+        .single();
 
       if (error) {
         console.error(error);
         return;
       }
 
+      dispatch(startTrip(data as Trip));
+
       hideDialog();
       reset();
-      startTrip();
 
       return queryClient.invalidateQueries({
         queryKey: ["current-trip"],
       });
     },
-    [status, hideDialog],
+    [hideDialog, user],
   );
 
   const vehicle_id = watch("vehicle_id");
@@ -89,27 +94,30 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
     <Portal>
       <Dialog visible={isVisible} onDismiss={hideDialog}>
         <Dialog.Icon icon="car-select" />
-        <Dialog.Title style={styles.text}>{t("title")}</Dialog.Title>
-        <Dialog.Content style={styles.form_container}>
-          <SelectVehicleInput control={control} />
-
-          <Divider />
-
-          <TextFormField<StartTripFormData>
-            disabled={watch("vehicle_id") === ""}
-            control={control}
-            name="start_odometer"
-            mode="outlined"
-            autoCapitalize="none"
-            inputMode="numeric"
-            label={t("form.odometer.label")}
-            keyboardType="numeric"
-            textContentType="none"
-            returnKeyType="go"
-            numberOfLines={1}
-            onSubmitEditing={handleSubmit(onSubmit)}
-          />
-        </Dialog.Content>
+        <Dialog.Title>{t("title")}</Dialog.Title>
+        <Dialog.ScrollArea style={styles.scroll_area}>
+          <ScrollView>
+            <SelectVehicleInput control={control} />
+          </ScrollView>
+        </Dialog.ScrollArea>
+        {watch("vehicle_id") !== "" && (
+          <Dialog.Content>
+            <TextFormField<StartTripFormData>
+              disabled={watch("vehicle_id") === ""}
+              control={control}
+              name="start_odometer"
+              mode="outlined"
+              autoCapitalize="none"
+              inputMode="numeric"
+              label={t("form.odometer.label")}
+              keyboardType="numeric"
+              textContentType="none"
+              returnKeyType="go"
+              numberOfLines={1}
+              onSubmitEditing={handleSubmit(onSubmit)}
+            />
+          </Dialog.Content>
+        )}
 
         <Dialog.Actions>
           <Button onPress={hideDialog}>{t("form.cancel")}</Button>
@@ -131,10 +139,10 @@ const styles = StyleSheet.create({
   form_container: {
     gap: 8,
   },
-  scroll_container: {
+  scroll_area: {
     paddingHorizontal: 0,
   },
-  text: {
-    textAlign: "center",
+  language: {
+    marginHorizontal: 8,
   },
 });

@@ -12,5 +12,15 @@
   "trip": {
     "unknown-location": "Onbekend adres",
     "unknown-time": "Onbekende tijd"
+  },
+
+  "loading-screen": {
+    "title": "Even geduld aub...",
+
+    "items": {
+      "loading-auth": "Authenticeren",
+      "loading-vehicles": "Voertuigen laden",
+      "loading-trips": "Ritten laden"
+    }
   }
 }

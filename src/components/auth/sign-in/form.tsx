@@ -12,8 +12,16 @@ import { Button, TextInput } from "react-native-paper";
 import { supabase } from "@/src/lib/supabase";
 import { useAuthErrorStore } from "@/src/store/auth-error";
 import { router } from "expo-router";
+import { useAppDispatch } from "@/src/store/hooks";
+import { initTrips, refetchTrips } from "@/src/store/features/trips.slice";
+import {
+  initVehicles,
+  refetchVehicles,
+} from "@/src/store/features/vehicle.slice";
 
 export function SignInForm() {
+  const dispatch = useAppDispatch();
+
   const { t } = useTranslation("auth", { keyPrefix: "sign-in.form" });
   const { setError } = useAuthErrorStore();
 
@@ -46,6 +54,8 @@ export function SignInForm() {
       return setError(error.code ?? "unknown");
     }
 
+    dispatch(refetchVehicles());
+    dispatch(refetchTrips());
     return router.replace("/(tabs)");
   }, []);
 

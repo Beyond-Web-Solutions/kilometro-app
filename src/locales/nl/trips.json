@@ -17,10 +17,12 @@
 
     "vehicle": "Voertuig",
     "user": "Bestuurder",
-    "unknown-user": "Onbekende bestuurder",
     "distance": "Afstand",
     "duration": "Duur",
     "avg-speed": "Gem. snelheid",
+
+    "unknown-vehicle": "Onbekend voertuig",
+    "unknown-user": "Onbekende bestuurder",
 
     "start-odometer": "Start kilometerstand",
     "end-odometer": "Eind kilometerstand"

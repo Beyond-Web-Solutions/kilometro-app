@@ -152,20 +152,19 @@ WHERE member.user_id = auth.uid();
 $$;
 
 CREATE
-    OR REPLACE FUNCTION "public"."get_selected_organization"() RETURNS "text"
+    OR REPLACE FUNCTION "public"."get_selected_organization"() RETURNS "organizations"
     LANGUAGE "plpgsql"
 AS
 $$
-DECLARE
-    user_role text;
 BEGIN
-
-    SELECT role
-    FROM organization_members member
-    WHERE member.user_id = auth.uid()
-      AND (organization_id = (select auth.jwt() -> 'user_metadata' -> 'organization_id'));
-
-    RETURN user_role;
+    return (SELECT organizations
+            FROM organization_members
+                     LEFT JOIN organizations ON organization_members.organization_id = organizations.id
+            WHERE organization_members.user_id = auth.uid()
+              AND (
+                organization_id = (select auth.jwt() -> 'user_metadata' ->> 'organization_id')::uuid
+                )
+            LIMIT 1);
 END;
 $$;
 

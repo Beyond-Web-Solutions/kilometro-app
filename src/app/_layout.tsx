@@ -8,13 +8,17 @@ import { useEffect, useState } from "react";
 import { AuthErrorToast } from "@/src/components/auth/error-toast";
 import * as SplashScreen from "expo-splash-screen";
 import { darkTheme, lightTheme } from "@/src/constants/ui/themes";
-import { SplashScreenProvider } from "@/src/components/splash-screen-provider";
+import { LoadingScreen } from "@/src/components/loading-screen";
 import { ErrorToast } from "@/src/components/_common/error-toast";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
 import "react-native-reanimated";
 import "@/src/lib/i18n";
+import { AuthProvider } from "@/src/components/auth/provider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+SplashScreen.setOptions({ fade: true });
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -36,6 +40,10 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   useEffect(() => {
+    SplashScreen.hideAsync();
+  }, []);
+
+  useEffect(() => {
     if (colorScheme === "dark") {
       setTheme(darkTheme);
     } else {
@@ -44,15 +52,19 @@ export default function RootLayout() {
   }, [colorScheme]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <PaperProvider theme={theme}>
-        <SplashScreenProvider>
-          <StatusBar style="auto" />
-          <Slot />
-          <AuthErrorToast />
-          <ErrorToast />
-        </SplashScreenProvider>
-      </PaperProvider>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <PaperProvider theme={theme}>
+          <AuthProvider>
+            <LoadingScreen>
+              <StatusBar style="auto" />
+              <Slot />
+              <AuthErrorToast />
+              <ErrorToast />
+            </LoadingScreen>
+          </AuthProvider>
+        </PaperProvider>
+      </QueryClientProvider>
+    </Provider>
   );
 }
