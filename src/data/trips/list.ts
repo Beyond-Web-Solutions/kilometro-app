@@ -7,7 +7,12 @@ export async function getTrips() {
     return null;
   }
 
-  const { data } = await supabase.from("trips").select("*").limit(100);
+  const { data } = await supabase
+    .from("trips")
+    .select("*")
+    .eq("status", "done")
+    .order("started_at", { ascending: false })
+    .limit(100);
 
   return data;
 }

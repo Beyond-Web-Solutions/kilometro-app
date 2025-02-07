@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 import { useState } from "react";
-import { useCurrentTripStore } from "@/src/store/current-trip";
 import { deleteTrip } from "@/src/hooks/trip/delete";
 import { useMutation } from "@tanstack/react-query";
+import { useAppDispatch } from "@/src/store/hooks";
+import { stopTrip } from "@/src/store/features/current-trip.slice";
+import { stopLocationUpdatesAsync } from "expo-location";
 
 interface Props {
   id: string;
@@ -11,13 +13,15 @@ interface Props {
 }
 
 export function CancelTripDialog({ id, onSubmit }: Props) {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation("map", { keyPrefix: "stop-trip-sheet.cancel" });
-  const { stopTrip } = useCurrentTripStore();
 
   const { mutate, isPending } = useMutation({
     mutationFn: deleteTrip,
-    onSuccess: () => {
-      stopTrip();
+    onSuccess: async () => {
+      dispatch(stopTrip());
+
+      await stopLocationUpdatesAsync("TRACK_BACKGROUND_LOCATION");
 
       setIsVisible(false);
       onSubmit();

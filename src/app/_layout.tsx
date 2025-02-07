@@ -11,10 +11,11 @@ import { darkTheme, lightTheme } from "@/src/constants/ui/themes";
 import { LoadingScreen } from "@/src/components/loading-screen";
 import { ErrorToast } from "@/src/components/_common/error-toast";
 import { Provider } from "react-redux";
-import { store } from "../store/store";
+import { persistor, store } from "../store/store";
+import { AuthProvider } from "@/src/components/auth/provider";
+import { PersistGate } from "redux-persist/integration/react";
 import "react-native-reanimated";
 import "@/src/lib/i18n";
-import { AuthProvider } from "@/src/components/auth/provider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -53,18 +54,20 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <PaperProvider theme={theme}>
-          <AuthProvider>
-            <LoadingScreen>
-              <StatusBar style="auto" />
-              <Slot />
-              <AuthErrorToast />
-              <ErrorToast />
-            </LoadingScreen>
-          </AuthProvider>
-        </PaperProvider>
-      </QueryClientProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <PaperProvider theme={theme}>
+            <AuthProvider>
+              <LoadingScreen>
+                <StatusBar style="auto" />
+                <Slot />
+                <AuthErrorToast />
+                <ErrorToast />
+              </LoadingScreen>
+            </AuthProvider>
+          </PaperProvider>
+        </QueryClientProvider>
+      </PersistGate>
     </Provider>
   );
 }

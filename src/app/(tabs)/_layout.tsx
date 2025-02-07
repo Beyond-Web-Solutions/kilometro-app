@@ -4,21 +4,19 @@ import { TabBar } from "@/src/components/nav/tabs";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomTabHeader } from "@/src/components/nav/bottom-tab-header";
-import { useOrganizationRole } from "@/src/hooks/org/role";
 import { useAppSelector } from "@/src/store/hooks";
 
 export default function TabsLayout() {
   const { t } = useTranslation("common");
 
   const user = useAppSelector((state) => state.auth.user);
-
-  const { data: role, isFetchedAfterMount } = useOrganizationRole();
+  const role = useAppSelector((state) => state.auth.role);
 
   useEffect(() => {
-    if (!role && isFetchedAfterMount) {
+    if (!role) {
       router.push("/onboard");
     }
-  }, [role, isFetchedAfterMount]);
+  }, [role]);
 
   if (!user) {
     return <Redirect href="/auth/sign-in" />;

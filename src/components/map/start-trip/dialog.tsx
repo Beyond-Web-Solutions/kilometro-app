@@ -16,6 +16,11 @@ import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
 import { startTrip } from "@/src/store/features/current-trip.slice";
 import { Trip } from "@/src/types/trips";
 import { supabase } from "@/src/lib/supabase";
+import {
+  LocationAccuracy,
+  LocationActivityType,
+  startLocationUpdatesAsync,
+} from "expo-location";
 
 interface Props {
   isVisible: boolean;
@@ -48,10 +53,14 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
 
   const onSubmit = useCallback(
     async (values: StartTripFormData) => {
-      if (!user) {
-        // todo
-        return;
-      }
+      if (!user) return;
+
+      await startLocationUpdatesAsync("TRACK_BACKGROUND_LOCATION", {
+        accuracy: LocationAccuracy.BestForNavigation,
+        showsBackgroundLocationIndicator: true,
+        activityType: LocationActivityType.AutomotiveNavigation,
+        pausesUpdatesAutomatically: true,
+      });
 
       const { data, error } = await supabase
         .from("trips")

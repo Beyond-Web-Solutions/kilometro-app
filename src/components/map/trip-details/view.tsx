@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { Icon, List, useTheme } from "react-native-paper";
+import { ActivityIndicator, Icon, List, useTheme } from "react-native-paper";
 import { formatDateTime } from "@/src/utils/format";
 import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
@@ -12,6 +12,9 @@ interface Props {
   destination: string | null;
   arrivedAt: string | null;
   onDestinationPress?: () => void;
+
+  fetchingOrigin?: boolean;
+  fetchingDestination?: boolean;
 }
 export function TripDetails({
   origin,
@@ -20,30 +23,40 @@ export function TripDetails({
   destination,
   onDestinationPress,
   arrivedAt,
+  fetchingOrigin,
+  fetchingDestination,
 }: Props) {
   const { colors } = useTheme();
   const { t } = useTranslation("common", { keyPrefix: "trip" });
 
   const renderOriginRightIcon = useCallback(
     (props: any) => {
+      if (fetchingOrigin) {
+        return <ActivityIndicator {...props} />;
+      }
+
       if (onOriginPress) {
         return <List.Icon {...props} icon="menu-right" />;
       }
 
       return null;
     },
-    [onOriginPress],
+    [onOriginPress, fetchingOrigin],
   );
 
   const renderDestinationRightIcon = useCallback(
     (props: any) => {
+      if (fetchingDestination) {
+        return <ActivityIndicator {...props} />;
+      }
+
       if (onDestinationPress) {
         return <List.Icon {...props} icon="menu-right" />;
       }
 
       return null;
     },
-    [onDestinationPress],
+    [onDestinationPress, fetchingDestination],
   );
 
   return (

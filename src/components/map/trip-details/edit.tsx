@@ -7,7 +7,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useDebounce } from "use-debounce";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 import { useCallback, useEffect, useState } from "react";
 import { useAddressAutocomplete } from "@/src/hooks/geo/address-autocomplete";
 import { ScrollView, StyleSheet } from "react-native";
@@ -28,18 +28,15 @@ export function EditTripDetailsDialog({
 }: Props) {
   const { colors } = useTheme();
   const { t } = useTranslation("map", { keyPrefix: "edit-trip-details" });
-  const { mutate, data } = useAddressAutocomplete();
+
+  const { mutate, data, isPending } = useAddressAutocomplete();
 
   const [placeId, setPlaceId] = useState<string>("");
-
   const [input, setInput] = useState(address ?? "");
-  const [q] = useDebounce(input, 300);
 
-  useEffect(() => {
-    if (q !== address) {
-      mutate(q);
-    }
-  }, [q, address]);
+  const debounced = useDebouncedCallback((value: string) => {
+    mutate(value);
+  }, 300);
 
   const handleOnDismiss = useCallback(() => {
     hideDialog();
@@ -55,6 +52,7 @@ export function EditTripDetailsDialog({
 
     if (newAddress) {
       callback(placeId, newAddress);
+      hideDialog();
     }
   }, [data, placeId, callback]);
 
@@ -66,29 +64,33 @@ export function EditTripDetailsDialog({
         <Dialog.Content>
           <Searchbar
             autoFocus
-            autoComplete="address-line1"
             autoCorrect={false}
-            placeholder={t("input.placeholder")}
+            autoComplete="address-line1"
             value={input}
-            onChangeText={setInput}
+            loading={isPending}
+            onChangeText={(text) => {
+              setInput(text);
+              debounced(text);
+            }}
+            placeholder={t("input.placeholder")}
             style={{ backgroundColor: colors.surfaceVariant }}
           />
-
-          <Dialog.ScrollArea style={styles.results_container}>
-            <ScrollView>
-              <RadioButton.Group value={placeId} onValueChange={setPlaceId}>
-                {data?.predictions.map((prediction) => (
-                  <RadioButton.Item
-                    mode="android"
-                    key={prediction.place_id}
-                    label={prediction.description}
-                    value={prediction.place_id}
-                  />
-                ))}
-              </RadioButton.Group>
-            </ScrollView>
-          </Dialog.ScrollArea>
         </Dialog.Content>
+        <Dialog.ScrollArea style={styles.results_container}>
+          <ScrollView>
+            <RadioButton.Group value={placeId} onValueChange={setPlaceId}>
+              {data?.predictions.map((prediction) => (
+                <RadioButton.Item
+                  mode="android"
+                  key={prediction.place_id}
+                  label={prediction.description}
+                  value={prediction.place_id}
+                  style={styles.place}
+                />
+              ))}
+            </RadioButton.Group>
+          </ScrollView>
+        </Dialog.ScrollArea>
         <Dialog.Actions>
           <Button onPress={handleOnDismiss}>{t("cancel")}</Button>
           <Button
@@ -108,5 +110,8 @@ const styles = StyleSheet.create({
   results_container: {
     paddingHorizontal: 0,
     marginTop: 8,
+  },
+  place: {
+    marginHorizontal: 8,
   },
 });

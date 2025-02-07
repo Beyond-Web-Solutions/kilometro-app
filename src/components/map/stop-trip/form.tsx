@@ -1,27 +1,26 @@
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { StyleSheet, View } from "react-native";
-import { useForm } from "react-hook-form";
+import { CancelTripDialog } from "@/src/components/map/stop-trip/cancel";
 import { Tables } from "@/src/types/supabase";
 import { TripDetails } from "@/src/components/map/trip-details/view";
-import { Button, Divider, IconButton, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { EditTripDetailsDialog } from "@/src/components/map/trip-details/edit";
+import { setTrip, stopTrip } from "@/src/store/features/current-trip.slice";
+import { Trip } from "@/src/types/trips";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   StopTripFormData,
   stopTripSchema,
 } from "@/src/constants/definitions/trip/stop";
+import { PolyUtil, SphericalUtil } from "node-geometry-library";
 import { SegmentedButtonsField } from "@/src/components/_common/form/segmented-buttons";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCurrentTripStore } from "@/src/store/current-trip";
-import { TextFormField } from "@/src/components/_common/form/text-input";
+import { Button, Divider, IconButton, Text } from "react-native-paper";
+import { TextFormField } from "../../_common/form/text-input";
 import { formatDistance } from "@/src/utils/format";
-import { LoadingTripDetails } from "@/src/components/map/stop-trip/loading";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  getDefaultValuesForStopTripForm,
-  handleOnStopTripSubmit,
-} from "@/src/utils/trips/stop";
-import { EditTripDetailsDialog } from "@/src/components/map/trip-details/edit";
-import { CancelTripDialog } from "@/src/components/map/stop-trip/cancel";
+import { supabase } from "@/src/lib/supabase";
+import { stopLocationUpdatesAsync } from "expo-location";
 
 interface Props {
   trip: Tables<"trips">;
@@ -29,10 +28,13 @@ interface Props {
 }
 
 export function StopTripForm({ trip, closeBottomSheet }: Props) {
-  const queryClient = useQueryClient();
-
   const { t } = useTranslation("map", { keyPrefix: "stop-trip-sheet.form" });
-  const { route, speed, stopTrip } = useCurrentTripStore();
+
+  const dispatch = useAppDispatch();
+  const route = useAppSelector((state) => state.current_trip.route);
+
+  const [isEditingOrigin, setIsEditingOrigin] = useState(false);
+  const [isEditingDestination, setIsEditingDestination] = useState(false);
 
   const points = useMemo(
     () =>
@@ -43,58 +45,52 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
     [route],
   );
 
-  const [isEditingOrigin, setIsEditingOrigin] = useState(false);
-  const [isEditingDestination, setIsEditingDestination] = useState(false);
+  const distance = useMemo(() => SphericalUtil.computeLength(points), [points]);
+
+  const newOdometer = useMemo(() => {
+    const km = (trip.start_odometer + Math.trunc(distance)) / 1000;
+
+    return Math.round(km * 10) / 10;
+  }, [distance, trip.start_odometer]);
 
   const {
     control,
     watch,
-    setValue,
-    reset,
-    getValues,
     handleSubmit,
-    formState: { isSubmitting, defaultValues, isLoading },
+    reset,
+    resetField,
+    getFieldState,
+    formState: { isSubmitting },
   } = useForm<StopTripFormData>({
     resolver: zodResolver(stopTripSchema),
-    defaultValues: () => getDefaultValuesForStopTripForm(trip, points, speed),
+    defaultValues: {
+      type: trip.is_private ? "private" : "business",
+      start_odometer: trip.start_odometer / 1000,
+      end_odometer: newOdometer,
+      distance,
+    },
   });
-
-  const default_odometer = defaultValues?.end_odometer;
-  const end_odometer = watch("end_odometer");
-
-  useEffect(() => {
-    const start_odometer = getValues("start_odometer");
-
-    if (end_odometer > start_odometer) {
-      setValue("distance", end_odometer - start_odometer);
-    } else {
-      setValue("distance", 0);
-    }
-  }, [end_odometer]);
 
   const onSubmit = useCallback(
     async (values: StopTripFormData) => {
-      const { error } = await handleOnStopTripSubmit(values, trip.id, points);
+      await supabase
+        .from("trips")
+        .update({
+          ...trip,
+          end_odometer: values.end_odometer * 1000,
+          distance: values.distance,
+          codec: PolyUtil.encode(points),
+        })
+        .eq("id", trip.id);
 
-      if (error) {
-        console.error(error);
-        return;
-      }
+      await stopLocationUpdatesAsync("TRACK_BACKGROUND_LOCATION");
 
-      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
-      queryClient.invalidateQueries({ queryKey: ["trips"] });
-      queryClient.invalidateQueries({ queryKey: ["current-trip"] });
-
-      stopTrip();
-      closeBottomSheet();
+      dispatch(stopTrip());
       reset();
+      closeBottomSheet();
     },
-    [trip, stopTrip],
+    [trip, points],
   );
-
-  if (isLoading) {
-    return <LoadingTripDetails />;
-  }
 
   return (
     <View style={styles.container}>
@@ -120,8 +116,8 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       <Divider horizontalInset />
 
       <TripDetails
-        origin={getValues("start_address")}
-        destination={getValues("end_address")}
+        origin={trip.start_address ?? t("unknown-address")}
+        destination={trip.end_address ?? t("unknown-address")}
         departedAt={trip.started_at}
         arrivedAt={new Date().toISOString()}
         onOriginPress={() => setIsEditingOrigin(true)}
@@ -150,16 +146,18 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
               returnKeyType="done"
             />
           </View>
-          {!!default_odometer && end_odometer !== default_odometer && (
+          {getFieldState("end_odometer").isDirty && (
             <IconButton
               icon="reload"
-              onPress={() => setValue("end_odometer", default_odometer)}
+              onPress={() => {
+                resetField("end_odometer");
+              }}
             />
           )}
         </View>
         <Text>
           {t("total-distance", {
-            distance: formatDistance(watch("distance")),
+            distance: formatDistance((watch("distance") ?? 0) / 1000),
           })}
         </Text>
       </View>
@@ -187,22 +185,30 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       <EditTripDetailsDialog
         isVisible={isEditingOrigin}
         hideDialog={() => setIsEditingOrigin(false)}
-        address={getValues("start_address")}
+        address={trip.start_address}
         callback={(placeId, address) => {
-          setValue("start_place_id", placeId);
-          setValue("start_address", address);
-          setIsEditingOrigin(false);
+          dispatch(
+            setTrip({
+              ...trip,
+              start_place_id: placeId,
+              start_address: address,
+            } as Trip),
+          );
         }}
       />
 
       <EditTripDetailsDialog
         isVisible={isEditingDestination}
         hideDialog={() => setIsEditingDestination(false)}
-        address={getValues("end_address")}
+        address={trip.end_address}
         callback={(placeId, address) => {
-          setValue("end_place_id", placeId);
-          setValue("end_address", address);
-          setIsEditingDestination(false);
+          dispatch(
+            setTrip({
+              ...trip,
+              end_place_id: placeId,
+              end_address: address,
+            } as Trip),
+          );
         }}
       />
     </View>
@@ -212,9 +218,6 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
 const styles = StyleSheet.create({
   container: {
     gap: 8,
-  },
-  button: {
-    flex: 1,
   },
   content: {
     paddingHorizontal: 16,
@@ -232,5 +235,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
   },
-  odometer_input: {},
+  button: {
+    flex: 1,
+  },
 });
