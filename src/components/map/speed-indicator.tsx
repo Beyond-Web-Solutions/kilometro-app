@@ -1,4 +1,3 @@
-import { useCurrentTripStore } from "@/src/store/current-trip";
 import { StyleSheet } from "react-native";
 import { formatSpeed } from "@/src/utils/format";
 import { Surface, Text } from "react-native-paper";

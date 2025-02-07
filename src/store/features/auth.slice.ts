@@ -2,7 +2,6 @@ import { User } from "@supabase/supabase-js";
 import {
   asyncThunkCreator,
   buildCreateSlice,
-  createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { supabase } from "@/src/lib/supabase";
@@ -39,11 +38,12 @@ export const authSlice = createAppSlice({
           data: { user },
         } = await supabase.auth.getUser();
 
-        const { data } = await supabase.rpc("get_user_role");
+        const { data: role } = await supabase.rpc("get_user_role");
 
-        const role = data as "admin" | "driver" | null | undefined;
-
-        return { user, role: role ?? null };
+        return {
+          user,
+          role: role as "admin" | "driver" | null,
+        };
       },
       {
         pending: (state) => {
