@@ -4,7 +4,7 @@ import { CancelTripDialog } from "@/src/components/map/stop-trip/cancel";
 import { Tables } from "@/src/types/supabase";
 import { TripDetails } from "@/src/components/map/trip-details/view";
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { EditTripDetailsDialog } from "@/src/components/map/trip-details/edit";
 import { setTrip, stopTrip } from "@/src/store/features/current-trip.slice";
 import { Trip } from "@/src/types/trips";
@@ -21,6 +21,8 @@ import { TextFormField } from "../../_common/form/text-input";
 import { formatDistance } from "@/src/utils/format";
 import { supabase } from "@/src/lib/supabase";
 import { stopLocationUpdatesAsync } from "expo-location";
+import { updateVehicle } from "@/src/store/features/vehicle.slice";
+import { addTrip } from "@/src/store/features/trips.slice";
 
 interface Props {
   trip: Tables<"trips">;
@@ -32,6 +34,12 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
 
   const dispatch = useAppDispatch();
   const route = useAppSelector((state) => state.current_trip.route);
+  const isFetchingStartAddress = useAppSelector(
+    (state) => state.current_trip.isFetchingStartLocation,
+  );
+  const isFetchingEndAddress = useAppSelector(
+    (state) => state.current_trip.isFetchingStopLocation,
+  );
 
   const [isEditingOrigin, setIsEditingOrigin] = useState(false);
   const [isEditingDestination, setIsEditingDestination] = useState(false);
@@ -48,9 +56,11 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
   const distance = useMemo(() => SphericalUtil.computeLength(points), [points]);
 
   const newOdometer = useMemo(() => {
-    const km = (trip.start_odometer + Math.trunc(distance)) / 1000;
+    const roundedDistanceInMeters = Math.trunc(distance);
+    const newOdometerInMeters = trip.start_odometer + roundedDistanceInMeters;
+    const newOdometerInKm = newOdometerInMeters / 1000;
 
-    return Math.round(km * 10) / 10;
+    return Math.round(newOdometerInKm * 10) / 10; // remove decimals
   }, [distance, trip.start_odometer]);
 
   const {
@@ -59,6 +69,8 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
     handleSubmit,
     reset,
     resetField,
+    setValue,
+    getValues,
     getFieldState,
     formState: { isSubmitting },
   } = useForm<StopTripFormData>({
@@ -67,22 +79,58 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       type: trip.is_private ? "private" : "business",
       start_odometer: trip.start_odometer / 1000,
       end_odometer: newOdometer,
-      distance,
+      distance: newOdometer - trip.start_odometer / 1000,
     },
   });
 
+  const end_odometer = watch("end_odometer");
+
+  useEffect(() => {
+    const start_odometer = getValues("start_odometer");
+
+    if (end_odometer > start_odometer) {
+      setValue("distance", end_odometer - start_odometer);
+    } else {
+      setValue("distance", 0);
+    }
+  }, [end_odometer]);
+
   const onSubmit = useCallback(
     async (values: StopTripFormData) => {
-      await supabase
+      if (trip.vehicle_id) {
+        await supabase
+          .from("vehicles")
+          .update({ odometer: values.end_odometer * 1000 })
+          .eq("id", trip.vehicle_id);
+
+        dispatch(
+          updateVehicle({
+            id: trip.vehicle_id,
+            changes: { odometer: values.end_odometer * 1000 },
+          }),
+        );
+      }
+
+      const { error, data } = await supabase
         .from("trips")
         .update({
           ...trip,
           end_odometer: values.end_odometer * 1000,
-          distance: values.distance,
+          distance: Math.trunc(values.distance * 1000),
           codec: PolyUtil.encode(points),
-        })
-        .eq("id", trip.id);
 
+          status: "done",
+        })
+        .eq("id", trip.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      dispatch(addTrip(data as Trip));
       await stopLocationUpdatesAsync("TRACK_BACKGROUND_LOCATION");
 
       dispatch(stopTrip());
@@ -91,7 +139,6 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
     },
     [trip, points],
   );
-
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -122,6 +169,8 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
         arrivedAt={new Date().toISOString()}
         onOriginPress={() => setIsEditingOrigin(true)}
         onDestinationPress={() => setIsEditingDestination(true)}
+        fetchingDestination={isFetchingEndAddress}
+        fetchingOrigin={isFetchingStartAddress}
       />
 
       <Divider horizontalInset />
@@ -157,7 +206,7 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
         </View>
         <Text>
           {t("total-distance", {
-            distance: formatDistance((watch("distance") ?? 0) / 1000),
+            distance: formatDistance(watch("distance")),
           })}
         </Text>
       </View>

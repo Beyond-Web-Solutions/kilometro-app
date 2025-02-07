@@ -61,7 +61,6 @@ export const currentTripSlice = createAppSlice({
     addWaypoint: create.reducer((state, action: PayloadAction<LatLng>) => {
       if (!state.first_location) {
         state.first_location = action.payload;
-        store.dispatch(fetchStartLocation(action.payload));
       }
 
       state.last_location = action.payload;
@@ -85,9 +84,9 @@ export const currentTripSlice = createAppSlice({
 
         const result = action.payload.results[0];
 
-        if (result && state.trip) {
-          state.trip.start_place_id = result.place_id;
-          state.trip.start_address = result.formatted_address;
+        if (state.trip) {
+          state.trip.start_place_id = result.place_id ?? null;
+          state.trip.start_address = result.formatted_address ?? null;
         }
       },
     }),
@@ -103,9 +102,9 @@ export const currentTripSlice = createAppSlice({
 
         const result = action.payload.results[0];
 
-        if (result && state.trip) {
-          state.trip.end_place_id = result.place_id;
-          state.trip.end_address = result.formatted_address;
+        if (state.trip) {
+          state.trip.end_place_id = result.place_id ?? null;
+          state.trip.end_address = result.formatted_address ?? null;
         }
       },
     }),

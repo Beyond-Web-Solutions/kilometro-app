@@ -32,7 +32,7 @@ export function TripDetails({
   const renderOriginRightIcon = useCallback(
     (props: any) => {
       if (fetchingOrigin) {
-        return <ActivityIndicator {...props} />;
+        return <ActivityIndicator {...props} size={18} />;
       }
 
       if (onOriginPress) {
@@ -47,7 +47,7 @@ export function TripDetails({
   const renderDestinationRightIcon = useCallback(
     (props: any) => {
       if (fetchingDestination) {
-        return <ActivityIndicator {...props} />;
+        return <ActivityIndicator {...props} size={18} />;
       }
 
       if (onDestinationPress) {

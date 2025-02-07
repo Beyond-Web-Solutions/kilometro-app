@@ -26,11 +26,16 @@ export default function MapPage() {
 
   // when the animation of centering is finished we can start following the user
   const handleCenterOnUser = useCallback((region: Region) => {
-    ref.current?.animateToRegion(region, 1000);
+    ref.current?.animateCamera(
+      {
+        center: { latitude: region.latitude, longitude: region.longitude },
+        altitude: 2500,
+        zoom: 15,
+      },
+      { duration: 300 },
+    );
 
-    /*    setTimeout(() => {
-      setIsFollowingUser(true);
-    }, 1000);*/
+    setIsFollowingUser(true);
   }, []);
 
   const handleViewRoute = useCallback((region: Region) => {

@@ -4,14 +4,16 @@ import { formatSpeed } from "@/src/utils/format";
 import { Surface, Text } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
+import { useAppSelector } from "@/src/store/hooks";
 
 export function SpeedIndicator() {
-  const { currentSpeed } = useCurrentTripStore();
+  const speed = useAppSelector((state) => state.current_trip.currentSpeed);
+
   const { t } = useTranslation("common");
 
   const insets = useSafeAreaInsets();
 
-  if (!currentSpeed) {
+  if (!speed) {
     return null;
   }
 
@@ -24,7 +26,7 @@ export function SpeedIndicator() {
       ]}
     >
       <Text style={styles.text} variant="titleLarge">
-        {formatSpeed(currentSpeed)}
+        {formatSpeed(speed)}
       </Text>
       <Text style={styles.text} variant="bodySmall">
         {t("km-h")}

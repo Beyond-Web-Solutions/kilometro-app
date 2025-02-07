@@ -4,7 +4,10 @@ import { useTheme } from "react-native-paper";
 import { StopTripForm } from "@/src/components/map/stop-trip/form";
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { updateTripStartLocation } from "@/src/utils/trips/update-start-location";
-import { fetchStopLocation } from "@/src/store/features/current-trip.slice";
+import {
+  fetchStartLocation,
+  fetchStopLocation,
+} from "@/src/store/features/current-trip.slice";
 
 interface Props {
   isVisible: boolean;
@@ -16,7 +19,8 @@ export function StopTripSheet({ isVisible, hideSheet }: Props) {
 
   const dispatch = useAppDispatch();
   const trip = useAppSelector((state) => state.current_trip.trip);
-  const end = useAppSelector((state) => state.current_trip.first_location);
+  const start = useAppSelector((state) => state.current_trip.first_location);
+  const end = useAppSelector((state) => state.current_trip.last_location);
 
   const { colors } = useTheme();
 
@@ -28,7 +32,13 @@ export function StopTripSheet({ isVisible, hideSheet }: Props) {
         dispatch(fetchStopLocation(end));
       }
     }
-  }, [isVisible, end]);
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (start && trip && !trip.start_place_id) {
+      dispatch(fetchStartLocation(start));
+    }
+  }, [start, trip]);
 
   return (
     <BottomSheetModal
