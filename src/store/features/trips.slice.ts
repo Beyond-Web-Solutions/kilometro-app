@@ -21,6 +21,7 @@ export const tripsSlice = createAppSlice({
   }),
   reducers: (create) => ({
     addTrip: create.reducer(tripsAdapter.addOne),
+    deleteTrip: create.reducer(tripsAdapter.removeOne),
     initTrips: create.asyncThunk(getTrips, {
       pending: (state) => {
         state.isPending = true;
@@ -58,4 +59,5 @@ export const tripsSelector = tripsAdapter.getSelectors<RootState>(
   (state) => state.trips,
 );
 
-export const { initTrips, refetchTrips, addTrip } = tripsSlice.actions;
+export const { addTrip, deleteTrip, initTrips, refetchTrips } =
+  tripsSlice.actions;

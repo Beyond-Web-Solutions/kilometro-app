@@ -11,7 +11,7 @@ import { useAppSelector } from "@/src/store/hooks";
 export default function CreateOrJoinOrganizationScreen() {
   const { t } = useTranslation("onboard", { keyPrefix: "create-or-join" });
 
-  const isPending = useAppSelector((state) => state.auth.isProfilePending);
+  const isPending = useAppSelector((state) => state.auth.isRolePending);
   const role = useAppSelector((state) => state.auth.role);
 
   if (!isPending && role) {

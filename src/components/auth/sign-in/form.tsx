@@ -18,6 +18,7 @@ import {
   initVehicles,
   refetchVehicles,
 } from "@/src/store/features/vehicle.slice";
+import { fetchAuth, fetchRole } from "@/src/store/features/auth.slice";
 
 export function SignInForm() {
   const dispatch = useAppDispatch();
@@ -56,6 +57,9 @@ export function SignInForm() {
 
     dispatch(refetchVehicles());
     dispatch(refetchTrips());
+    dispatch(fetchAuth());
+    dispatch(fetchRole());
+
     return router.replace("/(tabs)");
   }, []);
 

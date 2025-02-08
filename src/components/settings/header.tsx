@@ -2,6 +2,7 @@ import { Avatar, IconButton, List } from "react-native-paper";
 import { useUser } from "@/src/hooks/auth/user";
 import { useDefaultOrganization } from "@/src/hooks/org/default";
 import { AccountSettingsMenu } from "@/src/components/settings/account/menu";
+import { useAppSelector } from "@/src/store/hooks";
 
 export function ProfileSettings() {
   const { data: user } = useUser();

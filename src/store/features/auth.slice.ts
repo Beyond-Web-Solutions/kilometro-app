@@ -13,6 +13,7 @@ export const createAppSlice = buildCreateSlice({
 
 interface AuthState {
   isAuthPending: boolean;
+  isRolePending: boolean;
   isProfilePending: boolean;
   isOrganizationPending: boolean;
 
@@ -23,6 +24,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   isAuthPending: true,
+  isRolePending: true,
   isProfilePending: true,
   isOrganizationPending: true,
 
@@ -46,13 +48,13 @@ export const authSlice = createAppSlice({
       },
       {
         pending: (state) => {
-          state.isProfilePending = true;
+          state.isRolePending = true;
         },
         rejected: (state) => {
-          state.isProfilePending = false;
+          state.isRolePending = false;
         },
         fulfilled: (state, action) => {
-          state.isProfilePending = false;
+          state.isRolePending = false;
           state.role = action.payload ?? null;
         },
       },

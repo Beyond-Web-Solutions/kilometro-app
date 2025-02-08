@@ -11,6 +11,7 @@ TaskManager.defineTask<{ locations: LocationObject[] }>(
   "TRACK_BACKGROUND_LOCATION",
   async ({ data, error }) => {
     if (error) {
+      console.error(error);
       // check `error.message` for more details.
       return;
     }

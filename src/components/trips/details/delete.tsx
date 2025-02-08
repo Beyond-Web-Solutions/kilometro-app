@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { deleteTrip } from "@/src/hooks/trip/delete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { useAppDispatch } from "@/src/store/hooks";
+import { deleteTrip as deleteTripAction } from "@/src/store/features/trips.slice";
 
 interface Props {
   id: string;
@@ -13,16 +15,13 @@ interface Props {
 export function DeleteTripDialog({ id, isVisible, hideDialog }: Props) {
   const { t } = useTranslation("trips", { keyPrefix: "delete" });
 
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["delete-trip"],
     mutationFn: deleteTrip,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["trips"],
-        refetchType: "all",
-      });
+      dispatch(deleteTripAction(id));
 
       hideDialog();
       return router.back();

@@ -130,10 +130,11 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
         return;
       }
 
-      dispatch(addTrip(data as Trip));
       await stopLocationUpdatesAsync("TRACK_BACKGROUND_LOCATION");
 
+      dispatch(addTrip(data as Trip));
       dispatch(stopTrip());
+
       reset();
       closeBottomSheet();
     },

@@ -21,6 +21,7 @@ import {
   LocationActivityType,
   startLocationUpdatesAsync,
 } from "expo-location";
+import { isBackgroundLocationAvailableAsync } from "expo-location/src/Location";
 
 interface Props {
   isVisible: boolean;
@@ -28,8 +29,6 @@ interface Props {
 }
 
 export function StartTripDialog({ isVisible, hideDialog }: Props) {
-  const queryClient = useQueryClient();
-
   const { t } = useTranslation("map", { keyPrefix: "start-trip-dialog" });
 
   const dispatch = useAppDispatch();
@@ -81,10 +80,6 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
 
       hideDialog();
       reset();
-
-      return queryClient.invalidateQueries({
-        queryKey: ["current-trip"],
-      });
     },
     [hideDialog, user],
   );

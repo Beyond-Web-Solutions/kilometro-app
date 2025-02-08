@@ -11,6 +11,8 @@ import { TextFormField } from "@/src/components/_common/form/text-input";
 import { supabase } from "@/src/lib/supabase";
 import { getDefaultOrganization } from "@/src/hooks/org/default";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAppDispatch } from "@/src/store/hooks";
+import { addVehicle } from "@/src/store/features/vehicle.slice";
 
 interface Props {
   isVisible: boolean;
@@ -18,7 +20,7 @@ interface Props {
 }
 
 export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   const { t } = useTranslation("vehicles", { keyPrefix: "create" });
 
@@ -45,24 +47,25 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
       return;
     }
 
-    const { error } = await supabase.from("vehicles").insert({
-      name: values.name,
-      licence_plate: values.licence_plate,
-      odometer: (values.odometer ?? 0) * 1000,
-      organization_id: org.id,
-    });
+    const { error, data } = await supabase
+      .from("vehicles")
+      .insert({
+        name: values.name,
+        licence_plate: values.licence_plate,
+        odometer: (values.odometer ?? 0) * 1000,
+        organization_id: org.id,
+      })
+      .select()
+      .single();
 
     if (error) {
       console.error(error);
       return;
     }
 
+    dispatch(addVehicle(data));
     hideDialog();
     reset();
-
-    return queryClient.invalidateQueries({
-      queryKey: ["vehicles"],
-    });
   }, []);
 
   return (
@@ -88,7 +91,7 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
             autoComplete="off"
             name="licence_plate"
             mode="outlined"
-            autoCapitalize="none"
+            autoCapitalize="characters"
             label={t("form.licence-plate.label")}
             placeholder={t("form.licence-plate.placeholder")}
             keyboardType="default"

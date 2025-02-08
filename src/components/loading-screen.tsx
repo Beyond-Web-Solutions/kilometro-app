@@ -22,7 +22,7 @@ export function LoadingScreen({ children }: Props) {
   const vehiclesPending = useAppSelector((state) => state.vehicles.isPending);
   const tripsPending = useAppSelector((state) => state.trips.isPending);
   const authPending = useAppSelector((state) => state.auth.isAuthPending);
-  const profilePending = useAppSelector((state) => state.auth.isProfilePending);
+  const profilePending = useAppSelector((state) => state.auth.isRolePending);
 
   const [isLoading, setIsLoading] = useState(true);
 

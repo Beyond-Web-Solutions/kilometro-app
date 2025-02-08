@@ -1,9 +1,10 @@
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useCallback } from "react";
-import { useDeleteVehicle } from "@/src/hooks/vehicles/delete";
-import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { useAppDispatch } from "@/src/store/hooks";
+import { deleteVehicle } from "@/src/store/features/vehicle.slice";
+import { useDeleteVehicle } from "@/src/hooks/vehicles/delete";
 
 interface Props {
   id: string;
@@ -12,14 +13,11 @@ interface Props {
 }
 
 export function DeleteVehicleDialog({ id, isVisible, hideDialog }: Props) {
-  const queryClient = useQueryClient();
-
+  const dispatch = useAppDispatch();
   const { t } = useTranslation("vehicles", { keyPrefix: "delete" });
 
   const handleOnDeleteSuccess = useCallback(async () => {
-    await queryClient.invalidateQueries({
-      queryKey: ["vehicles"],
-    });
+    dispatch(deleteVehicle(id));
 
     hideDialog();
 

@@ -22,7 +22,9 @@ export const vehiclesSlice = createAppSlice({
     isRefetching: false,
   }),
   reducers: (create) => ({
+    addVehicle: create.reducer(vehiclesAdapter.addOne),
     updateVehicle: create.reducer(vehiclesAdapter.updateOne),
+    deleteVehicle: create.reducer(vehiclesAdapter.removeOne),
     initVehicles: create.asyncThunk(getVehicles, {
       pending: (state) => {
         state.isPending = true;
@@ -60,5 +62,10 @@ export const vehiclesSelector = vehiclesAdapter.getSelectors<RootState>(
   (state) => state.vehicles,
 );
 
-export const { initVehicles, refetchVehicles, updateVehicle } =
-  vehiclesSlice.actions;
+export const {
+  addVehicle,
+  updateVehicle,
+  deleteVehicle,
+  initVehicles,
+  refetchVehicles,
+} = vehiclesSlice.actions;
