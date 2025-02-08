@@ -1,22 +1,22 @@
 import { useTranslation } from "react-i18next";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { OnboardAndAuthLayout } from "@/src/components/_common/layout/onboard";
 import { useEffect } from "react";
 import { CreateOrganizationDialog } from "@/src/components/settings/organization/create/dialog";
 import { JoinOrganizationDialog } from "@/src/components/settings/organization/join/dialog";
 import { StyleSheet, View } from "react-native";
 import { useOrganizationRole } from "@/src/hooks/org/role";
+import { useAppSelector } from "@/src/store/hooks";
 
 export default function CreateOrJoinOrganizationScreen() {
   const { t } = useTranslation("onboard", { keyPrefix: "create-or-join" });
 
-  const { data: role, isFetched } = useOrganizationRole();
+  const isPending = useAppSelector((state) => state.auth.isProfilePending);
+  const role = useAppSelector((state) => state.auth.role);
 
-  useEffect(() => {
-    if (isFetched && role) {
-      return router.replace("/(tabs)");
-    }
-  }, [isFetched, role]);
+  if (!isPending && role) {
+    return <Redirect href="/(tabs)" />;
+  }
 
   return (
     <OnboardAndAuthLayout

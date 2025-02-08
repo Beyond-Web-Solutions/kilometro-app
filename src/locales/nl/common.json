@@ -20,7 +20,8 @@
     "items": {
       "loading-auth": "Authenticeren",
       "loading-vehicles": "Voertuigen laden",
-      "loading-trips": "Ritten laden"
+      "loading-trips": "Ritten laden",
+      "loading-profile": "Profiel laden"
     }
   }
 }

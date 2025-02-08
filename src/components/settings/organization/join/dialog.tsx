@@ -18,9 +18,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { refetchVehicles } from "@/src/store/features/vehicle.slice";
 import { refetchTrips } from "@/src/store/features/trips.slice";
 import { useAppDispatch } from "@/src/store/hooks";
+import { fetchRole } from "@/src/store/features/auth.slice";
 
 export function JoinOrganizationDialog() {
-  const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
 
   const { setError } = useErrorStore();
@@ -80,12 +80,9 @@ export function JoinOrganizationDialog() {
 
     await setDefaultOrganization(data.id);
 
-    queryClient.invalidateQueries({ queryKey: ["user"] });
-    queryClient.invalidateQueries({ queryKey: ["organizations"] });
-    queryClient.invalidateQueries({ queryKey: ["role"] });
-
     dispatch(refetchVehicles());
     dispatch(refetchTrips());
+    dispatch(fetchRole());
 
     setIsVisible(false);
   }, []);

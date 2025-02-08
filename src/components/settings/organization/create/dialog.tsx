@@ -15,9 +15,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { generateOrganizationCode } from "@/src/utils/identifier";
 import { useErrorStore } from "@/src/store/error";
 import { getUser } from "@/src/hooks/auth/user";
+import { useAppDispatch } from "@/src/store/hooks";
+import { fetchRole } from "@/src/store/features/auth.slice";
 
 export function CreateOrganizationDialog() {
-  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
 
   const { setError } = useErrorStore();
   const { t } = useTranslation("settings", {
@@ -39,53 +41,47 @@ export function CreateOrganizationDialog() {
     },
   });
 
-  const onSubmit = useCallback(
-    async (values: CreateOrganizationFormData) => {
-      const { data: organization, error: createOrganizationError } =
-        await supabase
-          .from("organizations")
-          .insert({
-            name: values.name,
-            email: values.email,
-            code: generateOrganizationCode(),
-          })
-          .select("id")
-          .single();
-
-      if (createOrganizationError) {
-        console.error(createOrganizationError);
-        return setError(t("form.errors.error-creating-org"));
-      }
-
-      const user = await getUser();
-
-      if (!user) {
-        return setError(t("form.errors.no-user"));
-      }
-
-      const { error: createMemberError } = await supabase
-        .from("organization_members")
+  const onSubmit = useCallback(async (values: CreateOrganizationFormData) => {
+    const { data: organization, error: createOrganizationError } =
+      await supabase
+        .from("organizations")
         .insert({
-          organization_id: organization.id,
-          user_id: user.id,
-          profile_id: user.id,
-        });
+          name: values.name,
+          email: values.email,
+          code: generateOrganizationCode(),
+        })
+        .select("id")
+        .single();
 
-      if (createMemberError) {
-        console.error(createMemberError);
-        return setError(t("form.errors.error-creating-member"));
-      }
+    if (createOrganizationError) {
+      console.error(createOrganizationError);
+      return setError(t("form.errors.error-creating-org"));
+    }
 
-      await setDefaultOrganization(organization.id);
+    const user = await getUser();
 
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-      queryClient.invalidateQueries({ queryKey: ["organizations"] });
-      queryClient.invalidateQueries({ queryKey: ["role"] });
+    if (!user) {
+      return setError(t("form.errors.no-user"));
+    }
 
-      setIsVisible(false);
-    },
-    [queryClient],
-  );
+    const { error: createMemberError } = await supabase
+      .from("organization_members")
+      .insert({
+        organization_id: organization.id,
+        user_id: user.id,
+        profile_id: user.id,
+      });
+
+    if (createMemberError) {
+      console.error(createMemberError);
+      return setError(t("form.errors.error-creating-member"));
+    }
+
+    await setDefaultOrganization(organization.id);
+    dispatch(fetchRole());
+
+    setIsVisible(false);
+  }, []);
 
   return (
     <>

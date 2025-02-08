@@ -7,7 +7,7 @@ import { Image } from "expo-image";
 import { ActivityIndicator, Icon, Text, useTheme } from "react-native-paper";
 import { initVehicles } from "@/src/store/features/vehicle.slice";
 import { initTrips } from "@/src/store/features/trips.slice";
-import { initAuth } from "@/src/store/features/auth.slice";
+import { fetchAuth, fetchRole } from "@/src/store/features/auth.slice";
 
 interface Props {
   children: ReactNode;
@@ -21,19 +21,23 @@ export function LoadingScreen({ children }: Props) {
 
   const vehiclesPending = useAppSelector((state) => state.vehicles.isPending);
   const tripsPending = useAppSelector((state) => state.trips.isPending);
-  const authPending = useAppSelector((state) => state.auth.isPending);
+  const authPending = useAppSelector((state) => state.auth.isAuthPending);
+  const profilePending = useAppSelector((state) => state.auth.isProfilePending);
 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     dispatch(initTrips());
     dispatch(initVehicles());
-    dispatch(initAuth());
+    dispatch(fetchRole());
+    dispatch(fetchAuth());
   }, []);
 
   useEffect(() => {
-    setIsLoading(vehiclesPending || tripsPending || authPending);
-  }, [vehiclesPending, tripsPending || authPending]);
+    setIsLoading(
+      vehiclesPending || tripsPending || authPending || profilePending,
+    );
+  }, [vehiclesPending, tripsPending, authPending, profilePending]);
 
   if (isLoading) {
     return (
@@ -53,6 +57,14 @@ export function LoadingScreen({ children }: Props) {
                 <Icon size={12} color={colors.primary} source="check" />
               )}
               <Text>{t("items.loading-auth")}</Text>
+            </View>
+            <View style={styles.loading_item}>
+              {profilePending ? (
+                <ActivityIndicator size={12} />
+              ) : (
+                <Icon size={12} color={colors.primary} source="check" />
+              )}
+              <Text>{t("items.loading-profile")}</Text>
             </View>
             <View style={styles.loading_item}>
               {vehiclesPending ? (

@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS "public"."trips"
     "is_private"     boolean                  DEFAULT false,
     "started_at"     timestamp with time zone DEFAULT "now"(),
     "ended_at"       timestamp with time zone DEFAULT "now"(),
-    "start_point"    "json"                                                             NOT NULL,
+    "start_point"    "json",
     "end_point"      "json",
     "start_address"  "text",
     "end_address"    "text",
@@ -344,3 +344,10 @@ create policy "Enable update for users based on their id"
     for update
     to authenticated
     using (((SELECT auth.uid() AS uid) = user_id));
+
+create policy "Enable delete for users based on user_id"
+    on "public"."trips"
+    as permissive
+    for delete
+    to public
+    using ((( SELECT auth.uid() AS uid) = user_id));

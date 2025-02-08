@@ -7,7 +7,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 import { useCallback, useEffect, useState } from "react";
 import { useAddressAutocomplete } from "@/src/hooks/geo/address-autocomplete";
 import { ScrollView, StyleSheet } from "react-native";
