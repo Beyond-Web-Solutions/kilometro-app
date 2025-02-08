@@ -11,21 +11,25 @@ import {
   formatSpeed,
   formatUsername,
 } from "@/src/utils/format";
-import { getTrip } from "@/src/hooks/trip/single";
 import { Tables } from "@/src/types/supabase";
+import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
+import { store } from "@/src/store/store";
 
 interface Props {
-  trip: Awaited<ReturnType<typeof getTrip>>;
+  trip: Tables<"trips">;
   profile: Tables<"profiles"> | null | undefined;
 }
 
 export function ViewTripDetailsBottomSheet({ trip, profile }: Props) {
   const ref = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["15%"], []);
+
+  const vehicle = trip.vehicle_id
+    ? vehiclesSelector.selectById(store.getState(), trip.vehicle_id)
+    : null;
 
   const { t } = useTranslation("trips", { keyPrefix: "details" });
   const { colors } = useTheme();
-
-  const snapPoints = useMemo(() => ["15%"], []);
 
   if (!trip) {
     return null;
@@ -49,7 +53,7 @@ export function ViewTripDetailsBottomSheet({ trip, profile }: Props) {
         <View>
           <List.Item
             title={t("vehicle")}
-            description={trip.vehicles?.name}
+            description={vehicle?.name ?? t("unknown-vehicle")}
             left={(props) => <List.Icon {...props} icon="car" />}
           />
           <List.Item
