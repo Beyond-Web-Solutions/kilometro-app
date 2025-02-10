@@ -16,12 +16,23 @@ import { PersistGate } from "redux-persist/integration/react";
 import "react-native-reanimated";
 import "@/src/lib/i18n";
 import * as Sentry from "@sentry/react-native";
+import { isRunningInExpoGo } from "expo";
+
+// Construct a new integration instance. This is needed to communicate between the integration and React
+const navigationIntegration = Sentry.reactNavigationIntegration({
+  enableTimeToInitialDisplay: !isRunningInExpoGo(),
+});
 
 Sentry.init({
   dsn: "https://3b9637e7905756da2d80869e4805262f@o4508409277251584.ingest.de.sentry.io/4508784077766736",
 
-  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-  // spotlight: __DEV__,
+  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  tracesSampleRate: 1.0, // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing. Adjusting this value in production.
+  integrations: [
+    // Pass integration
+    navigationIntegration,
+  ],
+  enableNativeFramesTracking: !isRunningInExpoGo(), // Tracks slow and frozen frames in the application
 });
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
