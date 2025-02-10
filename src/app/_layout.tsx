@@ -15,6 +15,14 @@ import { AuthProvider } from "@/src/components/auth/provider";
 import { PersistGate } from "redux-persist/integration/react";
 import "react-native-reanimated";
 import "@/src/lib/i18n";
+import * as Sentry from "@sentry/react-native";
+
+Sentry.init({
+  dsn: "https://3b9637e7905756da2d80869e4805262f@o4508409277251584.ingest.de.sentry.io/4508784077766736",
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
