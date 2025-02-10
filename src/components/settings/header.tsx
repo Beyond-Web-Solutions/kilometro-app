@@ -1,21 +1,36 @@
-import { Avatar, IconButton, List } from "react-native-paper";
-import { useUser } from "@/src/hooks/auth/user";
-import { useDefaultOrganization } from "@/src/hooks/org/default";
-import { AccountSettingsMenu } from "@/src/components/settings/account/menu";
+import { Avatar, List } from "react-native-paper";
 import { useAppSelector } from "@/src/store/hooks";
+import { organizationsSelector } from "@/src/store/features/organization.slice";
+import { Redirect } from "expo-router";
+import { formatUsername } from "@/src/utils/format";
+import { useTranslation } from "react-i18next";
 
 export function ProfileSettings() {
-  const { data: user } = useUser();
-  const { data: organization } = useDefaultOrganization();
+  const { t } = useTranslation("trips", { keyPrefix: "details" });
+  const selected = useAppSelector((state) => state.organizations.selected);
+
+  if (!selected) {
+    return <Redirect href="/onboard" />;
+  }
+
+  const profile = useAppSelector((state) => state.auth.profile);
+  const organization = useAppSelector((state) =>
+    organizationsSelector.selectById(state, selected),
+  );
 
   return (
     <List.Item
-      title={user?.email}
+      title={formatUsername(
+        t("unknown-user"),
+        profile?.first_name ?? null,
+        profile?.last_name ?? null,
+        profile?.email ?? null,
+      )}
       description={organization?.name}
-      right={(props) => <IconButton {...props} icon="qrcode-scan" />}
       left={({ style }) => (
         <Avatar.Icon style={style} icon="account" size={48} />
       )}
+      // right={(props) => <IconButton {...props} icon="qrcode-scan" />}
     />
   );
 }

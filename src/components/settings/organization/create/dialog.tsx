@@ -17,6 +17,7 @@ import { useErrorStore } from "@/src/store/error";
 import { getUser } from "@/src/hooks/auth/user";
 import { useAppDispatch } from "@/src/store/hooks";
 import { fetchRole } from "@/src/store/features/auth.slice";
+import { setSelectedOrganization } from "@/src/store/features/organization.slice";
 
 export function CreateOrganizationDialog() {
   const dispatch = useAppDispatch();
@@ -50,7 +51,7 @@ export function CreateOrganizationDialog() {
           email: values.email,
           code: generateOrganizationCode(),
         })
-        .select("id")
+        .select()
         .single();
 
     if (createOrganizationError) {
@@ -78,7 +79,9 @@ export function CreateOrganizationDialog() {
     }
 
     await setDefaultOrganization(organization.id);
+
     dispatch(fetchRole());
+    dispatch(setSelectedOrganization(organization.id));
 
     setIsVisible(false);
   }, []);

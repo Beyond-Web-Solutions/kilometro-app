@@ -2,7 +2,7 @@ import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView, { Marker, Polyline, Region } from "react-native-maps";
 import { useTheme } from "react-native-paper";
 import { useLocalSearchParams } from "expo-router";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { PolyUtil } from "node-geometry-library";
 import { ViewTripDetailsBottomSheet } from "@/src/components/trips/details/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { useProfile } from "@/src/hooks/profile/get";
 import { useAppSelector } from "@/src/store/hooks";
 import { tripsSelector } from "@/src/store/features/trips.slice";
-import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
 
 export default function Trip() {
   const scheme = useColorScheme();
@@ -40,7 +39,7 @@ export default function Trip() {
     return [];
   }, [trip]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (trip.start_point === null || trip.end_point === null) return;
 
     const latDelta =

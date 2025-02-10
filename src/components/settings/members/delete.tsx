@@ -1,6 +1,8 @@
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useDeleteOrganizationMember } from "@/src/hooks/org-members/delete";
+import { useAppDispatch } from "@/src/store/hooks";
+import { deleteOrganizationMember } from "@/src/store/features/organization-members.slice";
 
 interface Props {
   isVisible: boolean;
@@ -13,11 +15,15 @@ export function DeleteOrganizationMemberDialog({
   isVisible,
   hideDialog,
 }: Props) {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation("settings", {
     keyPrefix: "organization.members.delete",
   });
 
-  const { isPending, mutate } = useDeleteOrganizationMember(hideDialog);
+  const { isPending, mutate } = useDeleteOrganizationMember(() => {
+    dispatch(deleteOrganizationMember(id));
+    hideDialog();
+  });
 
   return (
     <Portal>

@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet } from "react-native";
 import { useState } from "react";
 import { useUpdateOrganizationMember } from "@/src/hooks/org-members/update";
+import { useAppDispatch } from "@/src/store/hooks";
+import { updateOrganizationMember } from "@/src/store/features/organization-members.slice";
 
 interface Props {
   isVisible: boolean;
@@ -17,13 +19,25 @@ export function UpdateOrganizationMemberDialog({
   id,
   role: defaultRole,
 }: Props) {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation("settings", {
     keyPrefix: "organization.members.edit",
   });
 
   const [role, setRole] = useState<string>(defaultRole);
 
-  const { isPending, mutate } = useUpdateOrganizationMember(hideDialog);
+  const { isPending, mutate } = useUpdateOrganizationMember((data) => {
+    hideDialog();
+
+    if (data) {
+      dispatch(
+        updateOrganizationMember({
+          id: data.id,
+          changes: data,
+        }),
+      );
+    }
+  });
 
   return (
     <Portal>

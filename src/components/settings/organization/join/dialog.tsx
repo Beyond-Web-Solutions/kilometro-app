@@ -14,11 +14,10 @@ import { useErrorStore } from "@/src/store/error";
 import { getUser } from "@/src/hooks/auth/user";
 import { getOrganizationIds } from "@/src/hooks/org/ids";
 import { setDefaultOrganization } from "@/src/hooks/org/set-default";
-import { useQueryClient } from "@tanstack/react-query";
-import { refetchVehicles } from "@/src/store/features/vehicle.slice";
-import { refetchTrips } from "@/src/store/features/trips.slice";
 import { useAppDispatch } from "@/src/store/hooks";
 import { fetchRole } from "@/src/store/features/auth.slice";
+import { setSelectedOrganization } from "@/src/store/features/organization.slice";
+import { fetchVehicles } from "@/src/store/features/vehicle.slice";
 
 export function JoinOrganizationDialog() {
   const dispatch = useAppDispatch();
@@ -45,7 +44,7 @@ export function JoinOrganizationDialog() {
   const onSubmit = useCallback(async (values: JoinOrganizationFormData) => {
     const { data } = await supabase
       .from("organizations")
-      .select("id")
+      .select()
       .eq("code", values.code)
       .maybeSingle();
 
@@ -80,9 +79,10 @@ export function JoinOrganizationDialog() {
 
     await setDefaultOrganization(data.id);
 
-    dispatch(refetchVehicles());
-    dispatch(refetchTrips());
+    dispatch(setSelectedOrganization(data.id));
     dispatch(fetchRole());
+    dispatch(fetchRole());
+    dispatch(fetchVehicles());
 
     setIsVisible(false);
   }, []);

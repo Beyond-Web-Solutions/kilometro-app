@@ -3,6 +3,8 @@ import { vehiclesSlice } from "@/src/store/features/vehicle.slice";
 import { tripsSlice } from "@/src/store/features/trips.slice";
 import { currentTripSlice } from "@/src/store/features/current-trip.slice";
 import { authSlice } from "@/src/store/features/auth.slice";
+import { organizationsSlice } from "@/src/store/features/organization.slice";
+import { organizationMemberSlice } from "@/src/store/features/organization-members.slice";
 import {
   FLUSH,
   PAUSE,
@@ -21,6 +23,8 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  organizations: organizationsSlice.reducer,
+  organization_members: organizationMemberSlice.reducer,
   vehicles: vehiclesSlice.reducer,
   trips: tripsSlice.reducer,
   current_trip: currentTripSlice.reducer,

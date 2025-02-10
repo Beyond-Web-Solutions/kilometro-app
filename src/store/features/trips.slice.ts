@@ -17,12 +17,11 @@ export const tripsSlice = createAppSlice({
   name: "trips",
   initialState: tripsAdapter.getInitialState({
     isPending: true,
-    isRefetching: false,
   }),
   reducers: (create) => ({
     addTrip: create.reducer(tripsAdapter.addOne),
     deleteTrip: create.reducer(tripsAdapter.removeOne),
-    initTrips: create.asyncThunk(getTrips, {
+    fetchTrips: create.asyncThunk(getTrips, {
       pending: (state) => {
         state.isPending = true;
       },
@@ -37,21 +36,6 @@ export const tripsSlice = createAppSlice({
         }
       },
     }),
-    refetchTrips: create.asyncThunk(getTrips, {
-      pending: (state) => {
-        state.isRefetching = true;
-      },
-      rejected: (state) => {
-        state.isRefetching = false;
-      },
-      fulfilled: (state, action) => {
-        state.isRefetching = false;
-
-        if (action.payload) {
-          tripsAdapter.setAll(state, action.payload as Trip[]);
-        }
-      },
-    }),
   }),
 });
 
@@ -59,5 +43,4 @@ export const tripsSelector = tripsAdapter.getSelectors<RootState>(
   (state) => state.trips,
 );
 
-export const { addTrip, deleteTrip, initTrips, refetchTrips } =
-  tripsSlice.actions;
+export const { addTrip, deleteTrip, fetchTrips } = tripsSlice.actions;

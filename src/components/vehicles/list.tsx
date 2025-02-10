@@ -4,20 +4,20 @@ import { List } from "react-native-paper";
 import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import {
-  refetchVehicles,
+  fetchVehicles,
   vehiclesSelector,
 } from "@/src/store/features/vehicle.slice";
 
 export function VehiclesList() {
   const dispatch = useAppDispatch();
   const vehicles = useAppSelector(vehiclesSelector.selectAll);
-  const isPending = useAppSelector((state) => state.vehicles.isRefetching);
+  const isPending = useAppSelector((state) => state.vehicles.isPending);
 
   return (
     <FlatList<Tables<"vehicles">>
       data={vehicles}
       refreshing={isPending}
-      onRefresh={() => dispatch(refetchVehicles())}
+      onRefresh={() => dispatch(fetchVehicles())}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <List.Item

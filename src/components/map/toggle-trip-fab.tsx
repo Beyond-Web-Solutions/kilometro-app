@@ -3,10 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
 import { StartTripDialog } from "@/src/components/map/start-trip/dialog";
 import { StopTripSheet } from "@/src/components/map/stop-trip/sheet";
-import {
-  useBackgroundPermissions,
-  useForegroundPermissions,
-} from "expo-location";
+import { useForegroundPermissions } from "expo-location";
 import { Linking } from "react-native";
 import { useAppSelector } from "@/src/store/hooks";
 
@@ -15,7 +12,7 @@ export function ToggleTripFab() {
 
   const isTracking = useAppSelector((state) => state.current_trip.isTracking);
 
-  const [status, request] = useBackgroundPermissions();
+  const [status, request] = useForegroundPermissions();
 
   const [isStopTripBottomSheetVisible, setIsStopTripBottomSheetVisible] =
     useState(false);

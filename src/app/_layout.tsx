@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { AuthErrorToast } from "@/src/components/auth/error-toast";
 import * as SplashScreen from "expo-splash-screen";
 import { darkTheme, lightTheme } from "@/src/constants/ui/themes";
-import { LoadingScreen } from "@/src/components/loading-screen";
 import { ErrorToast } from "@/src/components/_common/error-toast";
 import { Provider } from "react-redux";
 import { persistor, store } from "../store/store";
@@ -58,12 +57,10 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <PaperProvider theme={theme}>
             <AuthProvider>
-              <LoadingScreen>
-                <StatusBar style="auto" />
-                <Slot />
-                <AuthErrorToast />
-                <ErrorToast />
-              </LoadingScreen>
+              <StatusBar style="auto" />
+              <Slot />
+              <AuthErrorToast />
+              <ErrorToast />
             </AuthProvider>
           </PaperProvider>
         </QueryClientProvider>

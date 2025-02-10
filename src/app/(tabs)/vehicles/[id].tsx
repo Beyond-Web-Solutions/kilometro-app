@@ -8,17 +8,22 @@ import {
 } from "@/src/constants/definitions/vehicles/update";
 import { StyleSheet, View } from "react-native";
 import { TextFormField } from "@/src/components/_common/form/text-input";
-import { getVehicleDefaultValues } from "@/src/hooks/vehicles/default-values";
 import { useTranslation } from "react-i18next";
 import { Button, Divider } from "react-native-paper";
 import { useCallback } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useErrorStore } from "@/src/store/error";
+import { useAppSelector } from "@/src/store/hooks";
+import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
 
 export default function VehicleDetailsScreen() {
   const { id } = useLocalSearchParams();
   const { t } = useTranslation("vehicles", { keyPrefix: "edit.form" });
   const { setError } = useErrorStore();
+
+  const vehicle = useAppSelector((state) =>
+    vehiclesSelector.selectById(state, id as string),
+  );
 
   const {
     control,
@@ -27,7 +32,15 @@ export default function VehicleDetailsScreen() {
     formState: { isSubmitting },
   } = useForm<UpdateVehicleFormData>({
     resolver: zodResolver(updateVehicleSchema),
-    defaultValues: () => getVehicleDefaultValues(id as string),
+    defaultValues: {
+      id: vehicle.id,
+      name: vehicle.name,
+      licence_plate: vehicle.licence_plate,
+      odometer: vehicle.odometer / 1000, // Convert to kilometers,
+      brand: vehicle.brand ?? "",
+      model: vehicle.model ?? "",
+      year: vehicle.year ?? 0,
+    },
   });
 
   const onSubmit = useCallback(async (values: UpdateVehicleFormData) => {

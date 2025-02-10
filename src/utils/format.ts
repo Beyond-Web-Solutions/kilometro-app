@@ -48,9 +48,9 @@ export function formatDuration(
 
 export function formatUsername(
   empty: string,
-  firstName?: string,
-  lastName?: string,
-  email?: string,
+  firstName: string | null,
+  lastName: string | null,
+  email: string | null,
 ) {
   if (!firstName && !lastName) {
     return email;

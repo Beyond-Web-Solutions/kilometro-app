@@ -13,8 +13,11 @@ import { getUser } from "@/src/hooks/auth/user";
 import { useErrorStore } from "@/src/store/error";
 import { supabase } from "@/src/lib/supabase";
 import { getUserProfileDefaultValues } from "@/src/hooks/profile/form";
+import { useAppDispatch } from "@/src/store/hooks";
+import { setProfile } from "@/src/store/features/auth.slice";
 
 export function AccountSettings() {
+  const dispatch = useAppDispatch();
   const { setError } = useErrorStore();
 
   const { t } = useTranslation("settings", {
@@ -40,16 +43,20 @@ export function AccountSettings() {
       return setError(t("dialog.form.errors.no-user"));
     }
 
-    const { error } = await supabase.from("profiles").upsert(
-      {
-        user_id: user.id,
-        first_name: values.first_name,
-        last_name: values.last_name,
-      },
-      {
-        onConflict: "user_id",
-      },
-    );
+    const { error, data } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          user_id: user.id,
+          first_name: values.first_name,
+          last_name: values.last_name,
+        },
+        {
+          onConflict: "user_id",
+        },
+      )
+      .select()
+      .single();
 
     if (error) {
       console.error(error);
@@ -57,6 +64,7 @@ export function AccountSettings() {
       return setError(t("dialog.form.errors.error-saving-user"));
     }
 
+    dispatch(setProfile(data));
     setIsVisible(false);
   }, []);
 

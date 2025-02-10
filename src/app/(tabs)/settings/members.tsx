@@ -8,25 +8,37 @@ import { formatName } from "@/src/utils/format";
 import { useTranslation } from "react-i18next";
 import { useUser } from "@/src/hooks/auth/user";
 import { MembersOptionsMenu } from "@/src/components/settings/members/members-options";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
+import {
+  fetchOrganizationMembers,
+  organizationMembersSelector,
+} from "@/src/store/features/organization-members.slice";
+import { Redirect } from "expo-router";
 
 export default function OrganizationMembersPage() {
-  const { data: user } = useUser();
   const { colors } = useTheme();
-  const { data: role } = useOrganizationRole();
   const { t } = useTranslation("settings", {
     keyPrefix: "organization.members",
   });
 
-  const { data } = useQuery({
-    enabled: role === "admin",
-    queryKey: ["organizations", "members"],
-    queryFn: getOrganizationMembers,
-  });
+  const dispatch = useAppDispatch();
+  const members = useAppSelector(organizationMembersSelector.selectAll);
+  const organization = useAppSelector((state) => state.organizations.selected);
+  const user = useAppSelector((state) => state.auth.user);
+  const isPending = useAppSelector(
+    (state) => state.organization_members.isPending,
+  );
+
+  if (!organization) {
+    return <Redirect href="/(tabs)/settings" />;
+  }
 
   return (
     <Container>
       <FlatList
-        data={data}
+        data={members}
+        onRefresh={() => dispatch(fetchOrganizationMembers(organization))}
+        refreshing={isPending}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (

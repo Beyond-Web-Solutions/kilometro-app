@@ -115,6 +115,14 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
         .from("trips")
         .update({
           ...trip,
+          start_point: {
+            latitude: points[0].lat,
+            longitude: points[0].lng,
+          },
+          end_point: {
+            latitude: points[points.length - 1].lat,
+            longitude: points[points.length - 1].lng,
+          },
           end_odometer: values.end_odometer * 1000,
           distance: Math.trunc(values.distance * 1000),
           codec: PolyUtil.encode(points),
@@ -129,8 +137,6 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
         console.error(error);
         return;
       }
-
-      await stopLocationUpdatesAsync("TRACK_BACKGROUND_LOCATION");
 
       dispatch(addTrip(data as Trip));
       dispatch(stopTrip());

@@ -21,8 +21,6 @@ export function CancelTripDialog({ id, onSubmit }: Props) {
     onSuccess: async () => {
       dispatch(stopTrip());
 
-      await stopLocationUpdatesAsync("TRACK_BACKGROUND_LOCATION");
-
       setIsVisible(false);
       onSubmit();
     },

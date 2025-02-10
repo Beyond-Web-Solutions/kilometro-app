@@ -8,12 +8,11 @@ import { CenterOnUserFab } from "@/src/components/map/actions/center-on-user";
 import { useCallback, useRef, useState } from "react";
 import { ViewRouteFab } from "@/src/components/map/actions/view-route";
 import { SpeedIndicator } from "@/src/components/map/speed-indicator";
-import { useKeepAwake } from "expo-keep-awake";
 import { useAppSelector } from "@/src/store/hooks";
-import "@/src/lib/location-task";
+import { useLocationSubscriber } from "@/src/hooks/geo/location-subscriber";
 
 export default function MapPage() {
-  useKeepAwake();
+  useLocationSubscriber();
 
   const ref = useRef<MapView>(null);
   const scheme = useColorScheme();

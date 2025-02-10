@@ -15,10 +15,9 @@ interface AuthState {
   isAuthPending: boolean;
   isRolePending: boolean;
   isProfilePending: boolean;
-  isOrganizationPending: boolean;
 
-  organization: Tables<"organizations"> | null;
   user: User | null;
+  profile: Tables<"profiles"> | null;
   role: "admin" | "driver" | null;
 }
 
@@ -26,10 +25,9 @@ const initialState: AuthState = {
   isAuthPending: true,
   isRolePending: true,
   isProfilePending: true,
-  isOrganizationPending: true,
 
-  organization: null,
   user: null,
+  profile: null,
   role: null,
 };
 
@@ -37,9 +35,41 @@ export const authSlice = createAppSlice({
   name: "auth",
   initialState,
   reducers: (create) => ({
+    setProfile: create.reducer(
+      (state, action: PayloadAction<Tables<"profiles"> | null>) => {
+        state.profile = action.payload;
+      },
+    ),
     setUser: create.reducer((state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     }),
+    fetchProfile: create.asyncThunk(
+      async (user_id: string | null) => {
+        if (!user_id) {
+          return null;
+        }
+        const { data } = await supabase
+          .from("profiles")
+          .select()
+          .eq("user_id", user_id)
+          .maybeSingle();
+
+        return data;
+      },
+      {
+        pending: (state) => {
+          state.isRolePending = true;
+        },
+        rejected: (state) => {
+          state.isRolePending = false;
+        },
+        fulfilled: (state, action) => {
+          state.isRolePending = false;
+
+          state.profile = action.payload ?? null;
+        },
+      },
+    ),
     fetchRole: create.asyncThunk(
       async () => {
         const { data: role } = await supabase.rpc("get_user_role");
@@ -55,26 +85,13 @@ export const authSlice = createAppSlice({
         },
         fulfilled: (state, action) => {
           state.isRolePending = false;
+
           state.role = action.payload ?? null;
         },
       },
     ),
-    fetchAuth: create.asyncThunk(supabase.auth.getUser, {
-      pending: (state) => {
-        state.isAuthPending = true;
-      },
-      rejected: (state) => {
-        state.isAuthPending = false;
-      },
-      fulfilled: (state, action) => {
-        state.isAuthPending = false;
-
-        if (action.payload.data.user) {
-          state.user = action.payload.data.user;
-        }
-      },
-    }),
   }),
 });
 
-export const { setUser, fetchAuth, fetchRole } = authSlice.actions;
+export const { setUser, fetchRole, fetchProfile, setProfile } =
+  authSlice.actions;
