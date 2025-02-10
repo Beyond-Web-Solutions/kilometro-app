@@ -14,6 +14,7 @@ import {
   organizationMembersSelector,
 } from "@/src/store/features/organization-members.slice";
 import { Redirect } from "expo-router";
+import { EmptyList } from "@/src/components/_common/empty-list";
 
 export default function OrganizationMembersPage() {
   const { colors } = useTheme();
@@ -44,6 +45,7 @@ export default function OrganizationMembersPage() {
         refreshing={isPending}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <Divider />}
+        ListEmptyComponent={<EmptyList />}
         renderItem={({ item }) => (
           <List.Item
             title={formatName(

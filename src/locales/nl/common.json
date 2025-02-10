@@ -23,5 +23,10 @@
       "loading-trips": "Ritten laden",
       "loading-profile": "Profiel laden"
     }
+  },
+
+  "empty-list": {
+    "title": "Geen resultaten",
+    "subtitle": "Er zijn geen resultaten gevonden..."
   }
 }

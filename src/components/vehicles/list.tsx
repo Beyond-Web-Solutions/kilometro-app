@@ -1,12 +1,13 @@
 import { FlatList } from "react-native";
 import { Tables } from "@/src/types/supabase";
-import { List } from "react-native-paper";
+import { Divider, List } from "react-native-paper";
 import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import {
   fetchVehicles,
   vehiclesSelector,
 } from "@/src/store/features/vehicle.slice";
+import { EmptyList } from "@/src/components/_common/empty-list";
 
 export function VehiclesList() {
   const dispatch = useAppDispatch();
@@ -17,6 +18,8 @@ export function VehiclesList() {
     <FlatList<Tables<"vehicles">>
       data={vehicles}
       refreshing={isPending}
+      ItemSeparatorComponent={() => <Divider />}
+      ListEmptyComponent={<EmptyList />}
       onRefresh={() => dispatch(fetchVehicles())}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (

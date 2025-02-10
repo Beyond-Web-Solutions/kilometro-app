@@ -1,9 +1,10 @@
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { Tables } from "@/src/types/supabase";
 import { TripsOverviewListItem } from "@/src/components/trips/overview/list-item";
-import { useTheme } from "react-native-paper";
+import { Divider, useTheme } from "react-native-paper";
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { fetchTrips, tripsSelector } from "@/src/store/features/trips.slice";
+import { EmptyList } from "@/src/components/_common/empty-list";
 
 export default function TripsPage() {
   const { colors } = useTheme();
@@ -19,6 +20,8 @@ export default function TripsPage() {
       <FlatList<Tables<"trips">>
         data={trips}
         refreshing={isPending}
+        ItemSeparatorComponent={() => <Divider />}
+        ListEmptyComponent={<EmptyList />}
         onRefresh={() => dispatch(fetchTrips())}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <TripsOverviewListItem trip={item} />}

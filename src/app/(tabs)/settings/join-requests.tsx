@@ -6,9 +6,9 @@ import {
   organizationMembersSelector,
 } from "@/src/store/features/organization-members.slice";
 import { FlatList } from "react-native";
-import { Avatar, List, useTheme } from "react-native-paper";
-import { useTranslation } from "react-i18next";
 import { MemberListItem } from "@/src/components/settings/organization/list/item";
+import { EmptyList } from "@/src/components/_common/empty-list";
+import { Divider } from "react-native-paper";
 
 export default function JoinRequests() {
   const org = useAppSelector((state) => state.organizations.selected);
@@ -26,6 +26,8 @@ export default function JoinRequests() {
   return (
     <Container>
       <FlatList
+        ListEmptyComponent={<EmptyList />}
+        ItemSeparatorComponent={() => <Divider />}
         refreshing={isPending}
         onRefresh={() => dispatch(fetchOrganizationMembers(org))}
         data={members.filter(
