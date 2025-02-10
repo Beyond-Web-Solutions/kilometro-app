@@ -38,6 +38,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_accepted: boolean | null
           organization_id: string
           profile_id: string
           role: Database["public"]["Enums"]["organization_roles"]
@@ -46,6 +47,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          is_accepted?: boolean | null
           organization_id: string
           profile_id: string
           role?: Database["public"]["Enums"]["organization_roles"]
@@ -54,6 +56,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          is_accepted?: boolean | null
           organization_id?: string
           profile_id?: string
           role?: Database["public"]["Enums"]["organization_roles"]

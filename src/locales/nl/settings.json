@@ -51,6 +51,27 @@
         "cancel": "Annuleren",
         "submit": "Opslaan"
       }
+    },
+    "join-code": {
+      "title": "Organisatiecode",
+
+      "dialog-title": "Organisatiecode",
+      "dialog-description": "Andere gebruikers kunnen zich bij uw organisatie aansluiten door deze code in te voeren",
+
+      "ok": "OK"
+    },
+    "join-requests": {
+      "header-title": "Aanvragen",
+
+      "requests": "Aanvragen",
+
+      "unknown-member-name": "Onbekende naam",
+
+      "dialog-title": "Aanvraag",
+      "dialog-description": "Wil je deze aanvraag accepteren of weigeren?",
+
+      "accept": "Accepteren",
+        "reject": "Weigeren"
     }
   },
   "general": {

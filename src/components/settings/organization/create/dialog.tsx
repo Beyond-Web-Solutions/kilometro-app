@@ -11,7 +11,6 @@ import { StyleSheet } from "react-native";
 import { TextFormField } from "@/src/components/_common/form/text-input";
 import { supabase } from "@/src/lib/supabase";
 import { setDefaultOrganization } from "@/src/hooks/org/set-default";
-import { useQueryClient } from "@tanstack/react-query";
 import { generateOrganizationCode } from "@/src/utils/identifier";
 import { useErrorStore } from "@/src/store/error";
 import { getUser } from "@/src/hooks/auth/user";
@@ -71,6 +70,7 @@ export function CreateOrganizationDialog() {
         organization_id: organization.id,
         user_id: user.id,
         profile_id: user.id,
+        is_accepted: true,
       });
 
     if (createMemberError) {

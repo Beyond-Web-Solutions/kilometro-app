@@ -22,6 +22,11 @@ export default function SettingsLayout() {
         name="members"
         options={{ headerTitle: t("organization.members.overview.page-title") }}
       />
+      <Stack.Screen
+        key="join-requests"
+        name="join-requests"
+        options={{ headerTitle: t("organization.join-requests.header-title") }}
+      />
     </Stack>
   );
 }

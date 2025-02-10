@@ -42,5 +42,11 @@
     "links": {
       "continue": "Doorgaan"
     }
+  },
+  "await-access": {
+    "title": "Wacht op toegang",
+    "description": "Je aanvraag is verstuurd. Wacht op toegang van de beheerder van de organisatie.",
+
+    "refetch": "Verversen"
   }
 }

@@ -18,6 +18,7 @@ import { useAppDispatch } from "@/src/store/hooks";
 import { fetchRole } from "@/src/store/features/auth.slice";
 import { setSelectedOrganization } from "@/src/store/features/organization.slice";
 import { fetchVehicles } from "@/src/store/features/vehicle.slice";
+import { router } from "expo-router";
 
 export function JoinOrganizationDialog() {
   const dispatch = useAppDispatch();
@@ -85,6 +86,8 @@ export function JoinOrganizationDialog() {
     dispatch(fetchVehicles());
 
     setIsVisible(false);
+
+    return router.replace("/onboard/await-access");
   }, []);
 
   return (

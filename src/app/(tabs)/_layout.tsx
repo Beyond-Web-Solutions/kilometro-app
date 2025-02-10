@@ -1,7 +1,6 @@
 import { Redirect, router, Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import { TabBar } from "@/src/components/nav/tabs";
-import { useEffect, useLayoutEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomTabHeader } from "@/src/components/nav/bottom-tab-header";
 import { useAppSelector } from "@/src/store/hooks";
@@ -9,9 +8,17 @@ import { useAppSelector } from "@/src/store/hooks";
 export default function TabsLayout() {
   const { t } = useTranslation("common");
 
-  const isPending = useAppSelector((state) => state.auth.isPending);
+  const isPending = useAppSelector((state) => state.auth.isRolePending);
   const user = useAppSelector((state) => state.auth.user);
   const role = useAppSelector((state) => state.auth.role);
+  const isAccepted = useAppSelector((state) => state.auth.isAccepted);
+  const isAcceptedPending = useAppSelector(
+    (state) => state.auth.isAcceptedPending,
+  );
+
+  if (!isAccepted && !isAcceptedPending) {
+    return <Redirect href="/onboard/await-access" />;
+  }
 
   if (!user) {
     return <Redirect href="/auth/sign-in" />;

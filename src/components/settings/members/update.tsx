@@ -68,7 +68,13 @@ export function UpdateOrganizationMemberDialog({
             mode="contained"
             loading={isPending}
             disabled={isPending}
-            onPress={() => mutate({ id, role: role as "driver" | "admin" })}
+            onPress={() =>
+              mutate({
+                id,
+                role: role as "driver" | "admin",
+                is_accepted: true,
+              })
+            }
           >
             {t("submit")}
           </Button>

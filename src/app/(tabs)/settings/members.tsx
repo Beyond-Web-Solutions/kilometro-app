@@ -36,7 +36,10 @@ export default function OrganizationMembersPage() {
   return (
     <Container>
       <FlatList
-        data={members}
+        data={members.filter(
+          (member) =>
+            member.organization_id === organization && member.is_accepted,
+        )}
         onRefresh={() => dispatch(fetchOrganizationMembers(organization))}
         refreshing={isPending}
         keyExtractor={(item) => item.id}

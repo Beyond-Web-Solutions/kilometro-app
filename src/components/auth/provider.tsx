@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useAppDispatch } from "@/src/store/hooks";
 import {
+  fetchIsAccepted,
   fetchProfile,
   fetchRole,
   setUser,
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: Props) {
       dispatch(fetchVehicles());
       dispatch(fetchProfile(user?.id ?? null));
       dispatch(fetchOrganizations(user?.id ?? null));
+      dispatch(fetchIsAccepted());
     });
 
     return () => {

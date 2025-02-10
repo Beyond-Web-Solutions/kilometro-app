@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import { supabase } from "@/src/lib/supabase";
 import { Tables } from "@/src/types/supabase";
+import { RootState } from "../store";
 
 export const createAppSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -15,7 +16,9 @@ interface AuthState {
   isAuthPending: boolean;
   isRolePending: boolean;
   isProfilePending: boolean;
+  isAcceptedPending: boolean;
 
+  isAccepted: boolean;
   user: User | null;
   profile: Tables<"profiles"> | null;
   role: "admin" | "driver" | null;
@@ -25,7 +28,9 @@ const initialState: AuthState = {
   isAuthPending: true,
   isRolePending: true,
   isProfilePending: true,
+  isAcceptedPending: true,
 
+  isAccepted: false,
   user: null,
   profile: null,
   role: null,
@@ -43,6 +48,37 @@ export const authSlice = createAppSlice({
     setUser: create.reducer((state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     }),
+    fetchIsAccepted: create.asyncThunk(
+      async (_, thunk): Promise<boolean> => {
+        const state = thunk.getState() as RootState;
+
+        if (!state.auth.user || !state.organizations.selected) {
+          return false;
+        }
+
+        const { data } = await supabase
+          .from("organization_members")
+          .select("is_accepted")
+          .eq("user_id", state.auth.user.id)
+          .eq("organization_id", state.organizations.selected)
+          .maybeSingle();
+
+        return data?.is_accepted ?? false;
+      },
+      {
+        pending: (state) => {
+          state.isAcceptedPending = true;
+        },
+        rejected: (state) => {
+          state.isAcceptedPending = false;
+        },
+        fulfilled: (state, action) => {
+          state.isAcceptedPending = false;
+
+          state.isAccepted = action.payload;
+        },
+      },
+    ),
     fetchProfile: create.asyncThunk(
       async (user_id: string | null) => {
         if (!user_id) {
@@ -93,5 +129,5 @@ export const authSlice = createAppSlice({
   }),
 });
 
-export const { setUser, fetchRole, fetchProfile, setProfile } =
+export const { setUser, fetchRole, fetchProfile, setProfile, fetchIsAccepted } =
   authSlice.actions;

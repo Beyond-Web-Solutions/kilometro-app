@@ -20,11 +20,13 @@ export function useUpdateOrganizationMember(
 async function updateOrganizationMember(values: {
   id: string;
   role: "driver" | "admin";
+  is_accepted: boolean;
 }) {
   const { data } = await supabase
     .from("organization_members")
     .update({
       role: values.role,
+      is_accepted: values.is_accepted,
     })
     .eq("id", values.id)
     .select()

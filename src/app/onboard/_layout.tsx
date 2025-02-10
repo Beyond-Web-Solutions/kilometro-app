@@ -16,6 +16,13 @@ export default function OnboardLayout() {
           headerTitle: t("create-vehicles.header-title"),
         }}
       />
+      <Stack.Screen
+        key="await-access"
+        name="await-access"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
