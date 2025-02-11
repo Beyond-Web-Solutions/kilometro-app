@@ -200,5 +200,23 @@
         "submit": "Voeg toe"
       }
     }
+  },
+
+  "auth": {
+    "reset-password": {
+      "header-title": "Wachtwoord opnieuw instellen",
+
+      "list-item": "Wachtwoord",
+
+      "form": {
+        "password": {
+          "label": "Wachtwoord"
+        },
+        "confirm-password": {
+          "label": "Bevestig wachtwoord"
+        },
+        "submit": "Wachtwoord opnieuw instellen"
+      }
+    }
   }
 }

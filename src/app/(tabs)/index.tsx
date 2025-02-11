@@ -1,6 +1,6 @@
-import { SafeAreaView, StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView, { Polyline, Region } from "react-native-maps";
-import { Button, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ToggleTripFab } from "@/src/components/map/toggle-trip-fab";
@@ -10,7 +10,6 @@ import { ViewRouteFab } from "@/src/components/map/actions/view-route";
 import { SpeedIndicator } from "@/src/components/map/speed-indicator";
 import { useAppSelector } from "@/src/store/hooks";
 import { useLocationSubscriber } from "@/src/hooks/geo/location-subscriber";
-import * as Sentry from "@sentry/react-native";
 
 export default function MapPage() {
   useLocationSubscriber();

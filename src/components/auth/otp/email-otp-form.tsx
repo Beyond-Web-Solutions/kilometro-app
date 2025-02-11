@@ -37,11 +37,11 @@ export function VerifyEmailOtpForm({ email, type, onSuccess }: Props) {
     },
   });
 
-  const onSubmit = useCallback(async (data: EmailOtpFormData) => {
-    const { error } = await supabase.auth.verifyOtp({
-      email: data.email,
-      type: data.type,
-      token: data.otp,
+  const onSubmit = useCallback(async (values: EmailOtpFormData) => {
+    const { error, data } = await supabase.auth.verifyOtp({
+      email: values.email,
+      type: values.type,
+      token: values.otp,
     });
 
     if (error) {

@@ -13,11 +13,11 @@ export default function SignInPage() {
       links={[
         {
           label: t("links.forgot-password"),
-          onPress: () => router.navigate("/auth/sign-up"),
+          onPress: () => router.navigate("/auth/forgot-password"),
         },
         {
           label: t("links.no-account"),
-          onPress: () => router.navigate("/auth/sign-up"),
+          onPress: () => router.replace("/auth/sign-up"),
         },
       ]}
     >

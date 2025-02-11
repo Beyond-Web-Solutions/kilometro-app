@@ -29,7 +29,7 @@ export function DeleteVehicleDialog({ id, isVisible, hideDialog }: Props) {
   return (
     <Portal>
       <Dialog visible={isVisible} onDismiss={hideDialog}>
-        <Dialog.Icon icon="trash-can-outline" />
+        <Dialog.Icon icon="delete" />
         <Dialog.Title>{t("title")}</Dialog.Title>
         <Dialog.Content>
           <Text variant="bodyMedium">{t("description")}</Text>

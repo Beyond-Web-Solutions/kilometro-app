@@ -34,7 +34,7 @@ export function ShowOrganizationJoinCode() {
     <>
       <List.Item
         title={t("title")}
-        left={(props) => <List.Icon {...props} icon="account-plus" />}
+        left={(props) => <List.Icon {...props} icon="shield-key" />}
         right={(props) => <List.Icon {...props} icon="chevron-right" />}
         onPress={() => setIsVisible(true)}
       />

@@ -13,7 +13,7 @@ export default function SignUpPage() {
       links={[
         {
           label: t("links.already-account"),
-          onPress: () => router.navigate("/auth/sign-in"),
+          onPress: () => router.replace("/auth/sign-in"),
         },
       ]}
     >

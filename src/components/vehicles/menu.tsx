@@ -30,7 +30,7 @@ export function VehicleMenu({ params }: Props) {
       >
         <Menu.Item
           title={t("delete")}
-          leadingIcon="trash-can-outline"
+          leadingIcon="delete"
           onPress={() => {
             setIsVisible(false);
             setIsDeleteDialogVisible(true);

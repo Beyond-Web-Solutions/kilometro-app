@@ -11,7 +11,14 @@ export const createAppSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
 });
 
-const tripsAdapter = createEntityAdapter<Trip>();
+const tripsAdapter = createEntityAdapter<Trip>({
+  sortComparer: (a, b) => {
+    const startedAtA = new Date(a.started_at!).getTime();
+    const startedAtB = new Date(b.started_at!).getTime();
+
+    return startedAtB - startedAtA;
+  },
+});
 
 export const tripsSlice = createAppSlice({
   name: "trips",

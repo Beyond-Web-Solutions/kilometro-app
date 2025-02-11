@@ -10,7 +10,6 @@ import { useCallback } from "react";
 import { TextFormField } from "@/src/components/_common/form/text-input";
 import { supabase } from "@/src/lib/supabase";
 import { getDefaultOrganization } from "@/src/hooks/org/default";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch } from "@/src/store/hooks";
 import { addVehicle } from "@/src/store/features/vehicle.slice";
 

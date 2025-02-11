@@ -20,7 +20,6 @@ import { Button, Divider, IconButton, Text } from "react-native-paper";
 import { TextFormField } from "../../_common/form/text-input";
 import { formatDistance } from "@/src/utils/format";
 import { supabase } from "@/src/lib/supabase";
-import { stopLocationUpdatesAsync } from "expo-location";
 import { updateVehicle } from "@/src/store/features/vehicle.slice";
 import { addTrip } from "@/src/store/features/trips.slice";
 
@@ -126,7 +125,7 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
           end_odometer: values.end_odometer * 1000,
           distance: Math.trunc(values.distance * 1000),
           codec: PolyUtil.encode(points),
-
+          ended_at: new Date().toISOString(),
           status: "done",
         })
         .eq("id", trip.id)

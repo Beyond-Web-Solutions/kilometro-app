@@ -27,6 +27,11 @@ export default function SettingsLayout() {
         name="join-requests"
         options={{ headerTitle: t("organization.join-requests.header-title") }}
       />
+      <Stack.Screen
+        key="reset-password"
+        name="reset-password"
+        options={{ headerTitle: t("auth.reset-password.header-title") }}
+      />
     </Stack>
   );
 }

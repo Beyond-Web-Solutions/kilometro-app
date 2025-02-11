@@ -16,7 +16,9 @@ export function OrganizationJoinRequests() {
   return (
     <List.Item
       title={t("requests")}
-      left={(props) => <List.Icon {...props} icon="account-multiple-plus" />}
+      left={(props) => (
+        <List.Icon {...props} icon="checkbox-marked-circle-outline" />
+      )}
       right={(props) => <List.Icon {...props} icon="chevron-right" />}
       onPress={() => router.navigate("/(tabs)/settings/join-requests")}
     />
