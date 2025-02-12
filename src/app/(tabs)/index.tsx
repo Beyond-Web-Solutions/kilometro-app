@@ -5,7 +5,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ToggleTripFab } from "@/src/components/map/toggle-trip-fab";
 import { CenterOnUserFab } from "@/src/components/map/actions/center-on-user";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ViewRouteFab } from "@/src/components/map/actions/view-route";
 import { SpeedIndicator } from "@/src/components/map/speed-indicator";
 import { useAppSelector } from "@/src/store/hooks";

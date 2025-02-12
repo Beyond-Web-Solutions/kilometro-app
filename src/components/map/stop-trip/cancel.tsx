@@ -17,7 +17,7 @@ export function CancelTripDialog({ id, onSubmit }: Props) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: deleteTrip,
-    onSuccess: async () => {
+    onSuccess: () => {
       dispatch(stopTrip());
 
       setIsVisible(false);

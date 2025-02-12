@@ -2,7 +2,11 @@ import { FAB } from "react-native-paper";
 import { Region } from "react-native-maps";
 import { useAppSelector } from "@/src/store/hooks";
 import { useCallback } from "react";
-import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
+import {
+  getCurrentPositionAsync,
+  LocationAccuracy,
+  useForegroundPermissions,
+} from "expo-location";
 
 interface Props {
   callback: (region: Region) => void;
@@ -10,6 +14,7 @@ interface Props {
 
 export function CenterOnUserFab({ callback }: Props) {
   const location = useAppSelector((state) => state.current_trip.last_location);
+  const [status, request] = useForegroundPermissions();
 
   const handleCenterOnUserPress = useCallback(async () => {
     if (!location) {
@@ -33,7 +38,13 @@ export function CenterOnUserFab({ callback }: Props) {
       latitudeDelta: 0.03,
       longitudeDelta: 0.03,
     });
-  }, [location, callback]);
+  }, [location, callback, status]);
+
+  if (!status?.granted) {
+    return (
+      <FAB size="small" icon="target" variant="secondary" onPress={request} />
+    );
+  }
 
   return (
     <FAB

@@ -85,8 +85,8 @@ export const currentTripSlice = createAppSlice({
         const result = action.payload.results[0];
 
         if (state.trip) {
-          state.trip.start_place_id = result.place_id ?? null;
-          state.trip.start_address = result.formatted_address ?? null;
+          state.trip.start_place_id = result?.place_id ?? null;
+          state.trip.start_address = result?.formatted_address ?? null;
         }
       },
     }),
@@ -103,8 +103,8 @@ export const currentTripSlice = createAppSlice({
         const result = action.payload.results[0];
 
         if (state.trip) {
-          state.trip.end_place_id = result.place_id ?? null;
-          state.trip.end_address = result.formatted_address ?? null;
+          state.trip.end_place_id = result?.place_id ?? null;
+          state.trip.end_address = result?.formatted_address ?? null;
         }
       },
     }),

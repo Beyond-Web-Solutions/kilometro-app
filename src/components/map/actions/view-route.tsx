@@ -1,8 +1,5 @@
 import { FAB } from "react-native-paper";
-import { useCurrentTrip } from "@/src/hooks/trip/current";
-import { useMutation } from "@tanstack/react-query";
-import { getCurrentPositionAsync, LocationAccuracy } from "expo-location";
-import { LatLng, Region } from "react-native-maps";
+import { Region } from "react-native-maps";
 import { useAppSelector } from "@/src/store/hooks";
 import { useCallback } from "react";
 

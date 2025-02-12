@@ -19,8 +19,8 @@ export async function updateTripStartLocation(
     const { data, error } = await supabase
       .from("trips")
       .update({
-        start_place_id: result.place_id,
-        start_address: result.formatted_address,
+        start_place_id: result?.place_id,
+        start_address: result?.formatted_address,
         start_point: start,
       })
       .eq("id", trip.id)
