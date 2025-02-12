@@ -4,14 +4,17 @@ import {
   Dialog,
   List,
   Portal,
+  Snackbar,
   Text,
+  TouchableRipple,
   useTheme,
 } from "react-native-paper";
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { useAppSelector } from "@/src/store/hooks";
 import { Redirect } from "expo-router";
 import { organizationsSelector } from "@/src/store/features/organization.slice";
+import { setStringAsync } from "expo-clipboard";
 
 export function ShowOrganizationJoinCode() {
   const selected = useAppSelector((state) => state.organizations.selected);
@@ -29,6 +32,7 @@ export function ShowOrganizationJoinCode() {
   });
 
   const [isVisible, setIsVisible] = useState(false);
+  const [isCopiedSnackbarVisible, setIsCopiedSnackbarVisible] = useState(false);
 
   return (
     <>
@@ -44,7 +48,12 @@ export function ShowOrganizationJoinCode() {
           <Dialog.Title>{t("dialog-title")}</Dialog.Title>
           <Dialog.Content style={styles.dialog_content}>
             <Text>{t("dialog-description")}</Text>
-            <View
+            <TouchableRipple
+              onPress={() => {
+                setStringAsync(org.code).then(() => {
+                  setIsCopiedSnackbarVisible(true);
+                });
+              }}
               style={[
                 styles.code_container,
                 {
@@ -54,12 +63,22 @@ export function ShowOrganizationJoinCode() {
               ]}
             >
               <Text variant="labelLarge">{org.code}</Text>
-            </View>
+            </TouchableRipple>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => setIsVisible(false)}>{t("ok")}</Button>
           </Dialog.Actions>
         </Dialog>
+        <Snackbar
+          visible={isCopiedSnackbarVisible}
+          onDismiss={() => setIsCopiedSnackbarVisible(false)}
+          action={{
+            label: t("ok"),
+            onPress: () => setIsCopiedSnackbarVisible(false),
+          }}
+        >
+          {t("copied-to-clipboard")}
+        </Snackbar>
       </Portal>
     </>
   );

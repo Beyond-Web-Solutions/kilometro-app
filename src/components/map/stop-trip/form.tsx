@@ -22,6 +22,7 @@ import { formatDistance } from "@/src/utils/format";
 import { supabase } from "@/src/lib/supabase";
 import { updateVehicle } from "@/src/store/features/vehicle.slice";
 import { addTrip } from "@/src/store/features/trips.slice";
+import { getAverage } from "@/src/utils/math";
 
 interface Props {
   trip: Tables<"trips">;
@@ -32,6 +33,7 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
   const { t } = useTranslation("map", { keyPrefix: "stop-trip-sheet.form" });
 
   const dispatch = useAppDispatch();
+  const speed = useAppSelector((state) => state.current_trip.speed);
   const route = useAppSelector((state) => state.current_trip.route);
   const isFetchingStartAddress = useAppSelector(
     (state) => state.current_trip.isFetchingStartLocation,
@@ -125,6 +127,10 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
           end_odometer: values.end_odometer * 1000,
           distance: Math.trunc(values.distance * 1000),
           codec: PolyUtil.encode(points),
+
+          max_speed: Math.max(...speed),
+          avg_speed: getAverage(speed),
+
           ended_at: new Date().toISOString(),
           status: "done",
         })
@@ -143,7 +149,7 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
       reset();
       closeBottomSheet();
     },
-    [trip, points],
+    [trip, points, speed],
   );
   return (
     <View style={styles.container}>
