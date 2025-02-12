@@ -13,14 +13,18 @@ import { Button, Divider } from "react-native-paper";
 import { useCallback } from "react";
 import { supabase } from "@/src/lib/supabase";
 import { useErrorStore } from "@/src/store/error";
-import { useAppSelector } from "@/src/store/hooks";
-import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
+import {
+  updateVehicle,
+  vehiclesSelector,
+} from "@/src/store/features/vehicle.slice";
 
 export default function VehicleDetailsScreen() {
   const { id } = useLocalSearchParams();
   const { t } = useTranslation("vehicles", { keyPrefix: "edit.form" });
   const { setError } = useErrorStore();
 
+  const dispatch = useAppDispatch();
   const vehicle = useAppSelector((state) =>
     vehiclesSelector.selectById(state, id as string),
   );
@@ -44,19 +48,23 @@ export default function VehicleDetailsScreen() {
   });
 
   const onSubmit = useCallback(async (values: UpdateVehicleFormData) => {
-    const { error } = await supabase
+    const { error, data } = await supabase
       .from("vehicles")
       .update({
         ...values,
         odometer: values.odometer * 1000, // Convert back to meters,
       })
-      .eq("id", values.id);
+      .eq("id", values.id)
+      .select()
+      .single();
 
     if (error) {
       console.error(error);
 
       return setError(t("errors.saving"));
     }
+
+    return dispatch(updateVehicle({ id: values.id, changes: data }));
   }, []);
 
   return (
