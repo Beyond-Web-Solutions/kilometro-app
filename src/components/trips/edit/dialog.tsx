@@ -7,6 +7,7 @@ import {
   Divider,
   Portal,
   TextInput,
+  useTheme,
 } from "react-native-paper";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
@@ -31,6 +32,7 @@ registerTranslation("nl", nl);
 export function EditTripDialog() {
   const { t } = useTranslation("trips", { keyPrefix: "edit" });
   const { id, edit } = useLocalSearchParams();
+  const { colors } = useTheme();
 
   const dispatch = useAppDispatch();
   const trip = useAppSelector((state) =>
@@ -116,7 +118,7 @@ export function EditTripDialog() {
             {t("save")}
           </Button>
         </Appbar.Header>
-        <ScrollView>
+        <ScrollView style={{ backgroundColor: colors.surface }}>
           <Dialog.Content style={styles.content}>
             <DateTimeFormField<EditTripFormData>
               control={control}
