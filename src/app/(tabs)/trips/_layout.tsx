@@ -13,6 +13,7 @@ export default function TripsLayout() {
         name="index"
         options={{ headerTitle: t("overview.title") }}
       />
+
       <Stack.Screen
         key="[id]"
         name="[id]"

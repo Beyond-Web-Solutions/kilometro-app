@@ -132,7 +132,4 @@ const styles = StyleSheet.create({
   scroll_area: {
     paddingHorizontal: 0,
   },
-  language: {
-    marginHorizontal: 8,
-  },
 });

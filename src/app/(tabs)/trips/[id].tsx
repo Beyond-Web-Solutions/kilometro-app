@@ -2,7 +2,7 @@ import { StyleSheet, useColorScheme, View } from "react-native";
 import MapView, { Marker, Polyline, Region } from "react-native-maps";
 import { useTheme } from "react-native-paper";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PolyUtil } from "node-geometry-library";
 import { ViewTripDetailsBottomSheet } from "@/src/components/trips/details/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useProfile } from "@/src/hooks/profile/get";
 import { useAppSelector } from "@/src/store/hooks";
 import { tripsSelector } from "@/src/store/features/trips.slice";
+import { EditTripDialog } from "@/src/components/trips/edit/dialog";
 
 export default function Trip() {
   const scheme = useColorScheme();
@@ -56,44 +57,47 @@ export default function Trip() {
   }, [trip]);
 
   return (
-    <View style={styles.container}>
-      <GestureHandlerRootView>
-        <MapView
-          showsCompass
-          showsScale
-          region={region}
-          userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
-          style={styles.map}
-        >
-          {trip.start_point && (
-            <Marker
-              title={t("starting-point")}
-              description={trip?.start_address ?? undefined}
-              coordinate={{
-                latitude: trip.start_point.latitude,
-                longitude: trip.start_point.longitude,
-              }}
+    <>
+      <View style={styles.container}>
+        <GestureHandlerRootView>
+          <MapView
+            showsCompass
+            showsScale
+            region={region}
+            userInterfaceStyle={scheme === "dark" ? "dark" : "light"}
+            style={styles.map}
+          >
+            {trip.start_point && (
+              <Marker
+                title={t("starting-point")}
+                description={trip?.start_address ?? undefined}
+                coordinate={{
+                  latitude: trip.start_point.latitude,
+                  longitude: trip.start_point.longitude,
+                }}
+              />
+            )}
+            {trip.end_point && (
+              <Marker
+                title={t("destination")}
+                description={trip?.end_address ?? undefined}
+                coordinate={{
+                  latitude: trip.end_point.latitude,
+                  longitude: trip.end_point.longitude,
+                }}
+              />
+            )}
+            <Polyline
+              strokeColor={colors.primary}
+              strokeWidth={5}
+              coordinates={polyline}
             />
-          )}
-          {trip.end_point && (
-            <Marker
-              title={t("destination")}
-              description={trip?.end_address ?? undefined}
-              coordinate={{
-                latitude: trip.end_point.latitude,
-                longitude: trip.end_point.longitude,
-              }}
-            />
-          )}
-          <Polyline
-            strokeColor={colors.primary}
-            strokeWidth={5}
-            coordinates={polyline}
-          />
-        </MapView>
-        {trip && <ViewTripDetailsBottomSheet trip={trip} profile={profile} />}
-      </GestureHandlerRootView>
-    </View>
+          </MapView>
+          {trip && <ViewTripDetailsBottomSheet trip={trip} profile={profile} />}
+        </GestureHandlerRootView>
+      </View>
+      <EditTripDialog />
+    </>
   );
 }
 const styles = StyleSheet.create({

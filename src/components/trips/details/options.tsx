@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { IconButton, Menu } from "react-native-paper";
+import { Divider, IconButton, Menu } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { DeleteTripDialog } from "@/src/components/trips/details/delete";
 import { useOrganizationRole } from "@/src/hooks/org/role";
+import { router } from "expo-router";
 
 interface Props {
   params: { id?: string };
@@ -29,12 +30,15 @@ export function TripsOptionsMenu({ params }: Props) {
           <IconButton icon="dots-vertical" onPress={() => setIsVisible(true)} />
         }
       >
-        {/*<Menu.Item
-              onPress={() => {}}
-              title={t("edit.menu-item")}
-              leadingIcon="pencil"
-          />
-          <Divider />*/}
+        <Menu.Item
+          onPress={() => {
+            setIsVisible(false);
+            router.navigate(`/trips/${params.id}?edit=true`);
+          }}
+          title={t("edit.menu-item")}
+          leadingIcon="pencil"
+        />
+        <Divider />
         <Menu.Item
           title={t("delete.menu-item")}
           leadingIcon="delete"

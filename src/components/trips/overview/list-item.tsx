@@ -24,7 +24,7 @@ export function TripsOverviewListItem({ trip }: Props) {
       <TouchableRipple>
         <View>
           <List.Item
-            title={trip.start_address}
+            title={trip.start_address || t("unknown-address")}
             description={
               trip.started_at
                 ? formatDateTime(trip.started_at)
@@ -40,7 +40,7 @@ export function TripsOverviewListItem({ trip }: Props) {
             />
           </View>
           <List.Item
-            title={trip.end_address}
+            title={trip.end_address || t("unknown-address")}
             description={
               trip.ended_at ? formatDateTime(trip.ended_at) : t("unknown-time")
             }

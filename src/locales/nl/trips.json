@@ -5,7 +5,8 @@
     "from": "Van: ",
     "to": "Naar: ",
 
-    "unknown-time": "Onbekende tijd"
+    "unknown-time": "Onbekende tijd",
+    "unknown-address": "Onbekend adres"
   },
 
   "details": {
@@ -38,6 +39,40 @@
     "submit": "Verwijderen"
   },
   "edit": {
-    "menu-item": "Bewerken"
+    "menu-item": "Bewerken",
+    "title": "Rit bewerken",
+
+    "form": {
+      "started_at": {
+        "label": "Vertrokken op"
+      },
+      "ended_at": {
+        "label": "Aangekomen op"
+      },
+      "vehicle_id": {
+        "label": "Voertuig",
+
+        "dialog-title": "Voertuig kiezen",
+
+        "cancel": "Annuleren",
+        "confirm": "Bevestigen"
+      },
+
+
+      "start-odometer": {
+        "label": "Start kilometerstand (km)"
+      },
+      "end-odometer": {
+          "label": "Eind kilometerstand (km)"
+      },
+      "start-location": {
+        "label": "Vertrekpunt"
+      },
+      "end-location": {
+        "label": "Bestemming"
+      }
+    },
+
+    "save": "Opslaan"
   }
 }

@@ -58,6 +58,8 @@
       "dialog-title": "Organisatiecode",
       "dialog-description": "Andere gebruikers kunnen zich bij uw organisatie aansluiten door deze code in te voeren",
 
+      "copied-to-clipboard": "Gekopieerd naar klembord",
+
       "ok": "OK"
     },
     "join-requests": {

@@ -5,7 +5,6 @@ import { deleteTrip } from "@/src/hooks/trip/delete";
 import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch } from "@/src/store/hooks";
 import { stopTrip } from "@/src/store/features/current-trip.slice";
-import { stopLocationUpdatesAsync } from "expo-location";
 
 interface Props {
   id: string;
