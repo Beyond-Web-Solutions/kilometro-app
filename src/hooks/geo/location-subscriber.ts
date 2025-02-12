@@ -42,7 +42,7 @@ export function useLocationSubscriber() {
   }, []);
 
   useEffect(() => {
-    if (isTracking) {
+    if (isTracking && !subscription) {
       watchPositionAsync(
         {
           accuracy: LocationAccuracy.BestForNavigation,
