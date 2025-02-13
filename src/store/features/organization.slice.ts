@@ -27,6 +27,8 @@ export const organizationsSlice = createAppSlice({
     selected: null,
   }),
   reducers: (create) => ({
+    deleteOrganization: create.reducer(organizationAdapter.removeOne),
+    addOrganization: create.reducer(organizationAdapter.addOne),
     setSelectedOrganization: create.reducer(
       (state, action: PayloadAction<string | null>) => {
         state.selected = action.payload;
@@ -65,5 +67,9 @@ export const organizationsSlice = createAppSlice({
 export const organizationsSelector =
   organizationAdapter.getSelectors<RootState>((state) => state.organizations);
 
-export const { fetchOrganizations, setSelectedOrganization } =
-  organizationsSlice.actions;
+export const {
+  fetchOrganizations,
+  setSelectedOrganization,
+  deleteOrganization,
+  addOrganization,
+} = organizationsSlice.actions;

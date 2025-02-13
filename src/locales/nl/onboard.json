@@ -52,5 +52,11 @@
     "links": {
       "back": "Terug"
     }
+  },
+  "switch-org": {
+    "title": "Wissel van organisatie",
+    "description": "Je bent lid van meerdere organisaties. Kies een organisatie om mee te werken.",
+
+    "switch-button": "Wissel van organisatie"
   }
 }

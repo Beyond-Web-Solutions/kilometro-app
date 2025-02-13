@@ -30,6 +30,13 @@ export default function OnboardLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        key="switch-org"
+        name="switch-org"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

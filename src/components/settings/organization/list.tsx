@@ -5,6 +5,7 @@ import { OrganizationMembersSettings } from "@/src/components/settings/organizat
 import { ShowOrganizationJoinCode } from "@/src/components/settings/organization/code";
 import { OrganizationJoinRequests } from "@/src/components/settings/organization/list/requests";
 import { useAppSelector } from "@/src/store/hooks";
+import { DeleteOrganizationSetting } from "@/src/components/settings/organization/list/delete";
 
 export function OrganizationSettings() {
   const { t } = useTranslation("settings", { keyPrefix: "organization" });
@@ -17,6 +18,7 @@ export function OrganizationSettings() {
       <OrganizationMembersSettings />
       <ShowOrganizationJoinCode />
       {role === "admin" && <OrganizationJoinRequests />}
+      {role === "admin" && <DeleteOrganizationSetting />}
     </List.Section>
   );
 }

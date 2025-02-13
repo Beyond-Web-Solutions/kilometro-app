@@ -26,6 +26,7 @@ export function ShowOrganizationJoinCode() {
   const org = useAppSelector((state) =>
     organizationsSelector.selectById(state, selected),
   );
+
   const { colors, roundness } = useTheme();
   const { t } = useTranslation("settings", {
     keyPrefix: "organization.join-code",
@@ -62,7 +63,7 @@ export function ShowOrganizationJoinCode() {
                 },
               ]}
             >
-              <Text variant="labelLarge">{org.code}</Text>
+              <Text variant="labelLarge">{org?.code}</Text>
             </TouchableRipple>
           </Dialog.Content>
           <Dialog.Actions>

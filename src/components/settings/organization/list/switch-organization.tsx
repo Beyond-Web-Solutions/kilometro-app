@@ -19,6 +19,7 @@ export function SwitchOrganizationSetting() {
         right={(props) => <List.Icon {...props} icon="chevron-right" />}
       />
       <OrganizationSwitcher
+        showCreateNew
         isVisible={isVisible}
         hideDialog={() => setIsVisible(false)}
       />

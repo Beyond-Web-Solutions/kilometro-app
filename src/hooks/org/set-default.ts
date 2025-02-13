@@ -1,8 +1,10 @@
 import { supabase } from "@/src/lib/supabase";
 import { getUser } from "@/src/hooks/auth/user";
 import { useMutation } from "@tanstack/react-query";
+import { useAppDispatch } from "@/src/store/hooks";
+import { setSelectedOrganization } from "@/src/store/features/organization.slice";
 
-export function useSetDefaultOrganization(onSuccess: () => Promise<void>) {
+export function useSetDefaultOrganization(onSuccess: () => void) {
   return useMutation({
     mutationFn: setDefaultOrganization,
     onSuccess,

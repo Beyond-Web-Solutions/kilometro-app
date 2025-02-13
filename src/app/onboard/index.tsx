@@ -5,15 +5,21 @@ import { CreateOrganizationDialog } from "@/src/components/settings/organization
 import { JoinOrganizationDialog } from "@/src/components/settings/organization/join/dialog";
 import { StyleSheet, View } from "react-native";
 import { useAppSelector } from "@/src/store/hooks";
+import { organizationsSelector } from "@/src/store/features/organization.slice";
 
 export default function CreateOrJoinOrganizationScreen() {
   const { t } = useTranslation("onboard", { keyPrefix: "create-or-join" });
 
   const isPending = useAppSelector((state) => state.auth.isRolePending);
   const role = useAppSelector((state) => state.auth.role);
+  const orgCount = useAppSelector(organizationsSelector.selectTotal);
 
   if (!isPending && role) {
     return <Redirect href="/(tabs)" />;
+  }
+
+  if (orgCount > 0) {
+    return <Redirect href="/onboard/switch-org" />;
   }
 
   return (

@@ -10,7 +10,7 @@ export function OrganizationJoinRequests() {
   const role = useAppSelector((state) => state.auth.role);
 
   if (role !== "admin") {
-    return <Redirect href="/(tabs)/settings" />;
+    return null;
   }
 
   return (

@@ -13,10 +13,10 @@ import { Provider } from "react-redux";
 import { persistor, store } from "../store/store";
 import { AuthProvider } from "@/src/components/auth/provider";
 import { PersistGate } from "redux-persist/integration/react";
-import "react-native-reanimated";
-import "@/src/lib/i18n";
 import * as Sentry from "@sentry/react-native";
 import { isRunningInExpoGo } from "expo";
+import "react-native-reanimated";
+import "@/src/lib/i18n";
 
 // Construct a new integration instance. This is needed to communicate between the integration and React
 const navigationIntegration = Sentry.reactNavigationIntegration({

@@ -16,9 +16,16 @@ import { useErrorStore } from "@/src/store/error";
 import { getUser } from "@/src/hooks/auth/user";
 import { useAppDispatch } from "@/src/store/hooks";
 import { fetchRole } from "@/src/store/features/auth.slice";
-import { setSelectedOrganization } from "@/src/store/features/organization.slice";
+import {
+  addOrganization,
+  setSelectedOrganization,
+} from "@/src/store/features/organization.slice";
 
-export function CreateOrganizationDialog() {
+interface Props {
+  onSuccess?: () => void;
+}
+
+export function CreateOrganizationDialog({ onSuccess }: Props) {
   const dispatch = useAppDispatch();
 
   const { setError } = useErrorStore();
@@ -80,10 +87,15 @@ export function CreateOrganizationDialog() {
 
     await setDefaultOrganization(organization.id);
 
-    dispatch(fetchRole());
+    dispatch(addOrganization(organization));
     dispatch(setSelectedOrganization(organization.id));
+    dispatch(fetchRole());
 
     setIsVisible(false);
+
+    if (onSuccess) {
+      onSuccess();
+    }
   }, []);
 
   return (

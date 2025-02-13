@@ -45,7 +45,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Sta $(PRODUCT_NAME) toe om je locatie te gebruiken voor het registreren van ritafstanden en het genereren van kilometeroverzichten."
         }
       ],
       [

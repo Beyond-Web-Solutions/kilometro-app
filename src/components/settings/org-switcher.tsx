@@ -4,39 +4,54 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
 import { useOrganizations } from "@/src/hooks/org/list";
 import { useDefaultOrganization } from "@/src/hooks/org/default";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetDefaultOrganization } from "@/src/hooks/org/set-default";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
+import {
+  organizationsSelector,
+  setSelectedOrganization,
+} from "@/src/store/features/organization.slice";
+import { fetchRole } from "@/src/store/features/auth.slice";
 
 interface Props {
   isVisible: boolean;
   hideDialog: () => void;
+  showCreateNew: boolean;
 }
 
-export function OrganizationSwitcher({ isVisible, hideDialog }: Props) {
-  const queryClient = useQueryClient();
-
-  const { mutate, isPending } = useSetDefaultOrganization(async () => {
-    await queryClient.invalidateQueries({ queryKey: ["organizations"] });
-    await queryClient.invalidateQueries({ queryKey: ["user"] });
-
-    hideDialog();
-  });
+export function OrganizationSwitcher({
+  isVisible,
+  hideDialog,
+  showCreateNew,
+}: Props) {
+  const dispatch = useAppDispatch();
 
   const { t } = useTranslation("settings", {
     keyPrefix: "organization-switcher",
   });
 
-  const { data: organizations } = useOrganizations();
-  const { data: defaultOrganization } = useDefaultOrganization();
+  const selectedOrganizationId = useAppSelector(
+    (state) => state.organizations.selected,
+  );
+  const organizations = useAppSelector(organizationsSelector.selectAll);
 
   const [organization, setOrganization] = useState<string>("");
 
+  const { mutate, isPending } = useSetDefaultOrganization(() => {
+    dispatch(setSelectedOrganization(organization));
+    dispatch(fetchRole());
+
+    hideDialog();
+
+    router.replace("/(tabs)");
+  });
+
   useEffect(() => {
-    if (defaultOrganization) {
-      setOrganization(defaultOrganization.id);
+    if (selectedOrganizationId) {
+      setOrganization(selectedOrganizationId);
     }
-  }, [defaultOrganization]);
+  }, [selectedOrganizationId]);
 
   return (
     <Portal>
@@ -61,10 +76,21 @@ export function OrganizationSwitcher({ isVisible, hideDialog }: Props) {
             </RadioButton.Group>
           </ScrollView>
         </Dialog.ScrollArea>
-        <Dialog.Actions style={styles.footer}>
-          <Link href="/settings/new-organization" onPress={hideDialog} asChild>
-            <Button>{t("new")}</Button>
-          </Link>
+        <Dialog.Actions
+          style={[
+            styles.footer,
+            { justifyContent: showCreateNew ? "space-between" : "flex-end" },
+          ]}
+        >
+          {showCreateNew && (
+            <Link
+              href="/settings/new-organization"
+              onPress={hideDialog}
+              asChild
+            >
+              <Button>{t("new")}</Button>
+            </Link>
+          )}
           <View style={styles.footer_primary_actions}>
             <Button compact onPress={hideDialog}>
               {t("cancel")}

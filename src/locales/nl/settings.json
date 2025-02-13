@@ -74,6 +74,14 @@
 
       "accept": "Accepteren",
         "reject": "Weigeren"
+    },
+    "delete": {
+      "title": "Verwijder",
+      "dialog-title": "Verwijder organisatie",
+      "dialog-description": "Deze actie kan niet ongedaan worden gemaakt. Alle gegevens van de organisatie zullen worden verwijderd.",
+
+      "cancel": "Annuleren",
+      "submit": "Verwijderen"
     }
   },
   "general": {
