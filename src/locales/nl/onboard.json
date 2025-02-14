@@ -3,6 +3,8 @@
     "title": "Welkom!",
     "description": "Uw account is aangemaakt. Maak een team aan of voeg je bij een bestaand team.",
 
+    "select": "Selecteer een organisatie",
+
     "links": {
       "create": "Maak een organisatie",
       "join": "Voeg je bij een organisatie"

@@ -1,10 +1,11 @@
-import { List } from "react-native-paper";
+import { Divider, List } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { nativeApplicationVersion } from "expo-application";
 import { WebsiteLink } from "@/src/components/settings/footer/items/website";
 import { TermsLink } from "@/src/components/settings/footer/items/terms";
 import { PrivacyLink } from "@/src/components/settings/footer/items/privacy";
 import { SignOutButton } from "@/src/components/settings/footer/items/sign-out";
+import { DeleteAccountSetting } from "@/src/components/settings/footer/items/delete-account";
 
 export function SettingsFooter() {
   const { t } = useTranslation("settings", { keyPrefix: "footer" });
@@ -12,6 +13,7 @@ export function SettingsFooter() {
   return (
     <List.Section>
       <SignOutButton />
+      <DeleteAccountSetting />
       <List.Item
         title={t("support")}
         left={(props) => <List.Icon {...props} icon="help-circle-outline" />}

@@ -24,7 +24,7 @@ export function useDeleteOrganization(id: string, onSuccess?: () => void) {
   });
 }
 
-async function deleteOrganization(id: string) {
+export async function deleteOrganization(id: string) {
   const { error } = await supabase.from("organizations").delete().eq("id", id);
 
   if (error) {

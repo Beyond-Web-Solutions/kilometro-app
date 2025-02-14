@@ -3,9 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useSignOut } from "@/src/hooks/auth/sign-out";
 import { useCallback } from "react";
 import { router } from "expo-router";
+import { useAppSelector } from "@/src/store/hooks";
+import { isStream } from "minipass";
 
 export function SignOutButton() {
   const { t } = useTranslation("settings", { keyPrefix: "footer" });
+
+  const isTracking = useAppSelector((state) => state.current_trip.isTracking);
 
   const handleSignOutSuccess = useCallback(() => {
     router.replace("/auth/sign-in");
@@ -16,7 +20,9 @@ export function SignOutButton() {
   return (
     <List.Item
       title={t("sign-out")}
+      description={isTracking ? t("cannot-sign-out-while-driving") : null}
       onPress={() => mutate()}
+      disabled={isTracking}
       left={(props) => <List.Icon {...props} icon="logout" />}
       right={(props) =>
         isPending ? (

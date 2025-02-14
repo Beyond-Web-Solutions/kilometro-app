@@ -60,8 +60,9 @@ export function ViewTripDetailsBottomSheet({ trip, profile }: Props) {
             title={t("user")}
             description={formatUsername(
               t("unknown-user"),
-              profile?.first_name ?? undefined,
-              profile?.last_name ?? undefined,
+              profile?.first_name ?? null,
+              profile?.last_name ?? null,
+              profile?.email ?? null,
             )}
             left={(props) => <List.Icon {...props} icon="account" />}
           />

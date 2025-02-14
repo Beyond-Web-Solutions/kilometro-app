@@ -156,6 +156,7 @@
   },
   "footer": {
     "sign-out": "Uitloggen",
+    "cannot-sign-out-while-driving": "Je kunt niet uitloggen terwijl je aan het rijden bent",
     "support": "Ondersteuning",
     "app-website": "Website",
     "app-version": "Versie",
@@ -210,6 +211,18 @@
         "submit": "Voeg toe"
       }
     }
+  },
+
+  "delete-account": {
+    "list-item": "Account verwijderen",
+
+    "dialog-title": "Account verwijderen",
+    "dialog-description": "Weet je zeker dat je je account wilt verwijderen? Alle gegevens zullen worden verwijderd en kunnen niet worden hersteld.",
+
+    "also-delete-org": "Verwijder ook de organisatie",
+
+    "cancel": "Annuleren",
+    "submit": "Verwijderen"
   },
 
   "auth": {

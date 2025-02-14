@@ -6,6 +6,9 @@ import { JoinOrganizationDialog } from "@/src/components/settings/organization/j
 import { StyleSheet, View } from "react-native";
 import { useAppSelector } from "@/src/store/hooks";
 import { organizationsSelector } from "@/src/store/features/organization.slice";
+import { Button, Divider } from "react-native-paper";
+import { OrganizationSwitcher } from "@/src/components/settings/org-switcher";
+import { useState } from "react";
 
 export default function CreateOrJoinOrganizationScreen() {
   const { t } = useTranslation("onboard", { keyPrefix: "create-or-join" });
@@ -14,12 +17,10 @@ export default function CreateOrJoinOrganizationScreen() {
   const role = useAppSelector((state) => state.auth.role);
   const orgCount = useAppSelector(organizationsSelector.selectTotal);
 
+  const [isSwitcherVisible, setIsSwitcherVisible] = useState(false);
+
   if (!isPending && role) {
     return <Redirect href="/(tabs)" />;
-  }
-
-  if (orgCount > 0) {
-    return <Redirect href="/onboard/switch-org" />;
   }
 
   return (
@@ -29,6 +30,19 @@ export default function CreateOrJoinOrganizationScreen() {
       showDivider={false}
     >
       <View style={styles.container}>
+        {orgCount > 0 && (
+          <>
+            <Button mode="contained" onPress={() => setIsSwitcherVisible(true)}>
+              {t("select")}
+            </Button>
+            <OrganizationSwitcher
+              isVisible={isSwitcherVisible}
+              hideDialog={() => setIsSwitcherVisible(false)}
+              showCreateNew={false}
+            />
+            <Divider />
+          </>
+        )}
         <CreateOrganizationDialog />
         <JoinOrganizationDialog />
       </View>

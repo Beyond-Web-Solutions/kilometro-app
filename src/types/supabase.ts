@@ -280,6 +280,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      delete_user: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_org_ids_for_user: {
         Args: Record<PropertyKey, never>
         Returns: string[]
