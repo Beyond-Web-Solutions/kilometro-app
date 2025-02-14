@@ -1,5 +1,4 @@
 import { Modal, ScrollView, StyleSheet, View } from "react-native";
-import { nl, registerTranslation } from "react-native-paper-dates";
 import {
   Appbar,
   Button,
@@ -26,8 +25,6 @@ import { TextFormField } from "@/src/components/_common/form/text-input";
 import { Trip } from "@/src/types/trips";
 import { EditTripDetailsDialog } from "@/src/components/map/trip-details/edit";
 import { supabase } from "@/src/lib/supabase";
-
-registerTranslation("nl", nl);
 
 export function EditTripDialog() {
   const { t } = useTranslation("trips", { keyPrefix: "edit" });
@@ -107,7 +104,7 @@ export function EditTripDialog() {
       visible={edit === "true"}
     >
       <Portal.Host>
-        <Appbar.Header elevated>
+        <Appbar.Header mode="small" elevated>
           <Appbar.Action icon="close" onPress={close} />
           <Appbar.Content title={t("title")} />
           <Button

@@ -46,6 +46,7 @@ export function DeleteAccountSetting() {
 
       await supabase.rpc("delete_user");
       await supabase.auth.signOut({ scope: "global" });
+
       return router.replace("/auth/sign-in");
     },
     [role, org],

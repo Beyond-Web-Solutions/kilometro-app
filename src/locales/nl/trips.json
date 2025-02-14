@@ -5,6 +5,8 @@
     "from": "Van: ",
     "to": "Naar: ",
 
+    "export": "Exporteren",
+
     "unknown-time": "Onbekende tijd",
     "unknown-address": "Onbekend adres"
   },
@@ -74,5 +76,13 @@
     },
 
     "save": "Opslaan"
+  },
+
+  "export": {
+    "header-title": "Ritten exporteren",
+
+    "range": "Periode",
+
+    "submit": "Exporteren"
   }
 }

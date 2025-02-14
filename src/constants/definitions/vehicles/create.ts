@@ -5,7 +5,7 @@ export const createVehicleSchema = z.object({
   licence_plate: z
     .string()
     .length(8, { message: "licence-plate-must-be-8-characters" }),
-  odometer: z.coerce.number().int().positive("odometer-must-be-positive"),
+  odometer: z.coerce.number().positive("odometer-must-be-positive"),
 });
 
 export type CreateVehicleFormData = z.infer<typeof createVehicleSchema>;

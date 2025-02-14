@@ -10,6 +10,10 @@ import nl_validation from "../locales/nl/validation.json";
 import nl_vehicles from "../locales/nl/vehicles.json";
 import nl_settings from "../locales/nl/settings.json";
 
+import { nl, registerTranslation } from "react-native-paper-dates";
+
+registerTranslation("nl", nl);
+
 export const defaultNS = "common";
 export const resources = {
   nl: {

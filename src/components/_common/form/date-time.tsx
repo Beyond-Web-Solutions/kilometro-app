@@ -4,7 +4,7 @@ import { FieldPath, FieldValues } from "react-hook-form/dist/types";
 import { StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { DatePickerInput, TimePickerModal } from "react-native-paper-dates";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import i18n from "@/src/lib/i18n";
 
 interface Props<T extends FieldValues> {
@@ -16,9 +16,9 @@ interface Props<T extends FieldValues> {
 export function DateTimeFormField<T extends FieldValues>({
   control,
   name,
-  ...props
+  label,
 }: Props<T>) {
-  const { t } = useTranslation("validation");
+  const { t } = useTranslation(["validation", "common"]);
 
   const { field, fieldState } = useController({
     name,
@@ -44,20 +44,20 @@ export function DateTimeFormField<T extends FieldValues>({
             value={field.value}
             onChange={field.onChange}
             hasError={Boolean(fieldState.error)}
+            label={label}
             inputMode="end"
             mode="outlined"
             withDateFormatInLabel={false}
             editable={false}
             startWeekOnMonday
             readOnly
-            {...props}
           />
         </View>
         <View style={styles.picker_container}>
           <TextInput
             readOnly
             mode="outlined"
-            label={props.label}
+            label={label}
             right={
               <TextInput.Icon icon="clock-outline" onPress={showTimepicker} />
             }
@@ -74,6 +74,9 @@ export function DateTimeFormField<T extends FieldValues>({
         </HelperText>
       )}
       <TimePickerModal
+        use24HourClock
+        confirmLabel={t("common:ok")}
+        cancelLabel={t("common:cancel")}
         visible={isTimepickerVisible}
         onDismiss={hideTimepicker}
         onConfirm={({ hours, minutes }) => {
@@ -84,7 +87,7 @@ export function DateTimeFormField<T extends FieldValues>({
           field.onChange(newDate);
           setIsTimepickerVisible(false);
         }}
-        label={props.label}
+        label={label}
         locale={i18n.language}
         animationType="fade"
         hours={date.getHours()}
