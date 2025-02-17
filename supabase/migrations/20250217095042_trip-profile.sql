@@ -1,0 +1,1 @@
+alter table "public"."organization_members" add column "is_accepted" boolean not null default false;

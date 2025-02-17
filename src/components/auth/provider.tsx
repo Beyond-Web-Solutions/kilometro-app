@@ -13,6 +13,7 @@ import {
 } from "@/src/store/features/organization.slice";
 import { fetchTrips } from "@/src/store/features/trips.slice";
 import { fetchVehicles } from "@/src/store/features/vehicle.slice";
+import { fetchOrganizationMembers } from "@/src/store/features/organization-members.slice";
 
 interface Props {
   children: ReactNode;
@@ -46,6 +47,10 @@ export function AuthProvider({ children }: Props) {
       dispatch(fetchProfile(user?.id ?? null));
       dispatch(fetchOrganizations(user?.id ?? null));
       dispatch(fetchIsAccepted());
+
+      if (organizationId) {
+        dispatch(fetchOrganizationMembers(organizationId));
+      }
     });
 
     return () => {
