@@ -168,7 +168,10 @@
     "header-title": "Nieuwe organisatie",
 
     "create": {
-      "button": "Maak een nieuwe organisatie aan",
+      "card-title": "Nieuwe organisatie aanmaken",
+      "card-description": "Maak een nieuwe organisatie aan om je voertuigen en bestuurders te beheren.",
+
+      "button": "Aanmaken",
 
       "dialog-title": "Maak een nieuwe organisatie aan",
 
@@ -191,10 +194,12 @@
       }
     },
     "join": {
-      "button": "Voeg je bij een bestaande organisatie",
+      "card-title": "Aansluiten bij een bestaande organisatie",
+      "card-description": "Voer de organisatiecode in om je bij een bestaande organisatie aan te sluiten.",
+
+      "button": "Aansluiten",
 
       "dialog-title": "Voeg je bij een organisatie",
-      "dialog-description": "Voer de organisatiecode in om je bij een bestaande organisatie aan te sluiten. Je kunt deze code van een beheerder van de organisatie krijgen.",
 
       "organization-code": {
         "label": "Organisatiecode"

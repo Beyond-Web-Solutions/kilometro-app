@@ -1,5 +1,5 @@
 import { Container } from "@/src/components/_common/layout/container";
-import { Button, Divider } from "react-native-paper";
+import { Divider } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
 import { CreateOrganizationDialog } from "@/src/components/settings/organization/create/dialog";
 import { JoinOrganizationDialog } from "@/src/components/settings/organization/join/dialog";

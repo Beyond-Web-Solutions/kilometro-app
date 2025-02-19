@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button, Dialog, Portal } from "react-native-paper";
+import { Button, Card, Dialog, Portal, Text } from "react-native-paper";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +20,7 @@ import {
   addOrganization,
   setSelectedOrganization,
 } from "@/src/store/features/organization.slice";
+import { KeyboardAvoidingDialog } from "@/src/components/_common/keyboard-avoiding-dialog";
 
 interface Props {
   onSuccess?: () => void;
@@ -100,11 +101,23 @@ export function CreateOrganizationDialog({ onSuccess }: Props) {
 
   return (
     <>
-      <Button mode="contained" onPress={() => setIsVisible(true)}>
-        {t("button")}
-      </Button>
+      <Card>
+        <Card.Title title={t("card-title")} titleVariant="titleLarge" />
+        <Card.Content>
+          <Text>{t("card-description")}</Text>
+        </Card.Content>
+        <Card.Actions>
+          <Button mode="contained" onPress={() => setIsVisible(true)}>
+            {t("button")}
+          </Button>
+        </Card.Actions>
+      </Card>
+
       <Portal>
-        <Dialog visible={isVisible} onDismiss={() => setIsVisible(false)}>
+        <KeyboardAvoidingDialog
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        >
           <Dialog.Title>{t("dialog-title")}</Dialog.Title>
           <Dialog.Content style={styles.dialog_content}>
             <TextFormField<CreateOrganizationFormData>
@@ -146,7 +159,7 @@ export function CreateOrganizationDialog({ onSuccess }: Props) {
               {t("form.submit")}
             </Button>
           </Dialog.Actions>
-        </Dialog>
+        </KeyboardAvoidingDialog>
       </Portal>
     </>
   );

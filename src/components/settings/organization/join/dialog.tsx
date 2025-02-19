@@ -1,5 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { Button, Dialog, Divider, Portal, Text } from "react-native-paper";
+import {
+  Button,
+  Card,
+  Dialog,
+  Divider,
+  Portal,
+  Text,
+} from "react-native-paper";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -93,9 +100,17 @@ export function JoinOrganizationDialog() {
 
   return (
     <>
-      <Button mode="contained" onPress={() => setIsVisible(true)}>
-        {t("button")}
-      </Button>
+      <Card>
+        <Card.Title title={t("card-title")} titleVariant="titleLarge" />
+        <Card.Content>
+          <Text>{t("card-description")}</Text>
+        </Card.Content>
+        <Card.Actions>
+          <Button mode="contained" onPress={() => setIsVisible(true)}>
+            {t("button")}
+          </Button>
+        </Card.Actions>
+      </Card>
       <Portal>
         <KeyboardAvoidingDialog
           isVisible={isVisible}
@@ -103,8 +118,6 @@ export function JoinOrganizationDialog() {
         >
           <Dialog.Title>{t("dialog-title")}</Dialog.Title>
           <Dialog.Content style={styles.dialog_content}>
-            <Text>{t("dialog-description")}</Text>
-            <Divider />
             <TextFormField<JoinOrganizationFormData>
               control={control}
               autoCapitalize="characters"
