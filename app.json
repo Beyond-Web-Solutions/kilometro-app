@@ -47,7 +47,9 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Sta $(PRODUCT_NAME) toe om je locatie te gebruiken voor het registreren van ritafstanden en het genereren van kilometeroverzichten.",
           "locationWhenInUsePermission": "Sta $(PRODUCT_NAME) toe om je locatie te gebruiken voor het registreren van ritafstanden en het genereren van kilometeroverzichten.",
-          "locationAlwaysPermission": "Sta $(PRODUCT_NAME) toe om je locatie te gebruiken voor het registreren van ritafstanden en het genereren van kilometeroverzichten."
+          "locationAlwaysPermission": "Sta $(PRODUCT_NAME) toe om je locatie te gebruiken voor het registreren van ritafstanden en het genereren van kilometeroverzichten.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true
         }
       ],
       [

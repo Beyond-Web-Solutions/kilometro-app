@@ -10,6 +10,16 @@
 
   "km-h": "km/h",
 
+  "permissions": {
+    "location": {
+      "title": "Locatie toegang",
+      "message": "Kilometro heeft toegang tot uw locatie nodig om de ritten te kunnen volgen. Ga naar de instellingen en wijzig de locatie toegang naar 'Altijd'.",
+
+      "cancel": "Annuleren",
+      "submit": "Open instellingen"
+    }
+  },
+
   "trip": {
     "unknown-location": "Onbekend adres",
     "unknown-time": "Onbekende tijd"

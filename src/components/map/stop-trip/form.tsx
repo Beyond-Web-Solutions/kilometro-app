@@ -23,6 +23,8 @@ import { supabase } from "@/src/lib/supabase";
 import { updateVehicle } from "@/src/store/features/vehicle.slice";
 import { addTrip } from "@/src/store/features/trips.slice";
 import { getAverage } from "@/src/utils/math";
+import { stopLocationUpdatesAsync } from "expo-location";
+import { LOCATION_TASK_NAME } from "@/src/utils/task-manager";
 
 interface Props {
   trip: Tables<"trips">;
@@ -145,6 +147,7 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
 
       dispatch(addTrip(data as Trip));
       dispatch(stopTrip());
+      await stopLocationUpdatesAsync(LOCATION_TASK_NAME);
 
       reset();
       closeBottomSheet();

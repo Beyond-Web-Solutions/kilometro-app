@@ -5,6 +5,8 @@ import { deleteTrip } from "@/src/hooks/trip/delete";
 import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch } from "@/src/store/hooks";
 import { stopTrip } from "@/src/store/features/current-trip.slice";
+import { stopLocationUpdatesAsync } from "expo-location";
+import { LOCATION_TASK_NAME } from "@/src/utils/task-manager";
 
 interface Props {
   id: string;
@@ -17,8 +19,9 @@ export function CancelTripDialog({ id, onSubmit }: Props) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: deleteTrip,
-    onSuccess: () => {
+    onSuccess: async () => {
       dispatch(stopTrip());
+      await stopLocationUpdatesAsync(LOCATION_TASK_NAME);
 
       setIsVisible(false);
       onSubmit();

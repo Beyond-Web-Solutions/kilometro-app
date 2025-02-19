@@ -15,6 +15,12 @@ import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
 import { startTrip } from "@/src/store/features/current-trip.slice";
 import { Trip } from "@/src/types/trips";
 import { supabase } from "@/src/lib/supabase";
+import {
+  LocationAccuracy,
+  LocationActivityType,
+  startLocationUpdatesAsync,
+} from "expo-location";
+import { LOCATION_TASK_NAME } from "@/src/utils/task-manager";
 
 interface Props {
   isVisible: boolean;
@@ -63,6 +69,13 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
       }
 
       dispatch(startTrip(data as Trip));
+
+      await startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: LocationAccuracy.BestForNavigation,
+        pausesUpdatesAutomatically: true,
+        activityType: LocationActivityType.AutomotiveNavigation,
+        showsBackgroundLocationIndicator: true,
+      });
 
       hideDialog();
       reset();

@@ -3,16 +3,21 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useState } from "react";
 import { StartTripDialog } from "@/src/components/map/start-trip/dialog";
 import { StopTripSheet } from "@/src/components/map/stop-trip/sheet";
-import { useForegroundPermissions } from "expo-location";
+import {
+  useBackgroundPermissions,
+  useForegroundPermissions,
+} from "expo-location";
 import { Linking } from "react-native";
 import { useAppSelector } from "@/src/store/hooks";
+import { useLocationPermissions } from "@/src/hooks/permissions/location";
+import { LocationSettingsDialog } from "@/src/components/map/location-settings-dialog";
 
 export function ToggleTripFab() {
   const { t } = useTranslation("map");
 
   const isTracking = useAppSelector((state) => state.current_trip.isTracking);
 
-  const [status, request] = useForegroundPermissions();
+  const { request, showDialog, hideDialog, granted } = useLocationPermissions();
 
   const [isStopTripBottomSheetVisible, setIsStopTripBottomSheetVisible] =
     useState(false);
@@ -28,22 +33,15 @@ export function ToggleTripFab() {
     }
   }, [isTracking]);
 
-  const handlePermissionPress = useCallback(async () => {
-    if (status?.canAskAgain) {
-      await request();
-    } else {
-      await Linking.openSettings();
-    }
-  }, [status]);
-
-  if (!status?.granted) {
+  // Show the FAB to request permissions if they are not granted
+  if (!granted) {
     return (
       <FAB
         animated={false}
         variant="primary"
         icon="car"
         label={t("start-trip")}
-        onPress={handlePermissionPress}
+        onPress={request}
       />
     );
   }
@@ -65,6 +63,7 @@ export function ToggleTripFab() {
         isVisible={isStopTripBottomSheetVisible}
         hideSheet={() => setIsStopTripBottomSheetVisible(false)}
       />
+      <LocationSettingsDialog visible={showDialog} hideDialog={hideDialog} />
     </>
   );
 }

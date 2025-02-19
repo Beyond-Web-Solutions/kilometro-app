@@ -3,30 +3,25 @@ import { List } from "react-native-paper";
 import { useForegroundPermissions } from "expo-location";
 import { useCallback } from "react";
 import { Linking } from "react-native";
+import { useLocationPermissions } from "@/src/hooks/permissions/location";
+import { LocationSettingsDialog } from "@/src/components/map/location-settings-dialog";
 
 export function LocationSettings() {
   const { t } = useTranslation("settings", { keyPrefix: "general" });
 
-  const [status, request] = useForegroundPermissions();
-
-  const handleOnPermissionClick = useCallback(async () => {
-    if (status?.granted) return;
-
-    if (status?.canAskAgain) {
-      await request();
-    } else {
-      await Linking.openSettings();
-    }
-  }, [status, request]);
+  const { granted, request, hideDialog, showDialog } = useLocationPermissions();
 
   return (
-    <List.Item
-      title={t("location.title")}
-      onPress={handleOnPermissionClick}
-      left={(props) => <List.Icon {...props} icon="map-marker" />}
-      right={(props) => (
-        <List.Icon {...props} icon={status?.granted ? "check" : "alert"} />
-      )}
-    />
+    <>
+      <List.Item
+        title={t("location.title")}
+        onPress={request}
+        left={(props) => <List.Icon {...props} icon="map-marker" />}
+        right={(props) => (
+          <List.Icon {...props} icon={granted ? "check" : "alert"} />
+        )}
+      />
+      <LocationSettingsDialog visible={showDialog} hideDialog={hideDialog} />
+    </>
   );
 }
