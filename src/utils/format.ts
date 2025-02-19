@@ -6,6 +6,7 @@ export function formatOdometer(odometer: number | null, showUnit?: boolean) {
   return Intl.NumberFormat(i18n.language, {
     style: showUnit ? "unit" : undefined,
     unit: "kilometer",
+    roundingMode: "trunc",
   }).format((odometer ?? 0) / 1000);
 }
 

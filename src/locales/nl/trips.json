@@ -85,6 +85,26 @@
     "users": "Bestuurders",
     "vehicles": "Voertuigen",
 
+    "csv": {
+      "yes": "Ja",
+      "no": "Nee",
+
+      "is-private": "Privé",
+      "vehicle": "Voertuig",
+      "license-plate": "Kenteken",
+
+      "start-address": "Vertrekadres",
+      "end-address": "Bestemmingsadres",
+
+      "start-odometer": "Start kilometerstand",
+      "end-odometer": "Eind kilometerstand",
+      "distance": "Afstand (km)",
+
+      "user-email": "Bestuurder e-mail",
+      "user-first-name": "Bestuurder voornaam",
+      "user-last-name": "Bestuurder achternaam"
+    },
+
     "submit": "Exporteren"
   }
 }
