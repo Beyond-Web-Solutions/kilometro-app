@@ -55,7 +55,6 @@ export function DeleteOrganizationSetting() {
                 {t("cancel")}
               </Button>
               <Button
-                mode="contained"
                 loading={isPending}
                 disabled={isPending}
                 onPress={() => mutate()}

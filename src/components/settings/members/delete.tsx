@@ -36,7 +36,6 @@ export function DeleteOrganizationMemberDialog({
         <Dialog.Actions>
           <Button onPress={hideDialog}>{t("cancel")}</Button>
           <Button
-            mode="contained"
             loading={isPending}
             disabled={isPending}
             onPress={() => mutate(id)}

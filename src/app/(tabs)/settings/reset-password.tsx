@@ -7,15 +7,18 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextFormField } from "@/src/components/_common/form/text-input";
 import { useTranslation } from "react-i18next";
-import { useCallback } from "react";
+import { useCallback, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Divider } from "react-native-paper";
 import { supabase } from "@/src/lib/supabase";
 import { useAuthErrorStore } from "@/src/store/auth-error";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 export default function ResetPasswordPage() {
+  const navigation = useNavigation();
+
   const { setError } = useAuthErrorStore();
+
   const { t } = useTranslation("settings", {
     keyPrefix: "auth.reset-password.form",
   });
@@ -45,6 +48,20 @@ export default function ResetPasswordPage() {
     return router.back();
   }, []);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          loading={isSubmitting}
+          disabled={isSubmitting}
+          onPress={handleSubmit(onSubmit)}
+        >
+          {t("submit")}
+        </Button>
+      ),
+    });
+  }, []);
+
   return (
     <Container>
       <View style={styles.form}>
@@ -71,15 +88,6 @@ export default function ResetPasswordPage() {
           returnKeyType="go"
           onSubmitEditing={handleSubmit(onSubmit)}
         />
-        <Divider />
-        <Button
-          mode="contained"
-          loading={isSubmitting}
-          disabled={isSubmitting}
-          onPress={handleSubmit(onSubmit)}
-        >
-          {t("submit")}
-        </Button>
       </View>
     </Container>
   );

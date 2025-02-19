@@ -105,7 +105,6 @@ export function CreateOrganizationDialog({ onSuccess }: Props) {
       </Button>
       <Portal>
         <Dialog visible={isVisible} onDismiss={() => setIsVisible(false)}>
-          <Dialog.Icon icon="office-building" />
           <Dialog.Title>{t("dialog-title")}</Dialog.Title>
           <Dialog.Content style={styles.dialog_content}>
             <TextFormField<CreateOrganizationFormData>
@@ -140,7 +139,6 @@ export function CreateOrganizationDialog({ onSuccess }: Props) {
               {t("form.cancel")}
             </Button>
             <Button
-              mode="contained"
               onPress={handleSubmit(onSubmit)}
               loading={isSubmitting}
               disabled={isSubmitting}

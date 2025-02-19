@@ -46,9 +46,7 @@ export function LanguageSettings() {
           </Dialog.ScrollArea>
           <Dialog.Actions>
             <Button onPress={() => setIsVisible(false)}>{t("cancel")}</Button>
-            <Button mode="contained" onPress={handleOnLanguageSwitch}>
-              {t("submit")}
-            </Button>
+            <Button onPress={handleOnLanguageSwitch}>{t("submit")}</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

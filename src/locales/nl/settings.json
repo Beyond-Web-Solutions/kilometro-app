@@ -193,7 +193,8 @@
     "join": {
       "button": "Voeg je bij een bestaande organisatie",
 
-      "dialog-title": "Voeg je bij een bestaande organisatie",
+      "dialog-title": "Voeg je bij een organisatie",
+      "dialog-description": "Voer de organisatiecode in om je bij een bestaande organisatie aan te sluiten. Je kunt deze code van een beheerder van de organisatie krijgen.",
 
       "organization-code": {
         "label": "Organisatiecode"
@@ -227,7 +228,7 @@
 
   "auth": {
     "reset-password": {
-      "header-title": "Wachtwoord opnieuw instellen",
+      "header-title": "Wachtwoord veranderen",
 
       "list-item": "Wachtwoord",
 
@@ -238,7 +239,7 @@
         "confirm-password": {
           "label": "Bevestig wachtwoord"
         },
-        "submit": "Wachtwoord opnieuw instellen"
+        "submit": "Opslaan"
       }
     }
   }

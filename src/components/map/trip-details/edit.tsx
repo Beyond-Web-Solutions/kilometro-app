@@ -93,11 +93,7 @@ export function EditTripDetailsDialog({
         </Dialog.ScrollArea>
         <Dialog.Actions>
           <Button onPress={handleOnDismiss}>{t("cancel")}</Button>
-          <Button
-            mode="contained"
-            disabled={!placeId}
-            onPress={handleOnConfirm}
-          >
+          <Button disabled={!placeId} onPress={handleOnConfirm}>
             {t("submit")}
           </Button>
         </Dialog.Actions>

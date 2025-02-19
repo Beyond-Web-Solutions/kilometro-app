@@ -1,5 +1,5 @@
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { Appbar, Button } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import { getHeaderTitle } from "@react-navigation/elements";
 
 export function ModalHeader({

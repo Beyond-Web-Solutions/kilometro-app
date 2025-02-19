@@ -65,7 +65,6 @@ export function UpdateOrganizationMemberDialog({
         <Dialog.Actions>
           <Button onPress={hideDialog}>{t("cancel")}</Button>
           <Button
-            mode="contained"
             loading={isPending}
             disabled={isPending}
             onPress={() =>

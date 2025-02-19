@@ -40,7 +40,6 @@ export function DeleteVehicleDialog({ id, isVisible, hideDialog }: Props) {
             onPress={() => mutate(id)}
             disabled={isPending}
             loading={isPending}
-            mode="contained"
           >
             {t("submit")}
           </Button>

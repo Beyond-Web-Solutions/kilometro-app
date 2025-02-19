@@ -101,7 +101,6 @@ export function SelectVehicleInput({ control, defaultValue }: Props) {
               {t("trips:edit.form.vehicle_id.cancel")}
             </Button>
             <Button
-              mode="contained"
               onPress={() => {
                 setIsDialogVisible(false);
               }}

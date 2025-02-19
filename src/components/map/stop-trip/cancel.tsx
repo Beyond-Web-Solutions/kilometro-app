@@ -45,7 +45,6 @@ export function CancelTripDialog({ id, onSubmit }: Props) {
           <Dialog.Actions>
             <Button onPress={() => setIsVisible(false)}>{t("cancel")}</Button>
             <Button
-              mode="contained"
               onPress={() => mutate(id)}
               disabled={isPending}
               loading={isPending}

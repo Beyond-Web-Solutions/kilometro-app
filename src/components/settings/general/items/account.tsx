@@ -7,7 +7,7 @@ import {
   upsertProfileSchema,
 } from "@/src/constants/definitions/profile/upsert";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StyleSheet } from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { TextFormField } from "../../../_common/form/text-input";
 import { getUser } from "@/src/hooks/auth/user";
 import { useErrorStore } from "@/src/store/error";
@@ -15,9 +15,11 @@ import { supabase } from "@/src/lib/supabase";
 import { getUserProfileDefaultValues } from "@/src/hooks/profile/form";
 import { useAppDispatch } from "@/src/store/hooks";
 import { setProfile } from "@/src/store/features/auth.slice";
+import { KeyboardAvoidingDialog } from "@/src/components/_common/keyboard-avoiding-dialog";
 
 export function AccountSettings() {
   const dispatch = useAppDispatch();
+
   const { setError } = useErrorStore();
 
   const { t } = useTranslation("settings", {
@@ -78,7 +80,10 @@ export function AccountSettings() {
       />
 
       <Portal>
-        <Dialog visible={isVisible} onDismiss={() => setIsVisible(false)}>
+        <KeyboardAvoidingDialog
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        >
           <Dialog.Icon icon="account" />
           <Dialog.Title>{t("dialog.title")}</Dialog.Title>
           <Dialog.Content style={styles.form}>
@@ -92,7 +97,6 @@ export function AccountSettings() {
               label={t("dialog.form.first-name.label")}
               textContentType="givenName"
               onSubmitEditing={() => setFocus("last_name")}
-              autoFocus
             />
             <TextFormField<UpsertProfileFormData>
               control={control}
@@ -110,7 +114,6 @@ export function AccountSettings() {
               {t("dialog.cancel")}
             </Button>
             <Button
-              mode="contained"
               onPress={handleSubmit(onSubmit)}
               loading={isSubmitting}
               disabled={isSubmitting}
@@ -118,7 +121,7 @@ export function AccountSettings() {
               {t("dialog.submit")}
             </Button>
           </Dialog.Actions>
-        </Dialog>
+        </KeyboardAvoidingDialog>
       </Portal>
     </>
   );

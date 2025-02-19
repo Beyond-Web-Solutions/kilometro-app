@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { StackHeader } from "@/src/components/nav/stack-header";
 import { useTranslation } from "react-i18next";
+import { ModalHeader } from "@/src/components/nav/modal-header";
 
 export default function SettingsLayout() {
   const { t } = useTranslation("settings");
@@ -30,7 +31,11 @@ export default function SettingsLayout() {
       <Stack.Screen
         key="reset-password"
         name="reset-password"
-        options={{ headerTitle: t("auth.reset-password.header-title") }}
+        options={{
+          headerTitle: t("auth.reset-password.header-title"),
+          presentation: "fullScreenModal",
+          header: (props) => <ModalHeader {...props} />,
+        }}
       />
     </Stack>
   );

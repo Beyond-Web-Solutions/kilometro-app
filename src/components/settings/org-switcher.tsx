@@ -97,7 +97,6 @@ export function OrganizationSwitcher({
             </Button>
             <Button
               compact
-              mode="contained"
               loading={isPending}
               disabled={isPending}
               onPress={() => mutate(organization)}

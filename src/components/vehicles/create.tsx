@@ -12,6 +12,7 @@ import { supabase } from "@/src/lib/supabase";
 import { getDefaultOrganization } from "@/src/hooks/org/default";
 import { useAppDispatch } from "@/src/store/hooks";
 import { addVehicle } from "@/src/store/features/vehicle.slice";
+import { KeyboardAvoidingDialog } from "@/src/components/_common/keyboard-avoiding-dialog";
 
 interface Props {
   isVisible: boolean;
@@ -69,13 +70,12 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
 
   return (
     <Portal>
-      <Dialog visible={isVisible} onDismiss={hideDialog}>
+      <KeyboardAvoidingDialog isVisible={isVisible} setIsVisible={hideDialog}>
         <Dialog.Icon icon="car" />
         <Dialog.Title>{t("title")}</Dialog.Title>
         <Dialog.Content style={{ gap: 4 }}>
           <TextFormField<CreateVehicleFormData>
             control={control}
-            autoFocus
             name="name"
             mode="outlined"
             autoCapitalize="words"
@@ -114,7 +114,6 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
         <Dialog.Actions>
           <Button onPress={hideDialog}>{t("cancel")}</Button>
           <Button
-            mode="contained"
             disabled={isSubmitting}
             loading={isSubmitting}
             onPress={handleSubmit(onSubmit)}
@@ -122,7 +121,7 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
             {t("submit")}
           </Button>
         </Dialog.Actions>
-      </Dialog>
+      </KeyboardAvoidingDialog>
     </Portal>
   );
 }

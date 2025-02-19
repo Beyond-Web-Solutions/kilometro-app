@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button, Dialog, Portal } from "react-native-paper";
+import { Button, Dialog, Divider, Portal, Text } from "react-native-paper";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -19,6 +19,7 @@ import { fetchRole } from "@/src/store/features/auth.slice";
 import { setSelectedOrganization } from "@/src/store/features/organization.slice";
 import { fetchVehicles } from "@/src/store/features/vehicle.slice";
 import { router } from "expo-router";
+import { KeyboardAvoidingDialog } from "@/src/components/_common/keyboard-avoiding-dialog";
 
 export function JoinOrganizationDialog() {
   const dispatch = useAppDispatch();
@@ -96,13 +97,16 @@ export function JoinOrganizationDialog() {
         {t("button")}
       </Button>
       <Portal>
-        <Dialog visible={isVisible} onDismiss={() => setIsVisible(false)}>
-          <Dialog.Icon icon="account-plus" />
+        <KeyboardAvoidingDialog
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        >
           <Dialog.Title>{t("dialog-title")}</Dialog.Title>
           <Dialog.Content style={styles.dialog_content}>
+            <Text>{t("dialog-description")}</Text>
+            <Divider />
             <TextFormField<JoinOrganizationFormData>
               control={control}
-              autoFocus
               autoCapitalize="characters"
               name="code"
               mode="outlined"
@@ -118,7 +122,6 @@ export function JoinOrganizationDialog() {
               {t("form.cancel")}
             </Button>
             <Button
-              mode="contained"
               onPress={handleSubmit(onSubmit)}
               loading={isSubmitting}
               disabled={isSubmitting}
@@ -126,7 +129,7 @@ export function JoinOrganizationDialog() {
               {t("form.submit")}
             </Button>
           </Dialog.Actions>
-        </Dialog>
+        </KeyboardAvoidingDialog>
       </Portal>
     </>
   );
@@ -134,6 +137,6 @@ export function JoinOrganizationDialog() {
 
 const styles = StyleSheet.create({
   dialog_content: {
-    gap: 4,
+    gap: 8,
   },
 });

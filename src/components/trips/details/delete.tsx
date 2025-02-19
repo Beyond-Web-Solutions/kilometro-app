@@ -39,7 +39,6 @@ export function DeleteTripDialog({ id, isVisible, hideDialog }: Props) {
         <Dialog.Actions>
           <Button onPress={hideDialog}>{t("cancel")}</Button>
           <Button
-            mode="contained"
             disabled={isPending}
             loading={isPending}
             onPress={() => mutate(id)}

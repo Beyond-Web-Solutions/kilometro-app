@@ -21,6 +21,7 @@ import {
   startLocationUpdatesAsync,
 } from "expo-location";
 import { LOCATION_TASK_NAME } from "@/src/utils/task-manager";
+import { KeyboardAvoidingDialog } from "@/src/components/_common/keyboard-avoiding-dialog";
 
 interface Props {
   isVisible: boolean;
@@ -95,7 +96,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
 
   return (
     <Portal>
-      <Dialog visible={isVisible} onDismiss={hideDialog}>
+      <KeyboardAvoidingDialog isVisible={isVisible} setIsVisible={hideDialog}>
         <Dialog.Icon icon="car-select" />
         <Dialog.Title>{t("title")}</Dialog.Title>
         <Dialog.ScrollArea style={styles.scroll_area}>
@@ -126,14 +127,13 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
           <Button onPress={hideDialog}>{t("form.cancel")}</Button>
           <Button
             onPress={handleSubmit(onSubmit)}
-            mode="contained"
             loading={isSubmitting}
             disabled={isSubmitting}
           >
             {t("form.submit")}
           </Button>
         </Dialog.Actions>
-      </Dialog>
+      </KeyboardAvoidingDialog>
     </Portal>
   );
 }

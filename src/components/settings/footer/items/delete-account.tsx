@@ -82,7 +82,6 @@ export function DeleteAccountSetting() {
           <Dialog.Actions>
             <Button onPress={() => setIsVisible(false)}>{t("cancel")}</Button>
             <Button
-              mode="contained"
               onPress={handleSubmit(onSubmit)}
               loading={isSubmitting}
               disabled={isSubmitting}
