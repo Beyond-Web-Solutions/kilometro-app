@@ -21,8 +21,6 @@ TaskManager.defineTask<{ locations: LocationObject[] }>(
 
     if (!location) return;
 
-    console.log(location);
-
     if (location.coords.speed) {
       store.dispatch(addSpeed(location.coords.speed));
     }
