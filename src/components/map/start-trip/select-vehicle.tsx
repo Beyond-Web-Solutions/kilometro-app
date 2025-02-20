@@ -1,34 +1,34 @@
 import { StartTripFormData } from "@/src/constants/definitions/trip/start";
-import { ActivityIndicator, RadioButton } from "react-native-paper";
+import { ActivityIndicator, List, RadioButton } from "react-native-paper";
 import { RadioGroupField } from "@/src/components/_common/form/radio-group";
-import { Control } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 import { useVehicles } from "@/src/hooks/vehicles/list";
+import { useAppSelector } from "@/src/store/hooks";
+import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
 
 interface Props {
   control: Control<StartTripFormData>;
 }
 
 export function SelectVehicleInput({ control }: Props) {
-  const { data, isPending } = useVehicles();
+  const vehicles = useAppSelector(vehiclesSelector.selectAll);
 
-  if (isPending) {
-    return (
-      <View style={styles.activity_indicator_container}>
-        <ActivityIndicator animating />
-      </View>
-    );
-  }
+  const { field } = useController({
+    name: "vehicle_id",
+    control,
+  });
 
   return (
     <RadioGroupField<StartTripFormData> control={control} name="vehicle_id">
-      {data?.map((vehicle) => (
-        <RadioButton.Item
-          mode="android"
-          style={styles.radio_button}
+      {vehicles.map((vehicle) => (
+        <List.Item
           key={vehicle.id}
-          label={vehicle.name}
-          value={vehicle.id}
+          title={vehicle.name}
+          description={vehicle.licence_plate}
+          style={styles.radio_button}
+          right={() => <RadioButton.Android value={vehicle.id} />}
+          onPress={() => field.onChange(vehicle.id)}
         />
       ))}
     </RadioGroupField>
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   radio_button: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 8,
   },
 });
