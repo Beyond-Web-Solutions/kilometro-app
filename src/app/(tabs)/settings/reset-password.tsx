@@ -45,7 +45,7 @@ export default function ResetPasswordPage() {
       return setError(error.code ?? "unknown");
     }
 
-    return router.back();
+    return router.navigate("/(tabs)/settings");
   }, []);
 
   useLayoutEffect(() => {
