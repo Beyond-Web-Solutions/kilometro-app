@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
 import { supabase } from "@/src/lib/supabase";
-import { useAppDispatch } from "@/src/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import {
   fetchIsAccepted,
   fetchProfile,
@@ -22,6 +22,16 @@ interface Props {
 export function AuthProvider({ children }: Props) {
   const dispatch = useAppDispatch();
 
+  const organization = useAppSelector((state) => state.organizations.selected);
+
+  useEffect(() => {
+    if (organization) {
+      dispatch(fetchTrips(organization));
+      dispatch(fetchOrganizationMembers(organization));
+      dispatch(fetchVehicles(organization));
+    }
+  }, [organization]);
+
   useEffect(() => {
     const {
       data: { subscription },
@@ -42,15 +52,9 @@ export function AuthProvider({ children }: Props) {
       dispatch(setSelectedOrganization(organizationId));
 
       // fetch the trips, vehicles and other data
-      dispatch(fetchTrips());
-      dispatch(fetchVehicles());
       dispatch(fetchProfile(user?.id ?? null));
       dispatch(fetchOrganizations(user?.id ?? null));
       dispatch(fetchIsAccepted());
-
-      if (organizationId) {
-        dispatch(fetchOrganizationMembers(organizationId));
-      }
     });
 
     return () => {

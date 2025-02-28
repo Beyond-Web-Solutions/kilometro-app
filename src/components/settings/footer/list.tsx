@@ -6,6 +6,7 @@ import { TermsLink } from "@/src/components/settings/footer/items/terms";
 import { PrivacyLink } from "@/src/components/settings/footer/items/privacy";
 import { SignOutButton } from "@/src/components/settings/footer/items/sign-out";
 import { DeleteAccountSetting } from "@/src/components/settings/footer/items/delete-account";
+import { SupportLink } from "@/src/components/settings/footer/items/support";
 
 export function SettingsFooter() {
   const { t } = useTranslation("settings", { keyPrefix: "footer" });
@@ -14,10 +15,7 @@ export function SettingsFooter() {
     <List.Section>
       <SignOutButton />
       <DeleteAccountSetting />
-      <List.Item
-        title={t("support")}
-        left={(props) => <List.Icon {...props} icon="help-circle-outline" />}
-      />
+      <SupportLink />
       <WebsiteLink />
       <TermsLink />
       <PrivacyLink />

@@ -35,7 +35,7 @@ export function CreateVehicleDialog({ isVisible, hideDialog }: Props) {
     defaultValues: {
       name: "",
       licence_plate: "",
-      odometer: 0,
+      odometer: "",
     },
   });
 

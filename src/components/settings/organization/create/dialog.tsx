@@ -15,7 +15,7 @@ import { generateOrganizationCode } from "@/src/utils/identifier";
 import { useErrorStore } from "@/src/store/error";
 import { getUser } from "@/src/hooks/auth/user";
 import { useAppDispatch } from "@/src/store/hooks";
-import { fetchRole } from "@/src/store/features/auth.slice";
+import { fetchRole, setRole } from "@/src/store/features/auth.slice";
 import {
   addOrganization,
   setSelectedOrganization,
@@ -90,7 +90,7 @@ export function CreateOrganizationDialog({ onSuccess }: Props) {
 
     dispatch(addOrganization(organization));
     dispatch(setSelectedOrganization(organization.id));
-    dispatch(fetchRole());
+    dispatch(setRole("admin"));
 
     setIsVisible(false);
 

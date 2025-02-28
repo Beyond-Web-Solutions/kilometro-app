@@ -31,6 +31,7 @@ Sentry.init({
   integrations: [
     // Pass integration
     navigationIntegration,
+    Sentry.mobileReplayIntegration(),
   ],
   enableNativeFramesTracking: !isRunningInExpoGo(), // Tracks slow and frozen frames in the application
 });

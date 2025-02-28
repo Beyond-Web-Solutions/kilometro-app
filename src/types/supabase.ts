@@ -38,7 +38,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          is_accepted: boolean | null
+          is_accepted: boolean
           organization_id: string
           profile_id: string
           role: Database["public"]["Enums"]["organization_roles"]
@@ -47,16 +47,16 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          is_accepted?: boolean | null
+          is_accepted?: boolean
           organization_id: string
           profile_id: string
           role?: Database["public"]["Enums"]["organization_roles"]
-          user_id: string
+          user_id?: string
         }
         Update: {
           created_at?: string
           id?: string
-          is_accepted?: boolean | null
+          is_accepted?: boolean
           organization_id?: string
           profile_id?: string
           role?: Database["public"]["Enums"]["organization_roles"]
@@ -170,6 +170,8 @@ export type Database = {
           id: string
           is_private: boolean | null
           max_speed: number | null
+          organization_id: string
+          profile_id: string | null
           start_address: string | null
           start_odometer: number
           start_place_id: string | null
@@ -191,6 +193,8 @@ export type Database = {
           id?: string
           is_private?: boolean | null
           max_speed?: number | null
+          organization_id: string
+          profile_id?: string | null
           start_address?: string | null
           start_odometer: number
           start_place_id?: string | null
@@ -212,6 +216,8 @@ export type Database = {
           id?: string
           is_private?: boolean | null
           max_speed?: number | null
+          organization_id?: string
+          profile_id?: string | null
           start_address?: string | null
           start_odometer?: number
           start_place_id?: string | null
@@ -222,6 +228,20 @@ export type Database = {
           vehicle_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "trips_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trips_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "trips_vehicle_id_fkey"
             columns: ["vehicle_id"]

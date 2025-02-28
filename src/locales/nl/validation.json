@@ -12,5 +12,6 @@
   "licence-plate-must-be-8-characters": "Het kenteken moet 8 tekens lang zijn.",
   "organization-code-must-be-6-characters": "De organisatiecode moet 6 tekens lang zijn.",
   "name-must-have-at-least-2-characters": "De naam moet minimaal 2 tekens lang zijn.",
-  "start-date-must-be-before-end-date": "De startdatum moet voor de einddatum liggen."
+  "start-date-must-be-before-end-date": "De startdatum moet voor de einddatum liggen.",
+  "invalid-licence-plate": "Ongeldig kenteken."
 }

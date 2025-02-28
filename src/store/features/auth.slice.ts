@@ -40,6 +40,12 @@ export const authSlice = createAppSlice({
   name: "auth",
   initialState,
   reducers: (create) => ({
+    setRole: create.reducer(
+      (state, action: PayloadAction<"driver" | "admin" | null>) => {
+        state.role = action.payload;
+      },
+    ),
+
     setProfile: create.reducer(
       (state, action: PayloadAction<Tables<"profiles"> | null>) => {
         state.profile = action.payload;
@@ -129,5 +135,11 @@ export const authSlice = createAppSlice({
   }),
 });
 
-export const { setUser, fetchRole, fetchProfile, setProfile, fetchIsAccepted } =
-  authSlice.actions;
+export const {
+  setRole,
+  setUser,
+  fetchRole,
+  fetchProfile,
+  setProfile,
+  fetchIsAccepted,
+} = authSlice.actions;

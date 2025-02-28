@@ -55,7 +55,7 @@ export function SelectVehicleInput({ control, defaultValue }: Props) {
               onPress={() => setIsDialogVisible(true)}
             />
           }
-          value={vehicle.name}
+          value={vehicle?.name}
           readOnly
         />
         {hasError && (

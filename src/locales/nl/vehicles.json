@@ -1,4 +1,11 @@
 {
+  "no-vehicles": {
+    "title": "Geen voertuigen",
+    "description": "Voeg een voertuig toe om te beginnen met het bijhouden van ritten.",
+
+    "cancel": "Annuleren",
+    "cta": "Voertuig toevoegen"
+  },
   "list": {
     "title": "Voertuigen",
 

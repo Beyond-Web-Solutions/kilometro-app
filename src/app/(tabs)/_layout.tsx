@@ -43,7 +43,7 @@ export default function TabsLayout() {
         options={{
           title: t("home"),
           tabBarIcon: ({ color, size }) => (
-            <Icon size={size} color={color} source="map" />
+            <Icon size={size} color={color} source="map-marker" />
           ),
         }}
       />

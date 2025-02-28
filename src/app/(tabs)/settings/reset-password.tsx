@@ -9,7 +9,7 @@ import { TextFormField } from "@/src/components/_common/form/text-input";
 import { useTranslation } from "react-i18next";
 import { useCallback, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Divider } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { supabase } from "@/src/lib/supabase";
 import { useAuthErrorStore } from "@/src/store/auth-error";
 import { router, useNavigation } from "expo-router";

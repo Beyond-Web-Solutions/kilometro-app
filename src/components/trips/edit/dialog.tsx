@@ -25,6 +25,7 @@ import { TextFormField } from "@/src/components/_common/form/text-input";
 import { Trip } from "@/src/types/trips";
 import { EditTripDetailsDialog } from "@/src/components/map/trip-details/edit";
 import { supabase } from "@/src/lib/supabase";
+import * as Sentry from "@sentry/react-native";
 
 export function EditTripDialog() {
   const { t } = useTranslation("trips", { keyPrefix: "edit" });
@@ -89,6 +90,7 @@ export function EditTripDialog() {
       .single();
 
     if (error) {
+      Sentry.captureException(error);
       return;
     }
 

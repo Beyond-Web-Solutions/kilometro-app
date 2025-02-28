@@ -1,18 +1,12 @@
 import { supabase } from "@/src/lib/supabase";
 
-export async function getTrips() {
-  const { data: org } = await supabase.rpc("get_selected_organization");
-
-  if (!org) {
-    return null;
-  }
-
+export async function getTrips(organizationId: string) {
   const { data } = await supabase
     .from("trips")
     .select("*")
     .eq("status", "done")
-    .order("started_at", { ascending: false })
-    .limit(100);
+    .eq("organization_id", organizationId)
+    .order("started_at", { ascending: false });
 
   return data;
 }

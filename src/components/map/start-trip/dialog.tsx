@@ -34,6 +34,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
   const dispatch = useAppDispatch();
   const vehicles = useAppSelector(vehiclesSelector.selectAll);
   const user = useAppSelector((state) => state.auth.user);
+  const organization = useAppSelector((state) => state.organizations.selected);
 
   const {
     control,
@@ -52,7 +53,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
 
   const onSubmit = useCallback(
     async (values: StartTripFormData) => {
-      if (!user) return;
+      if (!user! || !organization) return;
 
       const { data, error } = await supabase
         .from("trips")
@@ -60,6 +61,7 @@ export function StartTripDialog({ isVisible, hideDialog }: Props) {
           user_id: user.id,
           vehicle_id: values.vehicle_id,
           start_odometer: Number(values.start_odometer) * 1000,
+          organization_id: organization,
         })
         .select("*")
         .single();

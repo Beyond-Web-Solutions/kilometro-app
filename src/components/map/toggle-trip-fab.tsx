@@ -11,13 +11,18 @@ import { Linking } from "react-native";
 import { useAppSelector } from "@/src/store/hooks";
 import { useLocationPermissions } from "@/src/hooks/permissions/location";
 import { LocationSettingsDialog } from "@/src/components/map/location-settings-dialog";
+import { vehiclesSelector } from "@/src/store/features/vehicle.slice";
+import { CreateVehicleDialog } from "@/src/components/map/start-trip/create-vehicle-dialog";
 
 export function ToggleTripFab() {
   const { t } = useTranslation("map");
 
   const isTracking = useAppSelector((state) => state.current_trip.isTracking);
+  const vehicles = useAppSelector(vehiclesSelector.selectTotal);
 
   const { request, showDialog, hideDialog, granted } = useLocationPermissions();
+
+  const [isVehiclesDialogVisible, setIsVehiclesDialogVisible] = useState(false);
 
   const [isStopTripBottomSheetVisible, setIsStopTripBottomSheetVisible] =
     useState(false);
@@ -43,6 +48,22 @@ export function ToggleTripFab() {
         label={t("start-trip")}
         onPress={request}
       />
+    );
+  }
+
+  if (vehicles === 0) {
+    return (
+      <>
+        <FAB
+          icon="car"
+          label={t("start-trip")}
+          onPress={() => setIsVehiclesDialogVisible(true)}
+        />
+        <CreateVehicleDialog
+          isVisible={isVehiclesDialogVisible}
+          hideDialog={() => setIsVehiclesDialogVisible(false)}
+        />
+      </>
     );
   }
 
