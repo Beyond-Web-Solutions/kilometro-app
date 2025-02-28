@@ -16,7 +16,13 @@ import {
 } from "@/src/constants/definitions/trip/stop";
 import { PolyUtil, SphericalUtil } from "node-geometry-library";
 import { SegmentedButtonsField } from "@/src/components/_common/form/segmented-buttons";
-import { Button, Divider, IconButton, Text } from "react-native-paper";
+import {
+  Button,
+  Divider,
+  IconButton,
+  Text,
+  TextInput,
+} from "react-native-paper";
 import { TextFormField } from "../../_common/form/text-input";
 import { formatDistance } from "@/src/utils/format";
 import { supabase } from "@/src/lib/supabase";
@@ -25,6 +31,7 @@ import { addTrip } from "@/src/store/features/trips.slice";
 import { getAverage } from "@/src/utils/math";
 import { stopLocationUpdatesAsync } from "expo-location";
 import { LOCATION_TASK_NAME } from "@/src/utils/task-manager";
+import { EditOdometerDialog } from "@/src/components/map/stop-trip/edit-odometer";
 
 interface Props {
   trip: Tables<"trips">;
@@ -46,6 +53,8 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
 
   const [isEditingOrigin, setIsEditingOrigin] = useState(false);
   const [isEditingDestination, setIsEditingDestination] = useState(false);
+  const [isEditOdometerDialogVisible, setIsEditOdometerDialogVisible] =
+    useState(false);
 
   const points = useMemo(
     () =>
@@ -75,14 +84,14 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
     setValue,
     getValues,
     getFieldState,
-    formState: { isSubmitting },
+    formState: { isSubmitting, defaultValues },
   } = useForm<StopTripFormData>({
     resolver: zodResolver(stopTripSchema),
     defaultValues: {
       type: trip.is_private ? "private" : "business",
+      distance: newOdometer - trip.start_odometer / 1000,
       start_odometer: trip.start_odometer / 1000,
       end_odometer: newOdometer,
-      distance: newOdometer - trip.start_odometer / 1000,
     },
   });
 
@@ -208,6 +217,13 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
               label={t("end_odometer.label")}
               keyboardType="numeric"
               returnKeyType="done"
+              readOnly
+              right={
+                <TextInput.Icon
+                  icon="pencil"
+                  onPress={() => setIsEditOdometerDialogVisible(true)}
+                />
+              }
             />
           </View>
           {getFieldState("end_odometer").isDirty && (
@@ -245,6 +261,13 @@ export function StopTripForm({ trip, closeBottomSheet }: Props) {
           {t("submit")}
         </Button>
       </View>
+
+      <EditOdometerDialog
+        isVisible={isEditOdometerDialogVisible}
+        closeDialog={() => setIsEditOdometerDialogVisible(false)}
+        control={control}
+        defaultValue={defaultValues?.end_odometer}
+      />
 
       <EditTripDetailsDialog
         isVisible={isEditingOrigin}

@@ -20,7 +20,12 @@
         "label": "Start kilometerstand"
       },
       "end_odometer": {
-        "label": "Eind kilometerstand"
+        "label": "Eind kilometerstand",
+
+        "dialog-title": "Bewerk kilometerstand",
+
+        "cancel": "Annuleren",
+        "submit": "Opslaan"
       },
       "type": {
         "label": "Type",
