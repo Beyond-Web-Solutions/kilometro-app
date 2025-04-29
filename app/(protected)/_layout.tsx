@@ -4,7 +4,7 @@ const isLoggedIn = false; // Simulate user login status
 
 export default function ProtectedLayout() {
   if (!isLoggedIn) {
-    return <Redirect href="/login" />;
+    return <Redirect href="/auth" />;
   }
 
   return <Stack />;

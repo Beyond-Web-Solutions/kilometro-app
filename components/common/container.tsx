@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 import { StyleSheet, View } from "react-native";
 
 export function Container({ style, ...props }: ComponentProps<typeof View>) {
-  return <View {...props} style={[style, styles.container]} />;
+  return <View style={[style, styles.container]} {...props} />;
 }
 
 const styles = StyleSheet.create({
