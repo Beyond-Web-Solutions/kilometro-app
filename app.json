@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "Kilometro",
-    "slug": "app",
+    "slug": "kilometro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "kilometro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -19,7 +19,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6c6eb7f6-3cf3-4313-b2c5-1b16c61d92bc"
+      }
+    },
+    "owner": "beyondwebsolutions"
   }
 }
