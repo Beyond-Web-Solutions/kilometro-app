@@ -1,6 +1,6 @@
 import { Text, Button } from "react-native-paper";
 import { Container } from "@/components/common/container";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 
 export default function LoginScreen() {
@@ -8,9 +8,16 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView>
-      <Container>
-        <Text variant="titleLarge">{t("title")}</Text>
+      <Container style={styles.container}>
+        <Text variant="headlineLarge">{t("title")}</Text>
       </Container>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    marginTop: 64,
+  },
+});
