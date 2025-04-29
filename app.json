@@ -23,7 +23,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "https://kilometro.expo.app/"
+        }
+      ],
       [
         "expo-splash-screen",
         {
