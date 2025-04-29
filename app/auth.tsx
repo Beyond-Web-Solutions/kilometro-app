@@ -18,6 +18,6 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    marginTop: 64,
+    marginTop: 72,
   },
 });
