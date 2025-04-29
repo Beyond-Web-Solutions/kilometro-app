@@ -1,48 +1,53 @@
 import { Button } from "react-native-paper";
-import { StyleSheet, View } from "react-native";
+import { Keyboard, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { AuthFormData, authSchema } from "@/lib/definitions/auth";
+import { SendOtpFormData, sendOtpSchema } from "@/lib/definitions/send-otp";
 import { zodResolver } from "@hookform/resolvers/zod/src";
 import { useCallback } from "react";
 import { TextInput } from "@/components/common/form/text-input";
 import { authClient } from "@/lib/auth/client";
 import { useRouter } from "expo-router";
 
-export function AuthForm() {
+export function SendOtpForm() {
   const router = useRouter();
-  const { t } = useTranslation("auth", { keyPrefix: "auth.form" });
+  const { t } = useTranslation("auth", { keyPrefix: "send-otp.form" });
 
-  const { handleSubmit, control, formState, reset } = useForm<AuthFormData>({
-    resolver: zodResolver(authSchema),
+  const { handleSubmit, control, formState, reset } = useForm<SendOtpFormData>({
+    resolver: zodResolver(sendOtpSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const onSubmit = useCallback(async (values: AuthFormData) => {
+  const onSubmit = useCallback(async (values: SendOtpFormData) => {
+    Keyboard.dismiss();
+
     const { data, error } = await authClient.emailOtp.sendVerificationOtp({
       email: values.email,
-      type: "sign-in", // or "email-verification", "forget-password"
+      type: "sign-in",
     });
 
     if (error) {
+      // todo show error message
       console.error("Error sending OTP:", error);
+      return;
     }
 
     if (data) {
-      router.push("/otp");
-      reset();
+      router.push(`/(auth)/verify-otp?email=${values.email}`);
+      reset({ email: "" });
     }
   }, []);
 
   return (
     <View style={styles.form}>
-      <TextInput<AuthFormData>
+      <TextInput<SendOtpFormData>
         name="email"
         control={control}
         label={t("email.label")}
         placeholder={t("email.placeholder")}
+        autoComplete="email"
         textContentType="emailAddress"
         keyboardType="email-address"
         autoCapitalize="none"

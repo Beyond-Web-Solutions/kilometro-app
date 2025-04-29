@@ -10,20 +10,9 @@ export default function RootLayout() {
     <PaperProvider>
       <AuthProvider>
         <StatusBar style="auto" />
-        <Stack>
-          <Stack.Screen
-            name="(protected)"
-            options={{ headerShown: false, animation: "none" }}
-          />
-
-          <Stack.Screen
-            name="auth"
-            options={{ headerShown: false, animation: "none" }}
-          />
-          <Stack.Screen
-            name="otp"
-            options={{ header: (props) => <Header {...props} />, title: "" }}
-          />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(protected)" options={{ animation: "none" }} />
+          <Stack.Screen name="(auth)" options={{ animation: "none" }} />
         </Stack>
       </AuthProvider>
     </PaperProvider>
