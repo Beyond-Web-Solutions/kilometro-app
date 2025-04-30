@@ -2,7 +2,7 @@ import { Appbar } from "react-native-paper";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
-export default function Header({
+export function Header({
   navigation,
   route,
   options,

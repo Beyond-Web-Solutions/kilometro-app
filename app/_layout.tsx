@@ -1,10 +1,13 @@
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "@/components/auth/provider";
 import { PaperProvider } from "react-native-paper";
 import { useColorScheme } from "react-native";
-import "@/lib/i18n/client";
 import { darkTheme, lightTheme } from "@/lib/ui/theme";
+import "@/lib/i18n/client";
+
+// Prevent the splash screen from auto-hiding until we know the auth state
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const theme = useColorScheme();
