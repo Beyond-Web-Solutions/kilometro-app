@@ -2,12 +2,15 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "@/components/auth/provider";
 import { PaperProvider } from "react-native-paper";
+import { useColorScheme } from "react-native";
 import "@/lib/i18n/client";
-import Header from "@/components/nav/header";
+import { darkTheme, lightTheme } from "@/lib/ui/theme";
 
 export default function RootLayout() {
+  const theme = useColorScheme();
+
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <AuthProvider>
         <StatusBar style="auto" />
         <Stack screenOptions={{ headerShown: false }}>

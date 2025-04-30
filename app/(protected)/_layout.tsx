@@ -1,11 +1,17 @@
 import { Redirect, Stack } from "expo-router";
-
-const isLoggedIn = false; // Simulate user login status
+import { useContext } from "react";
+import { AuthContext } from "@/components/auth/provider";
 
 export default function ProtectedLayout() {
-  if (!isLoggedIn) {
+  const { user, isPending } = useContext(AuthContext);
+
+  if (isPending) {
+    return null;
+  }
+
+  if (!user) {
     return <Redirect href="/(auth)/send-otp" />;
   }
 
-  return <Stack />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

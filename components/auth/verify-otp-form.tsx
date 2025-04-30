@@ -11,6 +11,7 @@ import {
 } from "@/lib/definitions/verify-otp";
 import { TextInput } from "@/components/common/form/text-input";
 import { authClient } from "@/lib/auth/client";
+import { Banner } from "react-native-paper";
 
 export function VerifyOtpForm() {
   const params = useLocalSearchParams<{ email: string }>();
@@ -20,13 +21,14 @@ export function VerifyOtpForm() {
     return <Redirect href="/(auth)/send-otp" />;
   }
 
-  const { handleSubmit, control, formState } = useForm<VerifyOtpFormData>({
-    resolver: zodResolver(verifyOtpSchema),
-    defaultValues: {
-      email: params.email,
-      otp: "",
-    },
-  });
+  const { handleSubmit, control, formState, setError } =
+    useForm<VerifyOtpFormData>({
+      resolver: zodResolver(verifyOtpSchema),
+      defaultValues: {
+        email: params.email,
+        otp: "",
+      },
+    });
 
   const onSubmit = useCallback(async (values: VerifyOtpFormData) => {
     Keyboard.dismiss();
@@ -34,8 +36,7 @@ export function VerifyOtpForm() {
     const { data, error } = await authClient.signIn.emailOtp(values);
 
     if (error) {
-      // todo show error message
-      console.error("Error verifying OTP:", error);
+      setError("root", { message: error.message });
       return;
     }
 
