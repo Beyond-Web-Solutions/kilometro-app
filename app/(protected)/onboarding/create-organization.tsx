@@ -25,9 +25,7 @@ export default function OnboardingScreen() {
           {t("title")}
         </Text>
         <Text style={styles.text}>{t("description")}</Text>
-        <CreateOrganizationForm
-          onSuccess={() => router.navigate("/onboarding/subscribe")}
-        />
+        <CreateOrganizationForm onSuccess={() => router.navigate("/")} />
       </Container>
     </Screen>
   );

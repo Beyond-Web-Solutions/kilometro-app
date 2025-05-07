@@ -3,9 +3,11 @@ import { MainTabBar } from "@/components/nav/tab-bar";
 import { Icon } from "react-native-paper";
 import { useContext } from "react";
 import { AuthContext } from "@/components/auth/provider";
+import { useTranslation } from "react-i18next";
 
 export default function TabsLayout() {
   const { organizationId } = useContext(AuthContext);
+  const { t } = useTranslation("common", { keyPrefix: "screens.tabs" });
 
   if (!organizationId) {
     return <Redirect href="/onboarding/create-organization" />;
@@ -16,8 +18,29 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Map",
+          title: t("home"),
           tabBarIcon: (props) => <Icon source="home" {...props} />,
+        }}
+      />
+      <Tabs.Screen
+        name="trips"
+        options={{
+          title: t("trips"),
+          tabBarIcon: (props) => <Icon source="clock-outline" {...props} />,
+        }}
+      />
+      <Tabs.Screen
+        name="vehicles"
+        options={{
+          title: t("vehicles"),
+          tabBarIcon: (props) => <Icon source="car" {...props} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: t("settings"),
+          tabBarIcon: (props) => <Icon source="cog" {...props} />,
         }}
       />
     </Tabs>

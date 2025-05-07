@@ -1,1 +1,10 @@
-{}
+{
+  "screens": {
+    "tabs": {
+      "home": "Home",
+      "vehicles": "Voertuigen",
+      "trips": "Ritten",
+      "settings": "Instellingen"
+    }
+  }
+}

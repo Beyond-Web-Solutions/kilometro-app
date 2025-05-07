@@ -60,7 +60,6 @@ export function VerifyOtpForm() {
       />
       <Button
         mode="contained"
-        icon="login-variant"
         loading={formState.isSubmitting}
         disabled={formState.isSubmitting}
         onPress={handleSubmit(onSubmit)}
