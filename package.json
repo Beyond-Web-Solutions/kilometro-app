@@ -50,7 +50,9 @@
     "react-native-screens": "~4.10.0",
     "react-native-web": "^0.20.0",
     "react-native-webview": "13.13.5",
-    "zod": "^3.24.3"
+    "zod": "^3.24.3",
+    "expo-maps": "~0.9.9",
+    "expo-location": "~18.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

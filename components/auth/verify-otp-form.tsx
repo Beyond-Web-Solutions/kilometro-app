@@ -2,20 +2,22 @@ import { Button } from "react-native-paper";
 import { Keyboard, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod/src";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
-import { Redirect, useLocalSearchParams } from "expo-router";
+import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import {
   VerifyOtpFormData,
   verifyOtpSchema,
 } from "@/lib/definitions/auth/verify-otp";
 import { TextInput } from "@/components/common/form/text-input";
 import { authClient } from "@/lib/auth/client";
-import { Banner } from "react-native-paper";
 
 export function VerifyOtpForm() {
   const params = useLocalSearchParams<{ email: string }>();
+  const router = useRouter();
+
   const { t } = useTranslation("auth", { keyPrefix: "verify-otp.form" });
+  const { refetch } = authClient.useActiveOrganization();
 
   if (!params.email) {
     return <Redirect href="/(auth)/send-otp" />;
@@ -30,21 +32,24 @@ export function VerifyOtpForm() {
       },
     });
 
-  const onSubmit = useCallback(async (values: VerifyOtpFormData) => {
-    Keyboard.dismiss();
+  const onSubmit = useCallback(
+    async (values: VerifyOtpFormData) => {
+      Keyboard.dismiss();
 
-    const { data, error } = await authClient.signIn.emailOtp(values);
+      const { data, error } = await authClient.signIn.emailOtp(values);
 
-    if (error) {
-      setError("root", { message: error.message });
-      return;
-    }
+      if (error) {
+        setError("root", { message: error.message });
+        return;
+      }
 
-    if (data) {
-      console.log("OTP verified successfully:", data);
-      // Handle successful OTP verification, e.g., redirect to another page
-    }
-  }, []);
+      if (data) {
+        refetch();
+        router.replace("/");
+      }
+    },
+    [refetch, router],
+  );
 
   return (
     <View style={styles.form}>
@@ -60,6 +65,7 @@ export function VerifyOtpForm() {
       />
       <Button
         mode="contained"
+        icon="login-variant"
         loading={formState.isSubmitting}
         disabled={formState.isSubmitting}
         onPress={handleSubmit(onSubmit)}

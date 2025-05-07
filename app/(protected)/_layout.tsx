@@ -1,12 +1,15 @@
 import { Redirect, Stack, usePathname } from "expo-router";
-import { useContext } from "react";
-import { AuthContext } from "@/components/auth/provider";
+import { authClient } from "@/lib/auth/client";
 
 export default function ProtectedLayout() {
   const pathname = usePathname();
-  const { user, isPending } = useContext(AuthContext);
 
-  if (isPending) {
+  const { isPending: isUserPending, data: user } = authClient.useSession();
+
+  const { isPending: isOrganizationPending } =
+    authClient.useActiveOrganization();
+
+  if (isUserPending || isOrganizationPending) {
     return null;
   }
 

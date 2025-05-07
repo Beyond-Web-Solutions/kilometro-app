@@ -7,14 +7,15 @@ import { CreateOrganizationForm } from "@/components/onboarding/create-org/form"
 import { useContext } from "react";
 import { AuthContext } from "@/components/auth/provider";
 import { Redirect, useRouter } from "expo-router";
+import { authClient } from "@/lib/auth/client";
 
 export default function OnboardingScreen() {
   const router = useRouter();
 
   const { t } = useTranslation("onboarding", { keyPrefix: "create-org" });
-  const { organizationId } = useContext(AuthContext);
+  const { data } = authClient.useActiveOrganization();
 
-  if (organizationId) {
+  if (data) {
     return <Redirect href="/" />;
   }
 

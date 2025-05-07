@@ -4,12 +4,13 @@ import { Icon } from "react-native-paper";
 import { useContext } from "react";
 import { AuthContext } from "@/components/auth/provider";
 import { useTranslation } from "react-i18next";
+import { authClient } from "@/lib/auth/client";
 
 export default function TabsLayout() {
-  const { organizationId } = useContext(AuthContext);
+  const { data } = authClient.useActiveOrganization();
   const { t } = useTranslation("common", { keyPrefix: "screens.tabs" });
 
-  if (!organizationId) {
+  if (!data) {
     return <Redirect href="/onboarding/create-organization" />;
   }
 

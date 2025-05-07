@@ -1,12 +1,11 @@
 import { Redirect, Stack } from "expo-router";
 import { Header } from "@/components/nav/header";
-import { useContext } from "react";
-import { AuthContext } from "@/components/auth/provider";
+import { authClient } from "@/lib/auth/client";
 
 export default function AuthLayoutLayout() {
-  const { user } = useContext(AuthContext);
+  const { data } = authClient.useSession();
 
-  if (user) {
+  if (data) {
     return <Redirect href="/" />;
   }
 
