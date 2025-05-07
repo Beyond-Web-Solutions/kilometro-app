@@ -1,8 +1,6 @@
 import { Redirect, Tabs, usePathname } from "expo-router";
 import { MainTabBar } from "@/components/nav/tab-bar";
 import { Icon } from "react-native-paper";
-import { useContext } from "react";
-import { AuthContext } from "@/components/auth/provider";
 import { useTranslation } from "react-i18next";
 import { authClient } from "@/lib/auth/client";
 

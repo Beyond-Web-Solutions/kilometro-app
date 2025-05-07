@@ -4,8 +4,6 @@ import { StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Text } from "react-native-paper";
 import { CreateOrganizationForm } from "@/components/onboarding/create-org/form";
-import { useContext } from "react";
-import { AuthContext } from "@/components/auth/provider";
 import { Redirect, useRouter } from "expo-router";
 import { authClient } from "@/lib/auth/client";
 

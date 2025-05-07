@@ -1,6 +1,5 @@
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { AuthProvider } from "@/components/auth/provider";
 import { adaptNavigationTheme, PaperProvider } from "react-native-paper";
 import { useColorScheme } from "react-native";
 import { darkTheme, lightTheme } from "@/lib/ui/theme";
@@ -9,6 +8,9 @@ import {
   DarkTheme as DarkNavigationTheme,
   DefaultTheme as DefaultNavigationTheme,
 } from "@react-navigation/native";
+import { Provider } from "react-redux";
+import { AuthProvider } from "@/components/auth/provider";
+import { store } from "@/lib/store/store";
 import "@/lib/i18n/client";
 
 // Prevent the splash screen from auto-hiding until we know the auth state
@@ -33,13 +35,18 @@ export default function RootLayout() {
             : { ...LightTheme, fonts: DarkNavigationTheme.fonts }
         }
       >
-        <AuthProvider>
-          <StatusBar style="auto" />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(protected)" options={{ animation: "none" }} />
-            <Stack.Screen name="(auth)" options={{ animation: "none" }} />
-          </Stack>
-        </AuthProvider>
+        <Provider store={store}>
+          <AuthProvider>
+            <StatusBar style="auto" />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen
+                name="(protected)"
+                options={{ animation: "none" }}
+              />
+              <Stack.Screen name="(auth)" options={{ animation: "none" }} />
+            </Stack>
+          </AuthProvider>
+        </Provider>
       </ThemeProvider>
     </PaperProvider>
   );

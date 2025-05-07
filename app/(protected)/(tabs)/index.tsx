@@ -1,9 +1,7 @@
-import { AppleMaps, GoogleMaps, useLocationPermissions } from "expo-maps";
+import { AppleMaps, GoogleMaps } from "expo-maps";
 import { Platform } from "react-native";
 
 export default function Index() {
-  const [status, requestPermission] = useLocationPermissions();
-
   if (Platform.OS === "ios") {
     return (
       <AppleMaps.View
