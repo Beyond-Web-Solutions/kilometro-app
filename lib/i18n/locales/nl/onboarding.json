@@ -1,0 +1,12 @@
+{
+  "create-org": {
+    "title": "Organisatie aanmaken",
+    "description": "Je hebt een organisatie nodig om ritten te registreren met de deelauto's binnen de organisatie.",
+    "form": {
+      "name": {
+        "label": "Naam van de organisatie"
+      },
+      "submit": "Organisatie aanmaken"
+    }
+  }
+}

@@ -2,7 +2,10 @@ import { Button } from "react-native-paper";
 import { Keyboard, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { SendOtpFormData, sendOtpSchema } from "@/lib/definitions/send-otp";
+import {
+  SendOtpFormData,
+  sendOtpSchema,
+} from "@/lib/definitions/auth/send-otp";
 import { zodResolver } from "@hookform/resolvers/zod/src";
 import { useCallback } from "react";
 import { TextInput } from "@/components/common/form/text-input";

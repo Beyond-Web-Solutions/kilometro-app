@@ -8,7 +8,7 @@ import { Redirect, useLocalSearchParams } from "expo-router";
 import {
   VerifyOtpFormData,
   verifyOtpSchema,
-} from "@/lib/definitions/verify-otp";
+} from "@/lib/definitions/auth/verify-otp";
 import { TextInput } from "@/components/common/form/text-input";
 import { authClient } from "@/lib/auth/client";
 import { Banner } from "react-native-paper";
